@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-core'
-import { ElAffix, ElButton, ElCard, ElIcon, ElInput, ElMenu, ElMenuItem } from 'element-plus'
+import { ElAffix, ElAvatar, ElBacktop, ElButton, ElCard, ElEmpty, ElIcon, ElInput, ElMenu, ElMenuItem, ElPagination } from 'element-plus'
 
 export default (app:App):void => {
   app.use(ElButton)
@@ -9,4 +9,8 @@ export default (app:App):void => {
   app.use(ElMenu)
   app.use(ElMenuItem)
   app.use(ElCard)
+  app.use(ElAvatar)
+  app.use(ElEmpty)
+  app.use(ElPagination)
+  app.use(ElBacktop)
 }

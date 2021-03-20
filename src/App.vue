@@ -1,5 +1,6 @@
 <template>
   <div class="whole-box">
+    <el-backtop :visibility-height="10" :bottom="100"></el-backtop>
     <el-affix :offset="0">
     <el-card>
     <div class="search-bar">
@@ -10,12 +11,13 @@
           prefix-icon="el-icon-search"
           v-model="search_bar_input"
           clearable>
+          <template #append>
+            <el-button icon="el-icon-search"></el-button>
+          </template>
         </el-input>
-        <el-button>Search</el-button>
       </div>
       <div class="search-bar-right" v-if="display_login_info">
-        <div class="user-icon line-box-border">
-        </div>
+        <el-avatar size="small" shape="square"></el-avatar>
         <div>UserName</div>
       </div>
       <div class="search-bar-right" v-if="!display_login_info">
@@ -114,13 +116,14 @@ export default {
   padding: 15px;
   padding-bottom: 5px;
   padding-top: 50px;
-  margin-top: -1px;
+  margin-bottom: 15px;
 }
 
 .footer{
   text-align: center;
   color: #999999;
   margin-bottom: 50px;
+  margin-top: 50px;
 }
 
 .main-body{
