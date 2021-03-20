@@ -1,34 +1,174 @@
 <template>
-  <img src="./assets/logo.png">
-  <div>
-    <p>
-      If Element Plus is successfully added to this project, you'll see an
-      <code v-text="'<el-button>'"></code>
-      below
-    </p>
-    <el-button type="primary">el-button</el-button>
+  <div class="whole-box">
+    <el-affix :offset="0">
+    <el-card>
+    <div class="search-bar">
+      <div class="search-bar-left">
+        <div>MelonGarden</div>
+        <el-input
+          placeholder="Type something to search"
+          prefix-icon="el-icon-search"
+          v-model="search_bar_input"
+          clearable>
+        </el-input>
+        <el-button>Search</el-button>
+      </div>
+      <div class="search-bar-right" v-if="display_login_info">
+        <div class="user-icon line-box-border">
+        </div>
+        <div>UserName</div>
+      </div>
+      <div class="search-bar-right" v-if="!display_login_info">
+        <el-button type="success">Sign Up</el-button>
+        <el-button>Sign In</el-button>
+      </div>
+    </div>
+    </el-card>
+    </el-affix>
+    <el-card class="header">
+      <div class="subheader">
+        <div :span="6">
+        <router-link to="/">
+        <img class="logo-img" src="./assets/logo.png"/>
+        </router-link>
+        </div>
+        <div :span="18" class="right-title">
+          <div class="subdescription">A wanderful community for whom want to communicate</div>
+          <div class="big-title">MelonGarden</div>
+        </div>
+      </div>
+      <div class="status">Members: 2332 Posts: 43</div>
+    </el-card>
+    <div class="main-body"> <router-view></router-view> </div>
+    <div class="footer">
+      ©2021 TheCreator |
+      <router-link to="/about">About</router-link> |
+      Contact
+    </div>
   </div>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+/* eslint-disable */
 export default {
   name: 'App',
+  data () {
+    return {
+      display_login_info: false,
+      search_bar_input: ""
+    }
+  },
   components: {
-    HelloWorld
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+#app{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
 }
+
+.logo-img{
+  width: 230px;
+  height: 150px;
+}
+
+.right-title{
+  text-align: left;
+  padding-left: 15px;
+  line-height: 1;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.subheader{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.big-title{
+  font-size: 72px;
+  line-height: 1;
+}
+
+.status{
+  text-align: left;
+  margin-top: 35px;
+  margin-left: 35px;
+}
+
+.subdescription{
+  color:#999999;
+}
+
+.whole-box{
+  width: 1024px;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header{
+  padding: 15px;
+  padding-bottom: 5px;
+  padding-top: 50px;
+  margin-top: -1px;
+}
+
+.footer{
+  text-align: center;
+  color: #999999;
+  margin-bottom: 50px;
+}
+
+.main-body{
+  text-align: center;
+  min-height: 1500px;
+}
+
+.line-box-border{
+  border: #333;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.user-icon{
+  width: 32px;
+  height: 32px;
+  border-radius: 25%;
+}
+
+.search-bar{
+  padding: 3px;
+  background-color: white;
+  padding-left: 35px;
+  padding-right: 15px;
+  margin: -15px;
+  /*box-shadow: 0px 5px 5px rgba(43, 43, 43, 0.112);*/
+}
+
+.search-bar, .search-bar-left, .search-bar-right{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.search-bar-right{
+  margin-left: auto;
+}
+
+.search-bar .el-input{
+  width: 400px;
+}
+
+.search-bar-left div, .search-bar .el-input, .search-bar .el-button{
+  margin-right: 8px;
+}
+
+.search-bar-right div{
+  margin-left: 8px;
+}
+
 </style>

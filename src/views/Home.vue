@@ -1,7 +1,9 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <el-menu default-active="1" mode="horizontal">
+      <el-menu-item index="1">Posts</el-menu-item>
+      <el-menu-item index="2">Images</el-menu-item>
+    </el-menu>
   </div>
 </template>
 
