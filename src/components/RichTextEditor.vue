@@ -24,6 +24,7 @@ import { Options, Vue } from 'vue-class-component'
   props: {
     modelValue: String
   },
+  emits: ['update:modelValue'],
   data () {
     return {
       inputValue: '',

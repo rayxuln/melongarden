@@ -10,7 +10,8 @@
           :poster="p.poster"
           :lastReplior="p.lastReplior"
           :showImages="p.showImages"
-          :updateTime="p.updateTime">
+          :updateTime="p.updateTime"
+          @click="onPostCardClicked(p.postId)">
         </post-card>
       </div>
 
@@ -48,7 +49,8 @@ var POST_CARD_LIST = [
     poster: 'AGoodMan',
     lastReplior: 'ABadMan',
     updateTime: '17:45',
-    showImages: false
+    showImages: false,
+    postId: '0'
   },
   {
     replyNum: 24,
@@ -57,7 +59,8 @@ var POST_CARD_LIST = [
     poster: 'ABadMan',
     lastReplior: 'AGoodMan',
     updateTime: '3-21',
-    showImages: true
+    showImages: true,
+    postId: '1'
   },
   {
     replyNum: 344,
@@ -66,7 +69,8 @@ var POST_CARD_LIST = [
     poster: 'AGoodMan',
     lastReplior: 'ABadMan',
     updateTime: '2020-8-15',
-    showImages: false
+    showImages: false,
+    postId: '2'
   }
 ]
 
@@ -86,6 +90,12 @@ var POST_CARD_LIST = [
   created () {
     for (var i = 0; i < 10; ++i) {
       this.post_card_list.push(POST_CARD_LIST[i % 3])
+    }
+  },
+  methods: {
+    onPostCardClicked (postId:string) {
+      console.log('Somebody has clicked. with ' + postId)
+      this.$router.push('/post/' + postId)
     }
   }
 })

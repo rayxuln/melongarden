@@ -98,7 +98,6 @@ export default {
 .status{
   text-align: left;
   margin-top: 35px;
-  margin-left: 35px;
 }
 
 .subdescription{
