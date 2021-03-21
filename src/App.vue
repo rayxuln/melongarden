@@ -43,7 +43,7 @@
     </el-card>
     <div class="main-body"> <router-view></router-view> </div>
     <div class="footer">
-      ©2021 TheCreator |
+      ©2021 MelonGarden | Design By Raiix |
       <router-link to="/about">About</router-link> |
       Contact
     </div>

@@ -27,7 +27,7 @@
           <div class="post-box-title">Post</div>
           <el-input placeholder="Type the title here..." maxlength="20" show-word-limit v-model="post_box_title"></el-input>
           <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
-          <rich-text-editor v-model="post_box_input"></rich-text-editor>
+          <rich-text-editor v-model="post_box_textarea"></rich-text-editor>
           <el-button type="primary">Post</el-button>
         </div>
       </el-card>
@@ -76,8 +76,7 @@ var POST_CARD_LIST = [
       posts_is_empty: false,
       post_card_list: [],
       post_box_title: '',
-      post_box_textarea: '',
-      post_box_input: ''
+      post_box_textarea: ''
     }
   },
   components: {
@@ -87,11 +86,6 @@ var POST_CARD_LIST = [
   created () {
     for (var i = 0; i < 10; ++i) {
       this.post_card_list.push(POST_CARD_LIST[i % 3])
-    }
-  },
-  watch: {
-    post_box_input (v) {
-      // console.log(v)
     }
   }
 })
