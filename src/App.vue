@@ -128,7 +128,7 @@ export default {
 
 .main-body{
   text-align: center;
-  min-height: 1500px;
+  min-height: 500px;
 }
 
 .line-box-border{

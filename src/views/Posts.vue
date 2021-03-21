@@ -26,7 +26,8 @@
         <div class="post-box-container">
           <div class="post-box-title">Post</div>
           <el-input placeholder="Type the title here..." maxlength="20" show-word-limit v-model="post_box_title"></el-input>
-          <el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input>
+          <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
+          <rich-text-editor v-model="post_box_input"></rich-text-editor>
           <el-button type="primary">Post</el-button>
         </div>
       </el-card>
@@ -37,6 +38,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
 import PostCard from '@/components/PostCard.vue'
+import RichTextEditor from '@/components/RichTextEditor.vue'
 
 var POST_CARD_LIST = [
   {
@@ -74,15 +76,22 @@ var POST_CARD_LIST = [
       posts_is_empty: false,
       post_card_list: [],
       post_box_title: '',
-      post_box_textarea: ''
+      post_box_textarea: '',
+      post_box_input: ''
     }
   },
   components: {
-    'post-card': PostCard
+    'post-card': PostCard,
+    'rich-text-editor': RichTextEditor
   },
   created () {
     for (var i = 0; i < 10; ++i) {
       this.post_card_list.push(POST_CARD_LIST[i % 3])
+    }
+  },
+  watch: {
+    post_box_input (v) {
+      // console.log(v)
     }
   }
 })
