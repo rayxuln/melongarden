@@ -4,7 +4,13 @@
       <el-menu-item index="/">Posts</el-menu-item>
       <el-menu-item index="/images">Images</el-menu-item>
     </el-menu>
-    <router-view></router-view>
+
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+
   </div>
 </template>
 
@@ -16,3 +22,7 @@ import { Options, Vue } from 'vue-class-component'
 })
 export default class Home extends Vue {}
 </script>
+
+<style scoped>
+
+</style>

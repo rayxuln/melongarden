@@ -77,6 +77,7 @@ const TEMP_LEVELS = [
   data () {
     return {
       postId: '',
+      currentPage: 0,
       reply_box_textarea: '',
       isLoadingPage: false,
       levelList: []
@@ -90,7 +91,12 @@ const TEMP_LEVELS = [
     }
   },
   mounted () {
-    this.postId = this.$route.params.postId
+    this.postId = this.$route.query.post_id
+    if (this.$route.query.page !== undefined) {
+      this.currentPage = this.$route.query.page
+    }
+
+    // console.log(`Loading page with page id: ${this.postId}, page: ${this.currentPage}`)
   },
   watch: {
     reply_box_textarea (newValue) {

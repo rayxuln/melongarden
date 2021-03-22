@@ -9,7 +9,7 @@
       <div class="level-box-right">
         <div class="level-box-content" ref="content"></div>
         <div class="level-box-corner">
-          <span> L{{ level }} {{ date }} <a class="level-box-reply" @click="$emit('replyTextClick')">Reply</a></span>
+          <span> L{{ level }} {{ date }} <el-link type="primary" @click.prevent="$emit('replyTextClick')">Reply</el-link></span>
         </div>
       </div>
     </div>
@@ -78,7 +78,4 @@ export default class PostPageLevel extends Vue {}
   text-align: right;
 }
 
-.level-box-reply{
-  color: #409EFF;
-}
 </style>

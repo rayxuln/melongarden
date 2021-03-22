@@ -41,7 +41,13 @@
       </div>
       <div class="status">Members: 2332 Posts: 43</div>
     </el-card>
-    <div class="main-body"> <router-view></router-view> </div>
+    <div class="main-body">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
     <div class="footer">
       ©2021 MelonGarden | Design By Raiix |
       <router-link to="/about">About</router-link> |
@@ -66,6 +72,16 @@ export default {
 </script>
 
 <style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 #app{
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;

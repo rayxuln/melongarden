@@ -94,8 +94,7 @@ var POST_CARD_LIST = [
   },
   methods: {
     onPostCardClicked (postId:string) {
-      console.log('Somebody has clicked. with ' + postId)
-      this.$router.push('/post/' + postId)
+      this.$router.push(`/post?post_id=${postId}`)
     }
   }
 })

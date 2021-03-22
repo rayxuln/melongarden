@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/post/:postId',
+    path: '/post',
     name: 'PostPage',
     component: () => import('../views/PostPage.vue')
   }
