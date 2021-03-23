@@ -9,14 +9,19 @@ export default function (postId:string, pageSize:number, pageNumber:number):Prom
     for (const l of rawLevels) {
       const user = Moker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
-      if (user !== null) userName = user.userName
+      let userAvatarUrl = ''
+      if (user !== null) {
+        userName = user.userName
+        userAvatarUrl = user.userAvatarUrl
+      }
       levels.push({
-        userAvatarUrl: '',
+        userAvatarUrl,
         userName,
         content: l.content,
         level: l.level,
         date: Tools.getProperDateString(l.date),
-        isPoster: post.getFirstLevel().userId === l.userId
+        isPoster: post.getFirstLevel().userId === l.userId,
+        isYou: l.userId === Moker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
       })
     }
   }

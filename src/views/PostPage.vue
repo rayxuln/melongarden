@@ -12,6 +12,7 @@
         :content="l.content"
         :date="l.date"
         :isPoster="l.isPoster"
+        :isYou="l.isYou"
         @replyTextClick="onReplyTextClicked">
       </post-page-level>
     </div>

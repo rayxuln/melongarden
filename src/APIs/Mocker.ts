@@ -209,8 +209,8 @@ class Mocker {
   postHelper:PostHelper = new PostHelper()
 
   constructor () {
-    this.userHelper.register('ADogMan', '')
-    this.userHelper.register('ACatMan', '')
+    this.userHelper.register('ADogMan', 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png')
+    this.userHelper.register('ACatMan', 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
 
     this.postTest()
   }

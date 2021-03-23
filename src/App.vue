@@ -17,7 +17,7 @@
         </el-input>
       </div>
       <div class="search-bar-right" v-if="display_login_info">
-        <el-avatar size="small" shape="square"></el-avatar>
+        <el-avatar size="small" shape="square" :src="userAvatar"></el-avatar>
         <div>{{ userName }}</div>
       </div>
       <div class="search-bar-right" v-if="!display_login_info">
