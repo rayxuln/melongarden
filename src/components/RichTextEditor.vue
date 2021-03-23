@@ -25,7 +25,7 @@ import { Options, Vue } from 'vue-class-component'
   props: {
     modelValue: String
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'images-upload-start', 'images-upload-finished'],
   data () {
     return {
       inputValue: '',
@@ -39,9 +39,16 @@ import { Options, Vue } from 'vue-class-component'
         paste_data_images: true,
         statusbar: false,
         elementpath: false,
-        images_upload_handler: Tools.imagesUploadHandler()
+        images_upload_handler: null
       }
     }
+  },
+  created () {
+    this.init.images_upload_handler = Tools.imagesUploadHandler(() => {
+      this.$emit('images-upload-start')
+    }, () => {
+      this.$emit('images-upload-finished')
+    })
   },
   mounted () {
     tinymce.init({})

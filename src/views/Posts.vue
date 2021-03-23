@@ -12,7 +12,7 @@
           :content="p.content"
           :poster="p.poster"
           :lastReplior="p.lastReplior"
-          :showImages="p.showImages"
+          :images="p.images"
           :updateTime="p.updateTime"
           :routePath="`/post?post_id=${p.postId}`"
           >
@@ -39,8 +39,8 @@
         <div class="post-box-title">Post</div>
         <el-input placeholder="Type the title here..." maxlength="20" show-word-limit v-model="post_box_title"></el-input>
         <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
-        <rich-text-editor v-model="post_box_textarea"></rich-text-editor>
-        <el-button type="primary" @click="onPostButtonClicked">Post</el-button>
+        <rich-text-editor v-model="post_box_textarea" @images-upload-start="onImagesUploadStart" @images-upload-finished="onImagesUploadFinished"></rich-text-editor>
+        <el-button :loading="post_box_post_button_loading" type="primary" @click="onPostButtonClicked">Post</el-button>
       </div>
     </el-card>
   </div>
@@ -54,39 +54,6 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
 import APIs from '@/APIs'
 import { ElMessage } from 'element-plus'
 
-var POST_CARD_LIST = [
-  {
-    replyNum: 15,
-    title: 'Welcome Everyone!(1)',
-    content: "Tody, I'm happy to say that this WebApp is finally done!!!!",
-    poster: 'AGoodMan',
-    lastReplior: 'ABadMan',
-    updateTime: '17:45',
-    showImages: false,
-    postId: '0'
-  },
-  {
-    replyNum: 24,
-    title: 'Welcome Everyone!(2)',
-    content: "Tody, I'm happy to say that this WebApp is finally done!!!!",
-    poster: 'ABadMan',
-    lastReplior: 'AGoodMan',
-    updateTime: '3-21',
-    showImages: true,
-    postId: '1'
-  },
-  {
-    replyNum: 344,
-    title: 'Welcome Everyone!(3)',
-    content: "Tody, I'm happy to say that this WebApp is finally done!!!!",
-    poster: 'AGoodMan',
-    lastReplior: 'ABadMan',
-    updateTime: '2020-8-15',
-    showImages: false,
-    postId: '2'
-  }
-]
-
 @Options({
   data () {
     return {
@@ -94,6 +61,7 @@ var POST_CARD_LIST = [
       post_card_list: [],
       post_box_title: '',
       post_box_textarea: '',
+      post_box_post_button_loading: false,
       current_post_number: 0,
       page_size: 3,
       isPageLoading: false
@@ -156,6 +124,12 @@ var POST_CARD_LIST = [
       }).catch((e) => {
         ElMessage.error('Can\'t post. ' + e)
       })
+    },
+    onImagesUploadStart () {
+      this.post_box_post_button_loading = true
+    },
+    onImagesUploadFinished () {
+      this.post_box_post_button_loading = false
     }
   }
 })

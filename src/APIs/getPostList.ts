@@ -40,19 +40,44 @@ function getPostLastUpdateTimeString (post:Post) {
   return getDateDate(date)
 }
 
+function getImagesInPost (content:string) {
+  const images = []
+  const reg = /<img\s+src="(([^"]|\\")*)"\s+\/>/gim
+  let res = reg.exec(content)
+  while (res !== null) {
+    images.push(res[1])
+    res = reg.exec(content)
+  }
+  return images
+}
+
+function genImage (small:string, big = '') {
+  if (big === '') big = small
+  else if (small === '') small = big
+  return {
+    big,
+    small
+  }
+}
+
 export default function (pageSize:number, pageNumber:number):Promise<unknown> {
   const posts = []
   const rawPosts = Moker.postHelper.getPosts(pageSize, pageNumber)
   for (const p of rawPosts) {
+    const images:Array<Record<string, string>> = []
+    const imageSources = p.postLevelList.length > 0 ? getImagesInPost(p.postLevelList[0].content) : []
+    imageSources.forEach(i => {
+      images.push(genImage(i))
+    })
     posts.push({
       replyNum: p.getReplyNum(),
       title: p.title,
       content: getPostContent(p),
       poster: Moker.userHelper.getUserNameById(p.getPoster()),
       lastReplior: Moker.userHelper.getUserNameById(p.getLastReplior()),
-      showImages: false,
       updateTime: getPostLastUpdateTimeString(p),
-      postId: p.postId
+      postId: p.postId,
+      images
     })
   }
   return promiseHelper(posts, 1000)

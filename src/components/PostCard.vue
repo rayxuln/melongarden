@@ -12,10 +12,10 @@
   <div class="post-card-content">
   {{ displayContent }}
   </div>
-  <div v-if="showImages" class="post-card-image-container">
-    <div class="fake-image-box"></div>
-    <div class="fake-image-box"></div>
-    <div class="fake-image-box"></div>
+  <div v-if="images.length > 0" class="post-card-image-container">
+    <div v-if="images.length >= 1" class="fake-image-box"><el-image :src="images[0].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
+    <div v-if="images.length >= 2" class="fake-image-box"><el-image :src="images[1].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
+    <div v-if="images.length >= 3" class="fake-image-box"><el-image :src="images[2].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
   </div>
 </div>
 <div class="post-card-right">
@@ -44,12 +44,19 @@ const MAX_TITLE_LEGNTH = 20
     poster: String,
     lastReplior: String,
     updateTime: String,
-    showImages: Boolean,
+    images: Array,
     routePath: String
   },
   computed: {
     displayContent () {
       return this.content
+    },
+    bigImageList () {
+      const res = []
+      for (const i of this.images) {
+        res.push(i.big)
+      }
+      return res
     }
   }
 })
@@ -60,8 +67,8 @@ export default class PostCard extends Vue {}
 .fake-image-box{
   width: 234.5px;
   height: 174px;
-  border: 1px solid black;
-  background-color: #999999;
+  /*border: 1px solid black;
+  background-color: #999999;*/
 }
 
 .post-card-title{

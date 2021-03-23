@@ -11,20 +11,21 @@ class Tools {
     return ''
   }
 
-  imagesUploadHandler () {
+  imagesUploadHandler (start: () => void, finish: () => void) {
     const forceFail = false
     return (blobInfo: { base64: () => string }, success: (a: string) => unknown, failure: (arg0: string, arg1: { remove: boolean }) => void, progress: (a: number) => unknown) => {
+      start()
       const img = 'data:image/jpeg;base64,' + blobInfo.base64()
       console.log('About to upload a image')
-      if (forceFail) {
-        failure('error force', { remove: true })
-        return
-      }
-
       let cnt = 10
       const int = setInterval(() => {
         if (cnt === 0) {
           success(img)
+          finish()
+          window.clearInterval(int)
+        } else if (forceFail && cnt === 5) {
+          failure('error force', { remove: true })
+          finish()
           window.clearInterval(int)
         } else {
           cnt -= 1
