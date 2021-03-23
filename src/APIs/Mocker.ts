@@ -129,7 +129,7 @@ export class Post {
     return this.postLevelList[this.postLevelList.length - 1].userId
   }
 
-  getLevels (pageSize:number, pageNumber:number):Array<unknown> {
+  getLevels (pageSize:number, pageNumber:number):Array<PostLevel> {
     if (pageSize <= 0) return []
     const start = Math.max(0, (pageNumber - 1) * pageSize)
     const end = Math.min(this.postLevelList.length, pageNumber * pageSize)
@@ -142,6 +142,10 @@ export class Post {
 
   getLastLevel ():PostLevel {
     return this.postLevelList[this.postLevelList.length - 1]
+  }
+
+  getFirstLevel ():PostLevel {
+    return this.postLevelList[0]
   }
 
   getReplyNum ():number {
@@ -187,6 +191,15 @@ class PostHelper {
   sortPosts () {
     this.postList.sort((a:Post, b:Post) => b.getLastLevel().date.getTime() - a.getLastLevel().date.getTime())
   }
+
+  getPostById (postId:string) {
+    for (const p of this.postList) {
+      if (p.postId === postId) {
+        return p
+      }
+    }
+    return null
+  }
 }
 
 class Mocker {
@@ -212,15 +225,15 @@ class Mocker {
   }
 
   postTest () {
-    let p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!1', 'Hi every one, this msg is from the Mocker!!!')
+    let p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!1', 'Hi every one, this msg is from the Mocker!!!1')
     p.postLevelList[0].date = new Date('1995-12-17')
 
     p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?')
 
-    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!2', 'Hi every one, this msg is from the Mocker!!!')
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!2', 'Hi every one, this msg is from the Mocker!!!2')
     p.postLevelList[0].date = new Date('2021-2-17')
 
-    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!3', 'Hi every one, this msg is from the Mocker!!!')
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!3', 'Hi every one, this msg is from the Mocker!!!3')
     p.postLevelList[0].date = new Date('2020-3-8')
 
     this.postHelper.sortPosts()

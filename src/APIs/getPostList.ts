@@ -1,3 +1,4 @@
+import Tools from './Tools'
 import Moker, { Post, promiseHelper } from './Mocker'
 
 function getPostContent (post:Post) {
@@ -14,38 +15,24 @@ function getPostContent (post:Post) {
   return content
 }
 
-function getDateFullDate (date:Date) {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-}
-
-function getDateDate (date:Date) {
-  return `${date.getMonth() + 1}-${date.getDate()}`
-}
-
-function getDateTime (date:Date) {
-  const min = String(date.getMinutes())
-  min.padStart(2, '0')
-  return `${date.getHours()}:${min}`
-}
-
 function getPostLastUpdateTimeString (post:Post) {
   if (post.postLevelList.length === 0) return ''
   const date = post.postLevelList[post.postLevelList.length - 1].date
   if (date.getFullYear() !== (new Date()).getFullYear()) {
-    return getDateFullDate(date)
+    return Tools.getDateFullDate(date)
   }
-  if (getDateDate(date) === getDateDate(new Date())) {
-    return getDateTime(date)
+  if (Tools.getDateDate(date) === Tools.getDateDate(new Date())) {
+    return Tools.getDateTime(date)
   }
-  return getDateDate(date)
+  return Tools.getDateDate(date)
 }
 
 function getImagesInPost (content:string) {
   const images = []
-  const reg = /<img\s+src="(([^"]|\\")*)"/gim
+  const reg = /<img((?!scr=")[.\s])+src="(([^"]|\\")*)"/gim
   let res = reg.exec(content)
-  while (res !== null) {
-    images.push(res[1])
+  while (res !== null && images.length < 3) {
+    images.push(res[2])
     res = reg.exec(content)
   }
   return images

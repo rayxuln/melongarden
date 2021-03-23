@@ -34,6 +34,29 @@ class Tools {
       }, 100)
     }
   }
+
+  getDateFullDate (date:Date) {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  }
+
+  getDateDate (date:Date) {
+    return `${date.getMonth() + 1}-${date.getDate()}`
+  }
+
+  getDateTime (date:Date) {
+    const min = String(date.getMinutes())
+    return `${date.getHours()}:${min.padStart(2, '0')}`
+  }
+
+  getProperDateString (date:Date) {
+    if (date.getFullYear() !== (new Date()).getFullYear()) {
+      return `${this.getDateFullDate(date)} ${this.getDateTime(date)}`
+    } else if (this.getDateDate(date) !== this.getDateDate(new Date())) {
+      return `${this.getDateDate(date)} ${this.getDateTime(date)}`
+    } else {
+      return this.getDateTime(date)
+    }
+  }
 }
 
 const ins = new Tools()

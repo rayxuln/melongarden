@@ -13,9 +13,9 @@
   {{ displayContent }}
   </div>
   <div v-if="images.length > 0" class="post-card-image-container">
-    <div v-if="images.length >= 1" class="fake-image-box"><el-image :src="images[0].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
-    <div v-if="images.length >= 2" class="fake-image-box"><el-image :src="images[1].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
-    <div v-if="images.length >= 3" class="fake-image-box"><el-image :src="images[2].small" fit="contain" :preview-src-list="bigImageList"></el-image></div>
+    <el-image v-if="images.length >= 1" class="fake-image-box" :src="images[0].small" fit="contain" :preview-src-list="bigImageList"></el-image>
+    <el-image v-if="images.length >= 2" class="fake-image-box" :src="images[1].small" fit="contain" :preview-src-list="bigImageList"></el-image>
+    <el-image v-if="images.length >= 3" class="fake-image-box" :src="images[2].small" fit="contain" :preview-src-list="bigImageList"></el-image>
   </div>
 </div>
 <div class="post-card-right">

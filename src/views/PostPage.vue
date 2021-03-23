@@ -1,8 +1,8 @@
 <template>
   <div class="post-page">
     <el-card shadow="never" class="post-page-body">
-    <div v-if="!isLoadingPage">
-    <div class="post-page-title">Welcome Everyone! {{ postId }}</div>
+    <div v-loading="isLoadingPage">
+    <div class="post-page-title">{{ title }}</div>
 
     <div class="post-page-level-container" v-for="l in levelList" :key="l.level">
       <post-page-level
@@ -16,60 +16,37 @@
       </post-page-level>
     </div>
 
-    <div class="post-page-tail">Replies: 94</div>
+    <div class="post-page-tail">Replies: {{ levelNum }}</div>
+
+    </div>
+    </el-card>
 
     <el-pagination
       background
       layout="prev, pager, next, jumper"
-      :page-size="10"
+      :page-size="pageSize"
       :page-count="5"
-      :total="1000">
+      :current-page="currentPage"
+      :total="levelNum"
+      @current-change="onCurrentPageChanged">
     </el-pagination>
-    </div>
-    <div v-else>
-      <el-skeleton :rows="7" animated />
-    </div>
-    </el-card>
 
     <el-card shadow="never">
     <div class="reply-box-container">
       <div class="reply-box-title">Reply</div>
-      <rich-text-editor v-model="reply_box_textarea"></rich-text-editor>
+      <rich-text-editor v-model="replyBoxTextArea"></rich-text-editor>
       <el-button type="primary" @click="onReply">Reply</el-button>
     </div>
     </el-card>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import APIs from '@/APIs'
 import { Options, Vue } from 'vue-class-component'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import PostPageLevel from '@/components/PostPageLevel.vue'
-
-const TEMP_LEVELS = [
-  {
-    userAvatarUrl: '',
-    userName: 'AGoodMan',
-    content: '',
-    level: -1,
-    date: '2021-3-17 17:45',
-    isPoster: true
-  },
-  {
-    userAvatarUrl: '',
-    userName: 'ABadMan',
-    content: '',
-    level: -1,
-    date: '2021-3-18 13:45'
-  },
-  {
-    userAvatarUrl: '',
-    userName: 'AGoodMan',
-    content: 'You are such a fool.',
-    level: -1,
-    date: '2021-4-1 4:45'
-  }
-]
+import { ElMessage } from 'element-plus'
 
 @Options({
   components: {
@@ -78,46 +55,77 @@ const TEMP_LEVELS = [
   },
   data () {
     return {
+      title: '',
       postId: '',
-      currentPage: 0,
-      reply_box_textarea: '',
+      currentPage: 1,
+      replyBoxTextArea: '',
       isLoadingPage: false,
-      levelList: []
+      levelList: [],
+      levelNum: 0,
+      pageSize: 2
     }
   },
   created () {
-    for (var i = 0; i < 3; ++i) {
-      var obj = { ...TEMP_LEVELS[i % 3] }
-      obj.level = i + 1
-      this.levelList.push(obj)
-    }
+    this.$watch(
+      () => this.$route.query,
+      () => {
+        if (this.$route.path === '/post') {
+          this.loadLevels()
+        }
+      }
+    )
   },
   mounted () {
-    this.postId = this.$route.query.post_id
-    if (this.$route.query.page !== undefined) {
-      this.currentPage = this.$route.query.page
-    }
-
-    // console.log(`Loading page with page id: ${this.postId}, page: ${this.currentPage}`)
-  },
-  watch: {
-    reply_box_textarea (newValue) {
-      this.levelList[0].content = newValue
-    }
+    this.loadLevels()
   },
   methods: {
     onReply () {
-      this.levelList.push({
-        userAvatarUrl: '',
-        userName: 'ANobody',
-        content: this.reply_box_textarea,
-        level: this.levelList.length + 1,
-        date: '2021-3-17 17:45'
+      if (this.replyBoxTextArea === '') {
+        ElMessage.error('The reply content mustn\'t be empty!')
+        return
+      }
+
+      APIs.reply(this.postId, this.replyBoxTextArea).then(() => {
+        ElMessage.success('You\'ve just replied in a post')
+        this.replyBoxTextArea = ''
+        const newPage = Math.ceil((this.levelNum + 1) / this.pageSize)
+        if (this.currentPage !== newPage) {
+          this.$router.push(`/post?post_id=${this.postId}&page=${newPage}`)
+        } else {
+          this.loadLevels()
+        }
+      }).catch((e) => {
+        ElMessage.error('Can\'t reply. ' + e)
       })
-      this.reply_box_textarea = ''
     },
     onReplyTextClicked () {
       window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
+    },
+    loadLevels () {
+      this.postId = this.$route.query.post_id
+      let currentPage = Number.parseInt(this.$route.query.page)
+      if (!currentPage) {
+        currentPage = 1
+      }
+
+      this.isLoadingPage = true
+
+      APIs.getPostInfo(this.postId).then((value) => {
+        const v = value as {levelNum:number, title:string}
+        this.levelNum = v.levelNum
+        this.title = v.title
+        this.currentPage = currentPage
+        return APIs.getPostLevelList(this.postId, this.pageSize, this.currentPage)
+      }).catch((e) => {
+        ElMessage.error('Error happing while loading post page. ' + e)
+      }).then((v) => {
+        this.levelList = v
+      }).then(() => {
+        this.isLoadingPage = false
+      })
+    },
+    onCurrentPageChanged (pageNumber:number) {
+      this.$router.push(`/post?post_id=${this.postId}&page=${pageNumber}`)
     }
   }
 })
@@ -140,10 +148,11 @@ export default class PostPage extends Vue {}
 
 .post-page-tail{
   margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: -5px;
 }
 
 .el-pagination{
+  margin-bottom: 15px;
   text-align: center;
 }
 

@@ -75,7 +75,9 @@ import { ElMessage } from 'element-plus'
     this.$watch(
       () => this.$route.query,
       () => {
-        this.loadPosts()
+        if (this.$route.path === '/') {
+          this.loadPosts()
+        }
       }
     )
   },
@@ -112,8 +114,8 @@ import { ElMessage } from 'element-plus'
         return
       }
 
-      APIs.post(this.post_box_title, this.post_box_textarea).then((v) => {
-        ElMessage.success('You\'ve just post a new post')
+      APIs.post(this.post_box_title, this.post_box_textarea).then(() => {
+        ElMessage.success('You\'ve just posted a new post')
         this.clearPostBox()
         if (this.current_post_number !== 1) {
           this.$router.push('/?cpn=1')

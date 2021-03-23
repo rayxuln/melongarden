@@ -4,7 +4,7 @@
     <div class="level-box">
       <div class="level-box-left">
         <div class="level-box-user-avatar"><el-avatar size="large" shape="square"></el-avatar></div>
-        <div class="level-box-user-name">{{ userName }} <div v-if="isPoster"><el-tag type="warning">Poster</el-tag></div></div>
+        <div class="level-box-user-name">{{ userName }} <div v-if="isPoster"><el-tag class="poster-tag" type="warning">Poster</el-tag></div></div>
       </div>
       <div class="level-box-right">
         <div class="level-box-content" ref="content"></div>
@@ -77,6 +77,10 @@ export default class PostPageLevel extends Vue {}
 .level-box-corner{
   margin-top: auto;
   text-align: right;
+}
+
+.poster-tag {
+  margin-top: 15px;
 }
 
 </style>
