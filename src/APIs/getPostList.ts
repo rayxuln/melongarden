@@ -2,14 +2,16 @@ import Moker, { Post, promiseHelper } from './Mocker'
 
 function getPostContent (post:Post) {
   if (post.postLevelList.length === 0) return ''
-  const MAX_CONTENT_LENGTH = 8
+  const MAX_CONTENT_LENGTH = 50
   const DOT_LENGTH = 3
   let content = post.postLevelList[0].content
   if (content === '') return ''
+  content = content.replace(/<[^<>]+>/g, '')
   if (content.length > MAX_CONTENT_LENGTH) {
     content = content.substring(0, MAX_CONTENT_LENGTH - DOT_LENGTH)
+    return content.padEnd(MAX_CONTENT_LENGTH, '.')
   }
-  return content.padEnd(MAX_CONTENT_LENGTH, '.')
+  return content
 }
 
 function getDateFullDate (date:Date) {
@@ -49,7 +51,8 @@ export default function (pageSize:number, pageNumber:number):Promise<unknown> {
       poster: Moker.userHelper.getUserNameById(p.getPoster()),
       lastReplior: Moker.userHelper.getUserNameById(p.getLastReplior()),
       showImages: false,
-      updateTime: getPostLastUpdateTimeString(p)
+      updateTime: getPostLastUpdateTimeString(p),
+      postId: p.postId
     })
   }
   return promiseHelper(posts, 1000)

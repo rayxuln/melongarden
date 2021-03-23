@@ -7,7 +7,7 @@
 </div>
 <div class="post-card-center">
   <div class="post-card-title">
-  {{ title }}
+  <router-link :to="routePath">{{ title }} </router-link>
   </div>
   <div class="post-card-content">
   {{ displayContent }}
@@ -44,7 +44,8 @@ const MAX_TITLE_LEGNTH = 20
     poster: String,
     lastReplior: String,
     updateTime: String,
-    showImages: Boolean
+    showImages: Boolean,
+    routePath: String
   },
   computed: {
     displayContent () {

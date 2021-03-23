@@ -1,9 +1,10 @@
 <template>
   <div class="posts">
+    <div v-loading="isPageLoading" class="body-part">
     <transition name="fade" mode="out-in">
     <el-empty v-if="posts_is_empty" description="There is no post, yet."></el-empty>
     <div v-else>
-      <transition-group name="fade" mode="out-in" tag="div">
+      <!--transition-group name="fade" mode="out-in" tag="div"-->
       <div v-for="p in post_card_list" :key="p">
         <post-card
           :replyNum="p.replyNum"
@@ -13,12 +14,17 @@
           :lastReplior="p.lastReplior"
           :showImages="p.showImages"
           :updateTime="p.updateTime"
-          @click="onPostCardClicked(p.postId)">
+          :routePath="`/post?post_id=${p.postId}`"
+          >
         </post-card>
       </div>
-      </transition-group>
+      <!--/transition-group-->
+    </div>
+    </transition>
+    </div>
 
-      <el-pagination
+    <el-pagination
+        v-if="!posts_is_empty"
         background
         layout="prev, pager, next, jumper"
         :page-size="page_size"
@@ -26,9 +32,7 @@
         :total="$store.state.postNum"
         :current-page="current_post_number"
         @current-change="onCurrentPageChanged">
-      </el-pagination>
-    </div>
-    </transition>
+    </el-pagination>
 
     <el-card shadow="never">
       <div class="post-box-container">
@@ -91,7 +95,8 @@ var POST_CARD_LIST = [
       post_box_title: '',
       post_box_textarea: '',
       current_post_number: 0,
-      page_size: 1
+      page_size: 3,
+      isPageLoading: false
     }
   },
   components: {
@@ -101,7 +106,7 @@ var POST_CARD_LIST = [
   created () {
     this.$watch(
       () => this.$route.query,
-      (newQuery:Record<string, unknown>, oldQuery:Record<string, unknown>) => {
+      () => {
         this.loadPosts()
       }
     )
@@ -110,14 +115,11 @@ var POST_CARD_LIST = [
     this.loadPosts()
   },
   methods: {
-    onPostCardClicked (postId:string) {
-      this.$router.push(`/post?post_id=${postId}`)
-    },
     onCurrentPageChanged (pageNumber:number) {
       this.$router.push(`/?cpn=${pageNumber}`)
     },
     loadPosts () {
-      this.post_card_list = []
+      this.isPageLoading = true
       this.current_post_number = Number.parseInt(this.$route.query.cpn) // cpn == current_post_number
       if (!this.current_post_number) {
         this.current_post_number = 1
@@ -128,6 +130,8 @@ var POST_CARD_LIST = [
         this.posts_is_empty = this.post_card_list.length === 0
       }).catch((v) => {
         ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      }).then(() => {
+        this.isPageLoading = false
       })
     },
     clearPostBox () {

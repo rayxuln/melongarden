@@ -1,6 +1,7 @@
 
 let userIdCount = 0
 let userTokenCount = 100
+let postIdCount = 233
 
 class User {
   userId = ''
@@ -102,9 +103,11 @@ class PostLevel {
 export class Post {
   postLevelList:Array<PostLevel> = []
   title = ''
+  postId = ''
 
   constructor (title:string) {
     this.title = title
+    this.postId = `${postIdCount++}`
   }
 
   clearLevels ():void {
