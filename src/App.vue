@@ -88,7 +88,6 @@ export default {
   methods: {
     onSignInButtonPressed () {
       Mocker.loginTestUser()
-      Mocker.postTest()
       this.$router.push('/?forceupdate')
       setTimeout(() => {
         this.$router.push('/')

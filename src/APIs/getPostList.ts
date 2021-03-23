@@ -42,7 +42,7 @@ function getPostLastUpdateTimeString (post:Post) {
 
 function getImagesInPost (content:string) {
   const images = []
-  const reg = /<img\s+src="(([^"]|\\")*)"\s+\/>/gim
+  const reg = /<img\s+src="(([^"]|\\")*)"/gim
   let res = reg.exec(content)
   while (res !== null) {
     images.push(res[1])

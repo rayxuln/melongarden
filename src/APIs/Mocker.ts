@@ -198,6 +198,8 @@ class Mocker {
   constructor () {
     this.userHelper.register('ADogMan', '')
     this.userHelper.register('ACatMan', '')
+
+    this.postTest()
   }
 
   setLoginTokenCookie (token:string) {
@@ -210,15 +212,15 @@ class Mocker {
   }
 
   postTest () {
-    let p = this.postHelper.post(this.userHelper.getLoginUserIdByToken(this.loginUserToken), 'Welcome again everyone!1', 'Hi every one, this msg is from the Mocker!!!')
+    let p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!1', 'Hi every one, this msg is from the Mocker!!!')
     p.postLevelList[0].date = new Date('1995-12-17')
 
-    p.appendLevel(this.userHelper.getUserIdByName('ADogMan'), 'You are a fool, aren\'t you?')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?')
 
-    p = this.postHelper.post(this.userHelper.getLoginUserIdByToken(this.loginUserToken), 'Welcome again everyone!2', 'Hi every one, this msg is from the Mocker!!!')
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!2', 'Hi every one, this msg is from the Mocker!!!')
     p.postLevelList[0].date = new Date('2021-2-17')
 
-    p = this.postHelper.post(this.userHelper.getLoginUserIdByToken(this.loginUserToken), 'Welcome again everyone!3', 'Hi every one, this msg is from the Mocker!!!')
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!3', 'Hi every one, this msg is from the Mocker!!!')
     p.postLevelList[0].date = new Date('2020-3-8')
 
     this.postHelper.sortPosts()
