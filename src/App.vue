@@ -18,11 +18,11 @@
       </div>
       <div class="search-bar-right" v-if="display_login_info">
         <el-avatar size="small" shape="square"></el-avatar>
-        <div>UserName</div>
+        <div>{{ userName }}</div>
       </div>
       <div class="search-bar-right" v-if="!display_login_info">
         <el-button type="success">Sign Up</el-button>
-        <el-button>Sign In</el-button>
+        <el-button @click="onSignInButtonPressed">Sign In</el-button>
       </div>
     </div>
     </el-card>
@@ -39,7 +39,7 @@
           <div class="big-title">MelonGarden</div>
         </div>
       </div>
-      <div class="status">Members: 2332 Posts: 43</div>
+      <div class="status">Members: {{ $store.state.memberNum }} Posts: {{ $store.state.postNum }}</div>
     </el-card>
     <div class="main-body">
       <router-view v-slot="{ Component }">
@@ -58,15 +58,58 @@
 
 <script>
 /* eslint-disable */
+import APIs from '@/APIs'
+import { ElMessage } from 'element-plus'
+
+import Mocker from '@/APIs/Mocker'
+
 export default {
   name: 'App',
   data () {
     return {
       display_login_info: false,
-      search_bar_input: ""
+      search_bar_input: "",
+      userName: 'UserName',
+      userAvatar: ''
     }
   },
-  components: {
+  created () {
+    this.$watch(
+      () => this.$route.path,
+      (newPath, oldPath) => {
+        this.loadMembersPosts()
+      }
+    )
+  },
+  mounted () {
+    this.loadMembersPosts()
+  },
+  methods: {
+    onSignInButtonPressed () {
+      Mocker.loginTestUser()
+      Mocker.postTest()
+      this.$router.push('/?forceupdate')
+      setTimeout(() => {
+        this.$router.push('/')
+        this.loadMembersPosts()
+
+        APIs.checkToken(APIs.getLoginTokenCookie()).then((res) => {
+          this.display_login_info = res.hasLogin
+          this.userName = res.userName
+          this.userAvatar = res.userAvatar
+        }).catch((v) => {
+          ElMessage.error("check token fail: " + v)
+        })
+      }, 1000)
+    },
+    loadMembersPosts() {
+      APIs.getMembersAndPosts().then((v)=>{
+        this.$store.commit('memberNumChanged', v.members)
+        this.$store.commit('postNumChanged', v.posts)
+      }).catch((v) => {
+        ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      })
+    }
   }
 }
 </script>

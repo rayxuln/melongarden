@@ -4,7 +4,7 @@
     <div class="level-box">
       <div class="level-box-left">
         <div class="level-box-user-avatar"><el-avatar size="large" shape="square"></el-avatar></div>
-        <div class="level-box-user-name">{{ userName }}</div>
+        <div class="level-box-user-name">{{ userName }} <div v-if="isPoster"><el-tag type="warning">Poster</el-tag></div></div>
       </div>
       <div class="level-box-right">
         <div class="level-box-content" ref="content"></div>
@@ -26,7 +26,8 @@ import { Options, Vue } from 'vue-class-component'
     userName: String,
     content: String,
     level: Number,
-    date: String
+    date: String,
+    isPoster: Boolean
   },
   emits: ['replyTextClick'],
   mounted () {

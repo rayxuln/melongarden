@@ -11,6 +11,7 @@
         :level="l.level"
         :content="l.content"
         :date="l.date"
+        :isPoster="l.isPoster"
         @replyTextClick="onReplyTextClicked">
       </post-page-level>
     </div>
@@ -51,7 +52,8 @@ const TEMP_LEVELS = [
     userName: 'AGoodMan',
     content: '',
     level: -1,
-    date: '2021-3-17 17:45'
+    date: '2021-3-17 17:45',
+    isPoster: true
   },
   {
     userAvatarUrl: '',
