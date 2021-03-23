@@ -59,6 +59,7 @@
 <script>
 /* eslint-disable */
 import APIs from '@/APIs'
+import Tools from '@/APIs/Tools'
 import { ElMessage } from 'element-plus'
 
 import Mocker from '@/APIs/Mocker'
@@ -93,22 +94,17 @@ export default {
         this.$router.push('/')
         this.loadMembersPosts()
 
-        APIs.checkToken(APIs.getLoginTokenCookie()).then((res) => {
+        APIs.checkToken(Tools.getLoginTokenCookie()).then((res) => {
           this.display_login_info = res.hasLogin
           this.userName = res.userName
           this.userAvatar = res.userAvatar
         }).catch((v) => {
-          ElMessage.error("check token fail: " + v)
+          ElMessage.error("Check token fail. " + v)
         })
       }, 1000)
     },
     loadMembersPosts() {
-      APIs.getMembersAndPosts().then((v)=>{
-        this.$store.commit('memberNumChanged', v.members)
-        this.$store.commit('postNumChanged', v.posts)
-      }).catch((v) => {
-        ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
-      })
+      this.$store.dispatch('updateMembersPosts')
     }
   }
 }

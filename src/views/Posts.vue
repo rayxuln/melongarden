@@ -36,7 +36,7 @@
         <el-input placeholder="Type the title here..." maxlength="20" show-word-limit v-model="post_box_title"></el-input>
         <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
         <rich-text-editor v-model="post_box_textarea"></rich-text-editor>
-        <el-button type="primary">Post</el-button>
+        <el-button type="primary" @click="onPostButtonClicked">Post</el-button>
       </div>
     </el-card>
   </div>
@@ -128,6 +128,29 @@ var POST_CARD_LIST = [
         this.posts_is_empty = this.post_card_list.length === 0
       }).catch((v) => {
         ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      })
+    },
+    clearPostBox () {
+      this.post_box_title = ''
+      this.post_box_textarea = ''
+    },
+    onPostButtonClicked () {
+      if (this.post_box_title === '') {
+        ElMessage.error('The title mustn\'t be empty!')
+        return
+      }
+
+      APIs.post(this.post_box_title, this.post_box_textarea).then((v) => {
+        ElMessage.success('You\'ve just post a new post')
+        this.clearPostBox()
+        if (this.current_post_number !== 1) {
+          this.$router.push('/?cpn=1')
+        } else {
+          this.loadPosts()
+        }
+        this.$store.dispatch('updateMembersPosts')
+      }).catch((e) => {
+        ElMessage.error('Can\'t post. ' + e)
       })
     }
   }

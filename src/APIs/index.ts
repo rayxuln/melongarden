@@ -2,6 +2,7 @@
 import getMembersAndPosts from './getMembersAndPosts'
 import getPostList from './getPostList'
 import checkToken from './checkToken'
+import post from './post'
 
 class APIMidware {
   getMembersAndPosts () {
@@ -16,15 +17,8 @@ class APIMidware {
     return checkToken(token)
   }
 
-  getLoginTokenCookie () {
-    const cookie = decodeURIComponent(document.cookie)
-    const ca = cookie.split(';')
-    for (const c of ca) {
-      if (c.indexOf('token=') === 0) {
-        return c.substring('token='.length, c.length)
-      }
-    }
-    return ''
+  post (title:string, content:string) {
+    return post(title, content)
   }
 }
 

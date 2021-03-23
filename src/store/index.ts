@@ -1,3 +1,6 @@
+import APIs from '@/APIs'
+import { ElMessage } from 'element-plus'
+
 import { createStore } from 'vuex'
 
 export default createStore({
@@ -14,6 +17,15 @@ export default createStore({
     }
   },
   actions: {
+    updateMembersPosts (context) {
+      APIs.getMembersAndPosts().then((value) => {
+        const v = <{members:unknown, posts:unknown}> value
+        context.commit('memberNumChanged', v.members)
+        context.commit('postNumChanged', v.posts)
+      }).catch((v) => {
+        ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      })
+    }
   },
   modules: {
   }

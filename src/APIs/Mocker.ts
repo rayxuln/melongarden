@@ -226,10 +226,10 @@ const m:Mocker = new Mocker()
 
 export default m
 
-export function promiseHelper (v:unknown, timeout = -1, isReject = false):Promise<unknown> {
+export function promiseHelper (v:unknown, timeout = -1, f = 'Reject for noreson', isReject = false):Promise<unknown> {
   return new Promise((resolve, reject) => {
     if (isReject) {
-      reject(new Error('Reject All APIs'))
+      reject(new Error(f))
     } else {
       if (timeout <= 0) {
         resolve(v)

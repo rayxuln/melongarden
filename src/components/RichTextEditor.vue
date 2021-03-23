@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Tools from '@/APIs/Tools'
 import tinymce from 'tinymce/tinymce'
 import TheEditor from '@tinymce/tinymce-vue'
 import 'tinymce/themes/silver'
@@ -38,11 +39,7 @@ import { Options, Vue } from 'vue-class-component'
         paste_data_images: true,
         statusbar: false,
         elementpath: false,
-        images_upload_handler: (blobInfo, success, failure) => {
-          const img = 'data:image/jpeg;base64,' + blobInfo.base64()
-          console.log('About to upload a image')
-          success(img)
-        }
+        images_upload_handler: Tools.imagesUploadHandler()
       }
     }
   },
