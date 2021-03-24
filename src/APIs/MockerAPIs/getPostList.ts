@@ -1,5 +1,5 @@
-import Tools from './Tools'
-import Moker, { Post, promiseHelper } from './Mocker'
+import Tools from '../Tools'
+import Mocker, { Post, promiseHelper } from './Mocker'
 
 function getPostContent (post:Post) {
   if (post.postLevelList.length === 0) return ''
@@ -51,7 +51,7 @@ function genImage (small:string, big = '') {
 
 export default function (pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
   const posts = []
-  const res = Moker.postHelper.getPosts(pageSize, pageNumber, filter)
+  const res = Mocker.postHelper.getPosts(pageSize, pageNumber, filter)
   const rawPosts = res[0] as Array<Post>
   const postNum = res[1] as number
   for (const p of rawPosts) {
@@ -69,8 +69,8 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
       title: p.title,
       titleTags,
       content: getPostContent(p),
-      poster: Moker.userHelper.getUserNameById(p.getPoster()),
-      lastReplior: Moker.userHelper.getUserNameById(p.getLastReplior()),
+      poster: Mocker.userHelper.getUserNameById(p.getPoster()),
+      lastReplior: Mocker.userHelper.getUserNameById(p.getLastReplior()),
       updateTime: getPostLastUpdateTimeString(p),
       postId: p.postId,
       images

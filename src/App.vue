@@ -57,15 +57,15 @@
   </div>
 </template>
 
-<script>
-/* eslint-disable */
+<script lang="ts">
 import APIs from '@/APIs'
 import Tools from '@/APIs/Tools'
 import { ElMessage } from 'element-plus'
 
-import Mocker from '@/APIs/Mocker'
+import Mocker from '@/APIs/MockerAPIs/Mocker'
+import { Options, Vue } from 'vue-class-component'
 
-export default {
+@Options({
   name: 'App',
   data () {
     return {
@@ -78,7 +78,7 @@ export default {
   created () {
     this.$watch(
       () => this.$route.path,
-      (newPath, oldPath) => {
+      () => {
         this.loadMembersPosts()
       }
     )
@@ -91,36 +91,39 @@ export default {
   },
   methods: {
     onSignInButtonPressed () {
+      // Test Mocker APIs
       Mocker.loginTestUser()
       this.$router.push('/?logining')
       setTimeout(() => {
         this.$router.push('/')
         this.loadMembersPosts()
 
-        APIs.checkToken().then((res) => {
+        APIs.checkToken().then((vaule) => {
+          const v = vaule as { userName:string, userAvatar:string }
           this.display_login_info = true
-          this.userName = res.userName
-          this.userAvatar = res.userAvatar
+          this.userName = v.userName
+          this.userAvatar = v.userAvatar
         }).catch((v) => {
           this.display_login_info = false
-          ElMessage.error("Check token fail. " + v)
+          ElMessage.error('Check token fail. ' + v)
         })
       }, 1000)
     },
-    loadMembersPosts() {
+    loadMembersPosts () {
       this.$store.dispatch('updateMembersPosts')
     },
     onSearchButtonClicked () {
       const r = {
         path: this.$route.path,
-        query: {...this.$route.query, search: this.searchFilter, page: 1},
+        query: { ...this.$route.query, search: this.searchFilter, page: 1 },
         hash: this.$route.hash,
-        params: {...this.$route.params}
+        params: { ...this.$route.params }
       }
       this.$router.push(r)
     }
   }
-}
+})
+export default class App extends Vue {}
 </script>
 
 <style>

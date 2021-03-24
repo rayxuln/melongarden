@@ -1,8 +1,8 @@
-import Moker, { promiseHelper } from './Mocker'
+import Mocker, { promiseHelper } from './Mocker'
 
 export default function (postId:string):Promise<unknown> {
   let reject = false
-  const p = Moker.postHelper.getPostById(postId)
+  const p = Mocker.postHelper.getPostById(postId)
   let levelNum = 0
   let title = ''
   if (p === null) {

@@ -1,4 +1,4 @@
-import Tools from './Tools'
+import Tools from '../Tools'
 
 import Mocker, { promiseHelper } from './Mocker'
 

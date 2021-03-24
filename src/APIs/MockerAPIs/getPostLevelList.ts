@@ -1,16 +1,16 @@
-import Tools from './Tools'
-import Moker, { promiseHelper, PostLevel } from './Mocker'
+import Tools from '../Tools'
+import Mocker, { promiseHelper, PostLevel } from './Mocker'
 
 export default function (postId:string, pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
   const levels = []
   let levelNum = 0
-  const post = Moker.postHelper.getPostById(postId)
+  const post = Mocker.postHelper.getPostById(postId)
   if (post !== null) {
     const res = post.getLevels(pageSize, pageNumber, filter)
     const rawLevels = res[0] as Array<PostLevel>
     levelNum = res[1] as number
     for (const l of rawLevels) {
-      const user = Moker.userHelper.getUser(l.userId)
+      const user = Mocker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
       let userAvatarUrl = ''
       if (user !== null) {
@@ -24,7 +24,7 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         level: l.level,
         date: Tools.getProperDateString(l.date),
         isPoster: post.getFirstLevel().userId === l.userId,
-        isYou: l.userId === Moker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
+        isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
       })
     }
   }

@@ -1,12 +1,12 @@
-import Tools from './Tools'
-import Moker, { promiseHelper } from './Mocker'
+import Tools from '../Tools'
+import Mocker, { promiseHelper } from './Mocker'
 
 export default function ():Promise<unknown> {
   const token = Tools.getLoginTokenCookie()
   let userName = ''
   let userAvatar = ''
   let reject = false
-  const user = Moker.userHelper.getUserByToken(token)
+  const user = Mocker.userHelper.getUserByToken(token)
   if (user !== null) {
     userName = user!.userName
     userAvatar = user!.userAvatarUrl

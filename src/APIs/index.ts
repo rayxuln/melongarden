@@ -1,39 +1,35 @@
 
-import getMembersAndPosts from './getMembersAndPosts'
-import getPostList from './getPostList'
-import checkToken from './checkToken'
-import post from './post'
-import getPostInfo from './getPostInfo'
-import getPostLevelList from './getPostLevelList'
-import reply from './reply'
+import MokerAPIs from './MockerAPIs'
+
+const APIs = MokerAPIs
 
 class APIMidware {
   getMembersAndPosts () {
-    return getMembersAndPosts()
+    return APIs.getMembersAndPosts()
   }
 
   getPostList (pageSize:number, pageNumber:number, filter:string) {
-    return getPostList(pageSize, pageNumber, filter)
+    return APIs.getPostList(pageSize, pageNumber, filter)
   }
 
   checkToken () {
-    return checkToken()
+    return APIs.checkToken()
   }
 
   post (title:string, content:string) {
-    return post(title, content)
+    return APIs.post(title, content)
   }
 
   getPostInfo (postId:string) {
-    return getPostInfo(postId)
+    return APIs.getPostInfo(postId)
   }
 
   getPostLevelList (postId:string, pageSize:number, pageNumber:number, filter:string) {
-    return getPostLevelList(postId, pageSize, pageNumber, filter)
+    return APIs.getPostLevelList(postId, pageSize, pageNumber, filter)
   }
 
   reply (postId:string, content:string) {
-    return reply(postId, content)
+    return APIs.reply(postId, content)
   }
 }
 
