@@ -7,7 +7,9 @@ function getPostContent (post:Post) {
   const DOT_LENGTH = 3
   let content = post.postLevelList[0].content
   if (content === '') return ''
-  content = content.replace(/<[^<>]+>/g, '')
+  // content = content.replace(/<[^<>]+>/g, '')
+  // content = Tools.htmlUnescape(content)
+  content = Tools.extractTextFromHtml(content)
   if (content.length > MAX_CONTENT_LENGTH) {
     content = content.substring(0, MAX_CONTENT_LENGTH - DOT_LENGTH)
     return content.padEnd(MAX_CONTENT_LENGTH, '.')
@@ -29,10 +31,10 @@ function getPostLastUpdateTimeString (post:Post) {
 
 function getImagesInPost (content:string) {
   const images = []
-  const reg = /<img((?!scr=")[.\s])+src="(([^"]|\\")*)"/gim
+  const reg = /<img((?!scr=")[^<])+src="(([^"]|\\")*)"/gim
   let res = reg.exec(content)
   while (res !== null && images.length < 3) {
-    images.push(res[2])
+    images.push(Tools.htmlUnescape(res[2]))
     res = reg.exec(content)
   }
   return images

@@ -49,6 +49,7 @@ import { Options, Vue } from 'vue-class-component'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import PostPageLevel from '@/components/PostPageLevel.vue'
 import { ElMessage } from 'element-plus'
+import { PrismHighlightAll } from '@/plugins/prism_wrap'
 
 @Options({
   components: {
@@ -120,6 +121,10 @@ import { ElMessage } from 'element-plus'
         return APIs.getPostLevelList(this.postId, this.pageSize, this.currentPage)
       }).then((v) => {
         this.levelList = v
+
+        this.$nextTick(() => {
+          PrismHighlightAll()
+        })
       }).catch((e) => {
         ElMessage.error('Error happing while loading post page. ' + e)
       }).then(() => {

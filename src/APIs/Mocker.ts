@@ -163,7 +163,7 @@ class PostHelper {
     p.appendLevel(posterId, content)
     let hasInserted = false
     for (let i = 0; i < this.postList.length; ++i) {
-      if (p.getLastLevel().date >= this.postList[i].getLastLevel().date) {
+      if (!this.postList[i].isPinned && p.getLastLevel().date >= this.postList[i].getLastLevel().date) {
         this.postList.splice(i, 0, p)
         hasInserted = true
         break

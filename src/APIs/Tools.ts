@@ -57,6 +57,25 @@ class Tools {
       return this.getDateTime(date)
     }
   }
+
+  htmlUnescape (html:string) {
+    return html.replace(/&lt;|&gt;|&amp;|&quot;|&nbsp;/g, (match:string, pos:number, text:string):string => {
+      switch (match) {
+        case '&lt;': return '<'
+        case '&gt;': return '>'
+        case '&amp;': return '&'
+        case '&quot;': return '"'
+        case '&nbsp;': return ' '
+      }
+      return text
+    })
+  }
+
+  extractTextFromHtml (html:string) {
+    const e = document.createElement('div')
+    e.innerHTML = html
+    return e.innerText
+  }
 }
 
 const ins = new Tools()
