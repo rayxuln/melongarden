@@ -3,7 +3,7 @@
     <el-card shadow="never" class="post-page-body">
     <div v-loading="isLoadingPage">
     <!--div class="post-page-title">{{ title }}</div-->
-    <el-page-header title="" :content="title" @back="$router.go(-1)"></el-page-header>
+    <el-page-header title="" :content="title" @back="$router.push('/')"></el-page-header>
 
     <div class="post-page-level-container" v-for="l in levelList" :key="l.level">
       <post-page-level
@@ -29,7 +29,7 @@
       :page-size="pageSize"
       :page-count="5"
       :current-page="currentPage"
-      :total="levelNum"
+      :total="filteredLevelNum"
       @current-change="onCurrentPageChanged">
     </el-pagination>
 
@@ -65,6 +65,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       isLoadingPage: false,
       levelList: [],
       levelNum: 0,
+      filteredLevelNum: 0,
       pageSize: 2
     }
   },
@@ -110,6 +111,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       if (!currentPage) {
         currentPage = 1
       }
+      const filter = this.$route.query.search || ''
 
       this.isLoadingPage = true
 
@@ -117,10 +119,13 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         const v = value as {levelNum:number, title:string}
         this.levelNum = v.levelNum
         this.title = v.title
+        this.currentPage = -1
+        return APIs.getPostLevelList(this.postId, this.pageSize, currentPage, filter)
+      }).then((value) => {
+        const v = value as { levels:unknown, levelNum:number }
+        this.levelList = v.levels
+        this.filteredLevelNum = v.levelNum
         this.currentPage = currentPage
-        return APIs.getPostLevelList(this.postId, this.pageSize, this.currentPage)
-      }).then((v) => {
-        this.levelList = v
 
         this.$nextTick(() => {
           PrismHighlightAll()
@@ -132,7 +137,13 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       })
     },
     onCurrentPageChanged (pageNumber:number) {
-      this.$router.push(`/post?post_id=${this.postId}&page=${pageNumber}`)
+      const r = {
+        path: this.$route.path,
+        query: { ...this.$route.query, page: pageNumber },
+        hash: this.$route.hash,
+        params: { ...this.$route.params }
+      }
+      this.$router.push(r)
     }
   }
 })

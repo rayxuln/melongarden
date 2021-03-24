@@ -49,9 +49,11 @@ function genImage (small:string, big = '') {
   }
 }
 
-export default function (pageSize:number, pageNumber:number):Promise<unknown> {
+export default function (pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
   const posts = []
-  const rawPosts = Moker.postHelper.getPosts(pageSize, pageNumber)
+  const res = Moker.postHelper.getPosts(pageSize, pageNumber, filter)
+  const rawPosts = res[0] as Array<Post>
+  const postNum = res[1] as number
   for (const p of rawPosts) {
     const images:Array<Record<string, string>> = []
     const imageSources = p.postLevelList.length > 0 ? getImagesInPost(p.postLevelList[0].content) : []
@@ -74,5 +76,5 @@ export default function (pageSize:number, pageNumber:number):Promise<unknown> {
       images
     })
   }
-  return promiseHelper(posts, 1000)
+  return promiseHelper({ posts, postNum }, 1000)
 }

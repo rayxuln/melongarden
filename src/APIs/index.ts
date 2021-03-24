@@ -12,8 +12,8 @@ class APIMidware {
     return getMembersAndPosts()
   }
 
-  getPostList (pageSize:number, pageNumber:number) {
-    return getPostList(pageSize, pageNumber)
+  getPostList (pageSize:number, pageNumber:number, filter:string) {
+    return getPostList(pageSize, pageNumber, filter)
   }
 
   checkToken (token:string) {
@@ -28,8 +28,8 @@ class APIMidware {
     return getPostInfo(postId)
   }
 
-  getPostLevelList (postId:string, pageSize:number, pageNumber:number) {
-    return getPostLevelList(postId, pageSize, pageNumber)
+  getPostLevelList (postId:string, pageSize:number, pageNumber:number, filter:string) {
+    return getPostLevelList(postId, pageSize, pageNumber, filter)
   }
 
   reply (postId:string, content:string) {

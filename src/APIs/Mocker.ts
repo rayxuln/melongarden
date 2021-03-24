@@ -86,7 +86,7 @@ class UserHelper {
   }
 }
 
-class PostLevel {
+export class PostLevel {
   userId = ''
   content = ''
   date:Date
@@ -98,6 +98,10 @@ class PostLevel {
     this.userId = userId
     this.content = content
     this.level = level
+  }
+
+  contain (key:string):boolean {
+    return this.content.includes(key)
   }
 }
 
@@ -131,15 +135,25 @@ export class Post {
     return this.postLevelList[this.postLevelList.length - 1].userId
   }
 
-  getLevels (pageSize:number, pageNumber:number):Array<PostLevel> {
-    if (pageSize <= 0) return []
+  getLevels (pageSize:number, pageNumber:number, key:string):Array<unknown> {
+    if (pageSize <= 0) return [[], 0]
+    let postLevelList = []
+    if (key === '') {
+      postLevelList = this.postLevelList
+    } else {
+      for (const l of this.postLevelList) {
+        if (l.contain(key)) {
+          postLevelList.push(l)
+        }
+      }
+    }
     const start = Math.max(0, (pageNumber - 1) * pageSize)
-    const end = Math.min(this.postLevelList.length, pageNumber * pageSize)
+    const end = Math.min(postLevelList.length, pageNumber * pageSize)
     const res = []
     for (let i = start; i < end; ++i) {
-      res.push(this.postLevelList[i])
+      res.push(postLevelList[i])
     }
-    return res
+    return [res, postLevelList.length]
   }
 
   getLastLevel ():PostLevel {
@@ -152,6 +166,14 @@ export class Post {
 
   getReplyNum ():number {
     return this.postLevelList.length
+  }
+
+  contain (key:string):boolean {
+    if (this.title.includes(key)) return true
+    for (const pl of this.postLevelList) {
+      if (pl.contain(key)) return true
+    }
+    return false
   }
 }
 
@@ -184,15 +206,23 @@ class PostHelper {
     }
   }
 
-  getPosts (pageSize:number, pageNumber:number) {
-    if (pageSize <= 0) return []
+  getPosts (pageSize:number, pageNumber:number, key:string) {
+    if (pageSize <= 0) return [[], 0]
+    let postList = []
+    if (key === '') {
+      postList = this.postList
+    } else {
+      for (const p of this.postList) {
+        if (p.contain(key)) postList.push(p)
+      }
+    }
     const start = Math.max(0, (pageNumber - 1) * pageSize)
-    const end = Math.min(this.postList.length, pageNumber * pageSize)
+    const end = Math.min(postList.length, pageNumber * pageSize)
     const res = []
     for (let i = start; i < end; ++i) {
-      res.push(this.postList[i])
+      res.push(postList[i])
     }
-    return res
+    return [res, postList.length]
   }
 
   getPostNum () {
@@ -245,6 +275,13 @@ class Mocker {
     p.postLevelList[0].date = new Date('1995-12-17')
 
     p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?1')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?2')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?3')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?4')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?5')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?6')
+    p.appendLevel(this.userHelper.getUserIdByName('ACatMan'), 'You are a fool, aren\'t you?7')
 
     p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!2', 'Hi every one, this msg is from the Mocker!!!2')
     p.postLevelList[0].date = new Date('2021-2-17')

@@ -76,6 +76,18 @@ class Tools {
     e.innerHTML = html
     return e.innerText
   }
+
+  locationSearchToQuery (str:string) {
+    if (!str.includes('?')) return {}
+    str = str.substr(1)
+    const res:Record<string, unknown> = {}
+    const ss = str.split('&')
+    for (const s of ss) {
+      const kv = s.split('=')
+      res[kv[0]] = kv[1]
+    }
+    return res
+  }
 }
 
 const ins = new Tools()

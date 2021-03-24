@@ -36,9 +36,6 @@
 <script>
 import { Options, Vue } from 'vue-class-component'
 
-const MAX_CONTENT_LEGNTH = 55
-const MAX_TITLE_LEGNTH = 20
-
 @Options({
   props: {
     replyNum: Number,

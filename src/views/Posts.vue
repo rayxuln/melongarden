@@ -30,7 +30,7 @@
         layout="prev, pager, next, jumper"
         :page-size="page_size"
         :page-count="5"
-        :total="$store.state.postNum"
+        :total="postNum"
         :current-page="current_post_number"
         @current-change="onCurrentPageChanged">
     </el-pagination>
@@ -65,7 +65,8 @@ import { ElMessage } from 'element-plus'
       post_box_post_button_loading: false,
       current_post_number: 0,
       page_size: 3,
-      isPageLoading: false
+      isPageLoading: false,
+      postNum: 0
     }
   },
   components: {
@@ -87,16 +88,25 @@ import { ElMessage } from 'element-plus'
   },
   methods: {
     onCurrentPageChanged (pageNumber:number) {
-      this.$router.push(`/?cpn=${pageNumber}`)
+      const r = {
+        path: this.$route.path,
+        query: { ...this.$route.query, page: pageNumber },
+        hash: this.$route.hash,
+        params: { ...this.$route.params }
+      }
+      this.$router.push(r)
     },
     loadPosts () {
       this.isPageLoading = true
-      this.current_post_number = Number.parseInt(this.$route.query.cpn) // cpn == current_post_number
+      this.current_post_number = Number.parseInt(this.$route.query.page)
       if (!this.current_post_number) {
         this.current_post_number = 1
       }
-      APIs.getPostList(this.page_size, this.current_post_number).then((posts) => {
-        this.post_card_list = posts
+      const filter = this.$route.query.search || ''
+      APIs.getPostList(this.page_size, this.current_post_number, filter).then((value) => {
+        const v = value as { posts:unknown, postNum:unknown }
+        this.post_card_list = v.posts
+        this.postNum = v.postNum
 
         this.posts_is_empty = this.post_card_list.length === 0
       }).catch((v) => {
@@ -118,8 +128,8 @@ import { ElMessage } from 'element-plus'
       APIs.post(this.post_box_title, this.post_box_textarea).then(() => {
         ElMessage.success('You\'ve just posted a new post')
         this.clearPostBox()
-        if (this.current_post_number !== 1) {
-          this.$router.push('/?cpn=1')
+        if (this.current_post_number !== 1 || this.$route.fullPath !== '/?page=1') {
+          this.$router.push('/?page=1')
         } else {
           this.loadPosts()
         }

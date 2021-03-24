@@ -9,10 +9,10 @@
         <el-input
           placeholder="Type something to search"
           prefix-icon="el-icon-search"
-          v-model="search_bar_input"
+          v-model="searchFilter"
           clearable>
           <template #append>
-            <el-button icon="el-icon-search"></el-button>
+            <el-button icon="el-icon-search" @click="onSearchButtonClicked"></el-button>
           </template>
         </el-input>
       </div>
@@ -69,9 +69,9 @@ export default {
   data () {
     return {
       display_login_info: false,
-      search_bar_input: "",
       userName: 'UserName',
-      userAvatar: ''
+      userAvatar: '',
+      searchFilter: ''
     }
   },
   created () {
@@ -83,6 +83,8 @@ export default {
     )
   },
   mounted () {
+    const query = Tools.locationSearchToQuery(window.location.search)
+    this.searchFilter = query.search || ''
     this.loadMembersPosts()
   },
   methods: {
@@ -104,6 +106,15 @@ export default {
     },
     loadMembersPosts() {
       this.$store.dispatch('updateMembersPosts')
+    },
+    onSearchButtonClicked () {
+      const r = {
+        path: this.$route.path,
+        query: {...this.$route.query, search: this.searchFilter, page: 1},
+        hash: this.$route.hash,
+        params: {...this.$route.params}
+      }
+      this.$router.push(r)
     }
   }
 }

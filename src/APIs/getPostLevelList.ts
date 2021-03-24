@@ -1,11 +1,14 @@
 import Tools from './Tools'
-import Moker, { promiseHelper } from './Mocker'
+import Moker, { promiseHelper, PostLevel } from './Mocker'
 
-export default function (postId:string, pageSize:number, pageNumber:number):Promise<unknown> {
+export default function (postId:string, pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
   const levels = []
+  let levelNum = 0
   const post = Moker.postHelper.getPostById(postId)
   if (post !== null) {
-    const rawLevels = post.getLevels(pageSize, pageNumber)
+    const res = post.getLevels(pageSize, pageNumber, filter)
+    const rawLevels = res[0] as Array<PostLevel>
+    levelNum = res[1] as number
     for (const l of rawLevels) {
       const user = Moker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
@@ -25,5 +28,5 @@ export default function (postId:string, pageSize:number, pageNumber:number):Prom
       })
     }
   }
-  return promiseHelper(levels, 1000)
+  return promiseHelper({ levels, levelNum }, 1000)
 }
