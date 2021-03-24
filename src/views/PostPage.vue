@@ -119,7 +119,9 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         const v = value as {levelNum:number, title:string}
         this.levelNum = v.levelNum
         this.title = v.title
-        this.currentPage = -1
+        if (this.currentPage !== currentPage) {
+          this.currentPage = -1
+        }
         return APIs.getPostLevelList(this.postId, this.pageSize, currentPage, filter)
       }).then((value) => {
         const v = value as { levels:unknown, levelNum:number }

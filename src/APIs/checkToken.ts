@@ -1,17 +1,20 @@
+import Tools from './Tools'
 import Moker, { promiseHelper } from './Mocker'
 
-export default function (token:string):Promise<unknown> {
-  const hasLogin = Moker.userHelper.getLoginUserIdByToken(token) !== ''
+export default function ():Promise<unknown> {
+  const token = Tools.getLoginTokenCookie()
   let userName = ''
   let userAvatar = ''
-  if (hasLogin) {
-    const user = Moker.userHelper.getUserByToken(token)
+  let reject = false
+  const user = Moker.userHelper.getUserByToken(token)
+  if (user !== null) {
     userName = user!.userName
     userAvatar = user!.userAvatarUrl
+  } else {
+    reject = true
   }
   return promiseHelper({
     userName,
-    userAvatar,
-    hasLogin
-  }, 1000)
+    userAvatar
+  }, 1000, 'Invalid token', reject)
 }

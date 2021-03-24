@@ -36,7 +36,8 @@ import { Options, Vue } from 'vue-class-component'
     return {
       inputValue: '',
       init: {
-        skin_url: '/tinymce/skins/ui/oxide',
+        skin_url: process.env.BASE_URL + 'tinymce/skins/ui/oxide',
+        content_css: process.env.BASE_URL + 'tinymce/skins/content/default/content.css',
         height: 300,
         plugins: 'image paste advlist table lists code emoticons autolink link hr codesample',
         toolbar: 'emoticons forecolor backcolor bold italic underline strikethrough | codesample link image | alignleft aligncenter alignright alignjustify | h1 h2 h3 blockquote table numlist bullist | hr styleselect code',
@@ -46,7 +47,7 @@ import { Options, Vue } from 'vue-class-component'
         statusbar: false,
         elementpath: false,
         images_upload_handler: null,
-        emoticons_database_url: '/tinymce/emojis/emojis.js',
+        emoticons_database_url: process.env.BASE_URL + 'tinymce/emojis/emojis.js',
         codesample_global_prismjs: true
       }
     }

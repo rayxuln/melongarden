@@ -16,8 +16,8 @@ class APIMidware {
     return getPostList(pageSize, pageNumber, filter)
   }
 
-  checkToken (token:string) {
-    return checkToken(token)
+  checkToken () {
+    return checkToken()
   }
 
   post (title:string, content:string) {

@@ -2,7 +2,7 @@
   <div class="home">
     <el-menu default-active="/" mode="horizontal" :router="true">
       <el-menu-item index="/">Posts</el-menu-item>
-      <el-menu-item index="/images">Images</el-menu-item>
+      <el-menu-item index="'/images'">Images</el-menu-item>
     </el-menu>
 
     <router-view v-slot="{ Component }">

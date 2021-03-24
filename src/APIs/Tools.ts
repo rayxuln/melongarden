@@ -1,9 +1,10 @@
 
 class Tools {
   getLoginTokenCookie () {
-    const cookie = decodeURIComponent(document.cookie)
+    const cookie = document.cookie
     const ca = cookie.split(';')
-    for (const c of ca) {
+    for (let c of ca) {
+      c = c.trim()
       if (c.indexOf('token=') === 0) {
         return c.substring('token='.length, c.length)
       }

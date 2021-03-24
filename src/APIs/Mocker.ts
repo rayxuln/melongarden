@@ -262,7 +262,7 @@ class Mocker {
   }
 
   setLoginTokenCookie (token:string) {
-    document.cookie = `token=${token}; path=/`
+    document.cookie = `token=${token};path=/;`
   }
 
   loginTestUser () {

@@ -10,6 +10,7 @@
           placeholder="Type something to search"
           prefix-icon="el-icon-search"
           v-model="searchFilter"
+          @change="onSearchButtonClicked"
           clearable>
           <template #append>
             <el-button icon="el-icon-search" @click="onSearchButtonClicked"></el-button>
@@ -83,6 +84,7 @@ export default {
     )
   },
   mounted () {
+    console.log(process.env.BASE_URL)
     const query = Tools.locationSearchToQuery(window.location.search)
     this.searchFilter = query.search || ''
     this.loadMembersPosts()
@@ -90,16 +92,17 @@ export default {
   methods: {
     onSignInButtonPressed () {
       Mocker.loginTestUser()
-      this.$router.push('/?forceupdate')
+      this.$router.push('/?logining')
       setTimeout(() => {
         this.$router.push('/')
         this.loadMembersPosts()
 
-        APIs.checkToken(Tools.getLoginTokenCookie()).then((res) => {
-          this.display_login_info = res.hasLogin
+        APIs.checkToken().then((res) => {
+          this.display_login_info = true
           this.userName = res.userName
           this.userAvatar = res.userAvatar
         }).catch((v) => {
+          this.display_login_info = false
           ElMessage.error("Check token fail. " + v)
         })
       }, 1000)
