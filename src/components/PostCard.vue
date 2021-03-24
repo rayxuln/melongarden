@@ -7,6 +7,9 @@
 </div>
 <div class="post-card-center">
   <div class="post-card-title">
+  <span class="tag-container" v-for="t in titleTags" :key="t">
+    <el-tag :type="t.type">{{ t.tag }}</el-tag>
+  </span>
   <router-link :to="routePath">{{ title }} </router-link>
   </div>
   <div class="post-card-content">
@@ -40,6 +43,13 @@ const MAX_TITLE_LEGNTH = 20
   props: {
     replyNum: Number,
     title: String,
+    titleTags: {
+      type: Array,
+      default: [
+        { type: 'warning', tag: 'Pin' },
+        { type: 'info', tag: 'Edited' }
+      ]
+    },
     content: String,
     poster: String,
     lastReplior: String,
@@ -110,5 +120,9 @@ export default class PostCard extends Vue {}
 
 .post-card-left > .el-card{
   padding: 10px;
+}
+
+.post-card-title > .tag-container > .el-tag{
+  margin-right: 5px;
 }
 </style>

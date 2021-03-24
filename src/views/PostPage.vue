@@ -2,7 +2,8 @@
   <div class="post-page">
     <el-card shadow="never" class="post-page-body">
     <div v-loading="isLoadingPage">
-    <div class="post-page-title">{{ title }}</div>
+    <!--div class="post-page-title">{{ title }}</div-->
+    <el-page-header title="" :content="title" @back="$router.go(-1)"></el-page-header>
 
     <div class="post-page-level-container" v-for="l in levelList" :key="l.level">
       <post-page-level
@@ -117,10 +118,10 @@ import { ElMessage } from 'element-plus'
         this.title = v.title
         this.currentPage = currentPage
         return APIs.getPostLevelList(this.postId, this.pageSize, this.currentPage)
-      }).catch((e) => {
-        ElMessage.error('Error happing while loading post page. ' + e)
       }).then((v) => {
         this.levelList = v
+      }).catch((e) => {
+        ElMessage.error('Error happing while loading post page. ' + e)
       }).then(() => {
         this.isLoadingPage = false
       })
@@ -168,6 +169,10 @@ export default class PostPage extends Vue {}
 .reply-box-title{
   font-size: 32px;
   margin: 5px;
+}
+
+.el-page-header{
+  margin-bottom: 15px;
 }
 
 </style>

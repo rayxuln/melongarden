@@ -56,9 +56,14 @@ export default function (pageSize:number, pageNumber:number):Promise<unknown> {
     imageSources.forEach(i => {
       images.push(genImage(i))
     })
+
+    const titleTags = []
+    if (p.isPinned) titleTags.push({ type: 'warning', tag: 'Pin' })
+
     posts.push({
       replyNum: p.getReplyNum(),
       title: p.title,
+      titleTags,
       content: getPostContent(p),
       poster: Moker.userHelper.getUserNameById(p.getPoster()),
       lastReplior: Moker.userHelper.getUserNameById(p.getLastReplior()),

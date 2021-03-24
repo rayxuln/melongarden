@@ -9,6 +9,7 @@
         <post-card
           :replyNum="p.replyNum"
           :title="p.title"
+          :titleTags="p.titleTags"
           :content="p.content"
           :poster="p.poster"
           :lastReplior="p.lastReplior"

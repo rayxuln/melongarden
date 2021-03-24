@@ -91,6 +91,7 @@ class PostLevel {
   content = ''
   date:Date
   level = -1
+  isEdited = false
 
   constructor (userId:string, content:string, level:number) {
     this.date = new Date()
@@ -104,6 +105,7 @@ export class Post {
   postLevelList:Array<PostLevel> = []
   title = ''
   postId = ''
+  isPinned = false
 
   constructor (title:string) {
     this.title = title
@@ -173,6 +175,15 @@ class PostHelper {
     return p
   }
 
+  pinPost (postId:string) {
+    const post = this.getPostById(postId)
+    if (post === null) throw new Error('postId is invalid')
+    if (!post.isPinned) {
+      post.isPinned = true
+      this.sortPosts()
+    }
+  }
+
   getPosts (pageSize:number, pageNumber:number) {
     if (pageSize <= 0) return []
     const start = Math.max(0, (pageNumber - 1) * pageSize)
@@ -189,7 +200,12 @@ class PostHelper {
   }
 
   sortPosts () {
-    this.postList.sort((a:Post, b:Post) => b.getLastLevel().date.getTime() - a.getLastLevel().date.getTime())
+    this.postList.sort((a:Post, b:Post) => {
+      if (a.isPinned === b.isPinned) {
+        return b.getLastLevel().date.getTime() - a.getLastLevel().date.getTime()
+      }
+      return a.isPinned ? -1 : 1
+    })
   }
 
   getPostById (postId:string) {
@@ -236,7 +252,15 @@ class Mocker {
     p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'Welcome again everyone!3', 'Hi every one, this msg is from the Mocker!!!3')
     p.postLevelList[0].date = new Date('2020-3-8')
 
-    this.postHelper.sortPosts()
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'It should be pinned1', 'Hi every one, this msg is from the Mocker!!!4')
+    p.postLevelList[0].date = new Date('2019-4-1')
+    this.postHelper.pinPost(p.postId)
+
+    p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'It should be pinned2', 'Hi every one, this msg is from the Mocker!!!4')
+    p.postLevelList[0].date = new Date('2019-4-2')
+    this.postHelper.pinPost(p.postId)
+
+    // this.postHelper.sortPosts()
   }
 }
 
