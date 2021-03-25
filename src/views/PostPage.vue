@@ -14,7 +14,8 @@
         :date="l.date"
         :isPoster="l.isPoster"
         :isYou="l.isYou"
-        @replyTextClick="onReplyTextClicked">
+        @replyTextClick="onReplyTextClicked"
+        @deleteTextClick="onDeleteTextClicked">
       </post-page-level>
     </div>
 
@@ -104,6 +105,13 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
     },
     onReplyTextClicked () {
       window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
+    },
+    onDeleteTextClicked () {
+      this.$confirm('Are you sure to delete this level?', 'Warning', {
+        confirmButtonText: 'Of caurse',
+        cancelButtonText: 'No sure yet',
+        type: 'warning'
+      })
     },
     loadLevels () {
       this.postId = this.$route.query.post_id

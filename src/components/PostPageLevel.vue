@@ -11,12 +11,17 @@
         </div>
       </div>
       <div class="level-box-right">
-        <div class="level-box-content" ref="content"></div>
+        <rich-text-editor v-if="displayEditor" v-model="editContent"></rich-text-editor>
+        <div v-else class="level-box-content" ref="content"></div>
         <div class="level-box-corner">
-          <span> L{{ level }} {{ date }}
+          <span v-if="displayEditor">L{{ level }}
+            <el-link type="primary" @click.prevent>Save</el-link> |
+            <el-link type="primary" @click.prevent="displayEditor = false">Cancel</el-link>
+          </span>
+          <span v-else> L{{ level }} {{ date }}
             <el-link type="primary" @click.prevent="$emit('replyTextClick')">Reply</el-link>
-            <span v-if="isYou"> | <el-link type="primary" @click.prevent>Edit</el-link></span>
-            <span v-if="canDelete"> | <el-link type="primary" @click.prevent>Delete</el-link></span>
+            <span v-if="isYou"> | <el-link type="primary" @click.prevent="displayEditor = true">Edit</el-link></span>
+            <span v-if="canDelete"> | <el-link type="primary" @click.prevent="$emit('deleteTextClick')">Delete</el-link></span>
           </span>
         </div>
       </div>
@@ -25,8 +30,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+import RichTextEditor from '@/components/RichTextEditor.vue'
 
 @Options({
   props: {
@@ -36,20 +42,50 @@ import { Options, Vue } from 'vue-class-component'
     level: Number,
     date: String,
     isPoster: Boolean,
-    isYou: Boolean
+    isYou: Boolean,
+    editMode: {
+      type: Boolean,
+      default: false
+    }
   },
-  emits: ['replyTextClick'],
+  components: {
+    'rich-text-editor': RichTextEditor
+  },
+  emits: ['replyTextClick', 'deleteTextClick'],
+  data () {
+    return {
+      displayEditor: false,
+      editContent: '666'
+    }
+  },
   computed: {
     canDelete () {
       return this.isYou
     }
   },
   mounted () {
-    this.$refs.content.innerHTML = this.content
+    this.showContent(this.content)
   },
   watch: {
     content (newValue) {
-      this.$refs.content.innerHTML = newValue
+      this.showContent(newValue)
+    },
+    editMode (newValue) {
+      this.displayEditor = newValue
+    },
+    displayEditor (newValue) {
+      if (newValue) {
+        this.editContent = this.content
+      } else {
+        this.$nextTick(() => {
+          this.showContent(this.content)
+        })
+      }
+    }
+  },
+  methods: {
+    showContent (html:string) {
+      this.$refs.content.innerHTML = html
     }
   }
 })
@@ -69,13 +105,20 @@ export default class PostPageLevel extends Vue {}
   background-color: rgb(247, 249, 251);
   min-height: 300px;
   border-right: 1px solid #EBEEF5;
+  flex: 1;
 }
 
 .level-box-right{
-  width: 100%;
+  flex: 10;
   padding: 15px;
   display: flex;
   flex-direction: column;
+  max-width: 82.55%;
+}
+
+.level-box-content{
+  height: 100%;
+  overflow-x: scroll;
 }
 
 .level-box-user-avatar{

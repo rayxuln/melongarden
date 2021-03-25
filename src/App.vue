@@ -93,9 +93,15 @@ import { Options, Vue } from 'vue-class-component'
     onSignInButtonPressed () {
       // Test Mocker APIs
       Mocker.loginTestUser()
-      this.$router.push('/?logining')
+      const r = {
+        path: this.$route.path,
+        query: { ...this.$route.query, login: 'yes' },
+        hash: this.$route.hash,
+        params: { ...this.$route.params }
+      }
+      this.$router.push(r)
       setTimeout(() => {
-        this.$router.push('/')
+        this.$router.go(-1)
         this.loadMembersPosts()
 
         APIs.checkToken().then((vaule) => {

@@ -61,6 +61,7 @@ import { Options, Vue } from 'vue-class-component'
   },
   mounted () {
     tinymce.init({})
+    this.inputValue = this.modelValue
   },
   watch: {
     modelValue (newValue) {
