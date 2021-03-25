@@ -3,7 +3,25 @@
 <el-card shadow="hover">
 <div class="post-card-container">
 <div class="post-card-left">
-  <el-card shadow="never">{{ replyNum }}</el-card>
+  <div class="post-card-left-reply-num"><div>{{ replyNum }}</div></div>
+  <div class="post-card-left-like-dislike">
+  <span>
+  <el-link
+    :type="hasLike === 1 ? 'danger' : 'primary'"
+    @click.prevent :underline="false">
+    <i class="el-icon-caret-top"></i>
+    {{ likeNum }}
+  </el-link>
+  </span>
+  <span>
+  <el-link
+    :type="hasLike === 2 ? 'danger' : 'primary'"
+    @click.prevent :underline="false">
+    <i class="el-icon-caret-bottom"></i>
+    {{ dislikeNum }}
+  </el-link>
+  </span>
+  </div>
 </div>
 <div class="post-card-center">
   <div class="post-card-title">
@@ -52,7 +70,19 @@ import { Options, Vue } from 'vue-class-component'
     lastReplior: String,
     updateTime: String,
     images: Array,
-    routePath: String
+    routePath: String,
+    hasLike: {
+      type: Number,
+      default: 0 // 1 = like, 2 = dislike
+    },
+    likeNum: {
+      type: Number,
+      default: 0
+    },
+    dislikeNum: {
+      type: Number,
+      default: 0
+    }
   },
   computed: {
     displayContent () {
@@ -115,8 +145,18 @@ export default class PostCard extends Vue {}
   margin-top: 15px;
 }
 
-.post-card-left > .el-card{
-  padding: 10px;
+.post-card-left-reply-num{
+  border: 1px solid #d7dae2;
+  border-radius: 4px;
+  text-align: center;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.post-card-left-like-dislike{
+  margin-top: 15px;
 }
 
 .post-card-title > .tag-container > .el-tag{

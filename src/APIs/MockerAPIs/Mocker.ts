@@ -176,6 +176,19 @@ export class Post {
     return this.postLevelList[l]
   }
 
+  updateLevelIndex ():void {
+    let cnt = 1
+    for (const l of this.postLevelList) {
+      l.level = cnt++
+    }
+  }
+
+  deleteLevel (l:number):void {
+    l -= 1
+    this.postLevelList.splice(l, 1)
+    this.updateLevelIndex()
+  }
+
   getReplyNum ():number {
     return this.postLevelList.length
   }
@@ -219,6 +232,14 @@ class PostHelper {
     if (!post.isPinned) {
       post.isPinned = true
       this.sortPosts()
+    }
+  }
+
+  deletePost (postId:string) {
+    for (let i = 0; i < this.postList.length; ++i) {
+      if (this.postList[i].postId === postId) {
+        this.postList.splice(i, 1)
+      }
     }
   }
 

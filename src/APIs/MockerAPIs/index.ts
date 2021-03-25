@@ -7,6 +7,7 @@ import getPostLevelList from './getPostLevelList'
 import reply from './reply'
 import editPostLevel from './editPostLevel'
 import getPostLevel from './getPostLevel'
+import deletePostLevel from './deletePostLevel'
 
 export default {
   getMembersAndPosts,
@@ -17,5 +18,6 @@ export default {
   getPostLevelList,
   reply,
   editPostLevel,
-  getPostLevel
+  getPostLevel,
+  deletePostLevel
 }

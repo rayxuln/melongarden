@@ -18,7 +18,7 @@
         :hasEdited="l.hasEdited"
         :isLoading="l.isLoading"
         @replyTextClick="onReplyTextClicked"
-        @deleteTextClick="onDeleteTextClicked"
+        @deleteTextClick="onDeleteTextClicked(l.level)"
         @saveTextClick="onSaveTextClicked(index, $event)">
       </post-page-level>
     </div>
@@ -110,12 +110,25 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
     onReplyTextClicked () {
       window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
     },
-    onDeleteTextClicked () {
+    onDeleteTextClicked (level:number) {
       this.$confirm('Are you sure to delete this level?', 'Warning', {
         confirmButtonText: 'Of caurse',
         cancelButtonText: 'No sure yet',
         type: 'warning'
-      })
+      }).then(() => {
+        APIs.deletePostLevel(this.postId, level).then((value) => {
+          const v = value as { hasDeletePost:boolean }
+          if (v.hasDeletePost) { // go to post list page
+            this.$router.push('/')
+            ElMessage.success('You\'ve just deleted a post.')
+          } else { // refresh current page
+            this.loadLevels()
+            ElMessage.success('You\'ve just deleted a level.')
+          }
+        }).catch((e) => {
+          ElMessage.error('Can\'t delete this level.' + e)
+        })
+      }).catch((e: unknown) => e)
     },
     onSaveTextClicked (index:number, content: string) {
       const levelRef = this.$refs[`levelRefList${index}`]
@@ -123,6 +136,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       l.isLoading = true
       APIs.editPostLevel(this.postId, l.level, content).then(() => {
         levelRef.displayEditor = false
+        ElMessage.success('Edit has been saved.')
         return APIs.getPostLevel(this.postId, l.level)
       }).catch((e) => {
         ElMessage.error('Can\'t save.' + e)

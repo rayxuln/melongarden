@@ -1,5 +1,5 @@
 import Tools from '../Tools'
-import Mocker, { promiseHelper, PostLevel } from './Mocker'
+import Mocker, { promiseHelper } from './Mocker'
 
 export default function (postId:string, level:number, content:string):Promise<unknown> {
   let reject = false
