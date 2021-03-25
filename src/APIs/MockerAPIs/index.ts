@@ -10,6 +10,8 @@ import getPostLevel from './getPostLevel'
 import deletePostLevel from './deletePostLevel'
 import likePostLevel from './likePostLevel'
 import getPostLevelLikeInfo from './getPostLevelLikeInfo'
+import getUserInfo from './getUserInfo'
+import pinPost from './pinPost'
 
 export default {
   getMembersAndPosts,
@@ -23,5 +25,7 @@ export default {
   getPostLevel,
   deletePostLevel,
   likePostLevel,
-  getPostLevelLikeInfo
+  getPostLevelLikeInfo,
+  getUserInfo,
+  pinPost
 }

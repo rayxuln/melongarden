@@ -36,6 +36,7 @@
         :page-count="5"
         :total="postNum"
         :current-page="current_post_number"
+        :hide-on-single-page="true"
         @current-change="onCurrentPageChanged">
     </el-pagination>
 
@@ -68,7 +69,7 @@ import { ElMessage } from 'element-plus'
       post_box_textarea: '',
       post_box_post_button_loading: false,
       current_post_number: 0,
-      page_size: 3,
+      page_size: 7,
       isPageLoading: false,
       postNum: 0
     }

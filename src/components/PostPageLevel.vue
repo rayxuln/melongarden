@@ -40,7 +40,7 @@
             <el-link type="primary" @click.prevent="$emit('replyTextClick')">Reply</el-link>
             <span v-if="isYou"> | <el-link type="primary" @click.prevent="displayEditor = true">Edit</el-link></span>
             <span v-if="canDelete"> | <el-link type="primary" @click.prevent="$emit('deleteTextClick')">Delete</el-link></span>
-            <span v-if="level === 1 && canPin"> | <el-link type="primary" @click.prevent>Pin</el-link></span>
+            <span v-if="level === 1 && isAdmin"> | <el-link type="primary" @click.prevent="$emit('pinClick', !isPinned)">{{ pinText }}</el-link></span>
           </span>
         </div>
       </div>
@@ -76,12 +76,20 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
       default: 0
     },
     hasEdited: Boolean,
-    canPin: Boolean
+    isAdmin: Boolean,
+    isPinned: Boolean
   },
   components: {
     'rich-text-editor': RichTextEditor
   },
-  emits: ['replyTextClick', 'deleteTextClick', 'saveTextClick', 'likeClick', 'dislikeClick'],
+  emits: [
+    'replyTextClick',
+    'deleteTextClick',
+    'saveTextClick',
+    'likeClick',
+    'dislikeClick',
+    'pinClick'
+  ],
   data () {
     return {
       displayEditor: false,
@@ -90,7 +98,10 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
   },
   computed: {
     canDelete () {
-      return this.isYou
+      return this.isYou || this.isAdmin
+    },
+    pinText () {
+      return this.isPinned ? 'Unpin' : 'Pin'
     }
   },
   mounted () {

@@ -1,11 +1,17 @@
 import Tools from '../Tools'
-import Mocker, { promiseHelper, PostLevel } from './Mocker'
+import Mocker, { promiseHelper, PostLevel, UserType } from './Mocker'
 
 export default function (postId:string, pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
   const levels = []
   let levelNum = 0
   const post = Mocker.postHelper.getPostById(postId)
+  // this is a user user
   const userId = Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
+  let isAdmin = false
+  if (userId !== '') {
+    const user = Mocker.userHelper.getUser(userId)
+    isAdmin = user!.userType === UserType.ADMIN
+  }
   if (post !== null) {
     const res = post.getLevels(pageSize, pageNumber, filter)
     const rawLevels = res[0] as Array<PostLevel>
@@ -14,7 +20,7 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
       const user = Mocker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
       let userAvatarUrl = ''
-      if (user !== null) {
+      if (user !== null) { // this is the layer user
         userName = user.userName
         userAvatarUrl = user.userAvatarUrl
       }
@@ -30,6 +36,8 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         dislikeNum: l.disLikeNum,
         isPoster: post.getFirstLevel().userId === l.userId,
         isLoading: false,
+        isAdmin,
+        isPinned: post.isPinned,
         isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
       })
     }

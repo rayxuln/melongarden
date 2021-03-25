@@ -3,15 +3,22 @@ let userIdCount = 0
 let userTokenCount = 100
 let postIdCount = 233
 
+export const UserType = {
+  NORMAL: 0,
+  ADMIN: 1
+}
+
 class User {
   userId = ''
   userName = '<UnknownUserName>'
   userAvatarUrl = ''
+  userType = UserType.NORMAL
 
-  constructor (name:string, avatar:string) {
+  constructor (name:string, avatar:string, type:number) {
     this.userId = `${userIdCount++}`
     this.userName = name
     this.userAvatarUrl = avatar
+    this.userType = type
   }
 }
 
@@ -20,8 +27,8 @@ class UserHelper {
 
   loginUserDictionary:Record<string, string> = {}
 
-  register (name:string, avatar:string) {
-    this.userList.push(new User(name, avatar))
+  register (name:string, avatar:string, type:number = UserType.NORMAL) {
+    this.userList.push(new User(name, avatar, type))
   }
 
   login (id:string) {
@@ -84,6 +91,11 @@ class UserHelper {
     }
     return '<UnkwownUser>'
   }
+
+  getUserTags (userId:string) {
+    const user = this.getUser(userId)
+    return user!.userType === UserType.ADMIN ? [{ type: 'warning', tag: 'Admin' }] : []
+  }
 }
 
 export class PostLevel {
@@ -110,6 +122,13 @@ export class PostLevel {
 
   canUserEdit (userId:string):boolean {
     return this.userId === userId
+  }
+
+  canUserDelete (userId:string):boolean {
+    if (this.userId === userId) return true
+    const user = m.userHelper.getUser(userId)
+    if (user && user.userType === UserType.ADMIN) return true
+    return false
   }
 
   like (userId:string):void {
@@ -271,6 +290,21 @@ class PostHelper {
     }
   }
 
+  unpinPost (postId:string) {
+    const post = this.getPostById(postId)
+    if (post === null) throw new Error('postId is invalid')
+    if (post.isPinned) {
+      post.isPinned = false
+      this.sortPosts()
+    }
+  }
+
+  canPin (userId:string) {
+    const user = m.userHelper.getUser(userId)
+    if (user && user.userType === UserType.ADMIN) return true
+    return false
+  }
+
   deletePost (postId:string) {
     for (let i = 0; i < this.postList.length; ++i) {
       if (this.postList[i].postId === postId) {
@@ -319,6 +353,28 @@ class PostHelper {
     }
     return null
   }
+
+  getUserPostNum (userId:string) {
+    let res = 0
+    for (const post of this.postList) {
+      if (post.getFirstLevel().userId === userId) {
+        res += 1
+      }
+    }
+    return res
+  }
+
+  getUserReplyNum (userId:string) {
+    let res = 0
+    for (const post of this.postList) {
+      for (const level of post.postLevelList) {
+        if (level.level !== 1 && level.userId === userId) {
+          res += 1
+        }
+      }
+    }
+    return res
+  }
 }
 
 class Mocker {
@@ -330,6 +386,7 @@ class Mocker {
   constructor () {
     this.userHelper.register('ADogMan', 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png')
     this.userHelper.register('ACatMan', 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
+    this.userHelper.register('AdminMan', 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', UserType.ADMIN)
 
     this.postTest()
   }
@@ -339,7 +396,8 @@ class Mocker {
   }
 
   loginTestUser () {
-    this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('ACatMan'))
+    // this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('ACatMan'))
+    this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('AdminMan'))
     this.setLoginTokenCookie(this.loginUserToken)
   }
 
@@ -372,6 +430,11 @@ class Mocker {
     p.postLevelList[0].date = new Date('2019-4-2')
     this.postHelper.pinPost(p.postId)
     p.getFirstLevel().like(this.userHelper.getUserIdByName('ADogMan'))
+
+    p = this.postHelper.post(this.userHelper.getUserIdByName('AdminMan'), 'Admin POST!!!', 'Hi everyone, how do you do?')
+    p.postLevelList[0].date = new Date('2018-5-26')
+    this.postHelper.pinPost(p.postId)
+    p.getFirstLevel().like(this.userHelper.getUserIdByName('AdminMan'))
 
     // this.postHelper.sortPosts()
   }

@@ -1,5 +1,9 @@
 
 class Tools {
+  setLoginTokenCookie (token:string) {
+    document.cookie = `token=${token};path=/;`
+  }
+
   getLoginTokenCookie () {
     const cookie = document.cookie
     const ca = cookie.split(';')

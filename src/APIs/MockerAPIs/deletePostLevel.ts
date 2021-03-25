@@ -21,7 +21,7 @@ export default function (postId:string, level:number):Promise<unknown> {
           reject = true
           reason = 'Invalid level.'
         } else {
-          if (!l.canUserEdit(user.userId)) {
+          if (!l.canUserDelete(user.userId)) {
             reject = true
             reason = 'You can\'t delete this level.'
           } else {
@@ -29,8 +29,13 @@ export default function (postId:string, level:number):Promise<unknown> {
           }
         }
       } else {
-        hasDeletePost = true
-        Mocker.postHelper.deletePost(postId)
+        if (!post.getFirstLevel().canUserDelete(user.userId)) {
+          reject = true
+          reason = 'You can\'t delete this post.'
+        } else {
+          hasDeletePost = true
+          Mocker.postHelper.deletePost(postId)
+        }
       }
     }
   }

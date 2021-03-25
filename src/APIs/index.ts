@@ -51,6 +51,14 @@ class APIMidware {
   getPostLevelLikeInfo (postId:string, level:number) {
     return APIs.getPostLevelLikeInfo(postId, level)
   }
+
+  getUserInfo () {
+    return APIs.getUserInfo()
+  }
+
+  pinPost (postId:string, pin:boolean) {
+    return APIs.pinPost(postId, pin)
+  }
 }
 
 const ins = new APIMidware()

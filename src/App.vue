@@ -17,14 +17,35 @@
           </template>
         </el-input>
       </div>
+      <transition name="fade" mode="out-in">
       <div class="search-bar-right" v-if="display_login_info">
         <el-avatar size="small" shape="square" :src="userAvatar"></el-avatar>
-        <div>{{ userName }}</div>
+        <div><el-popover
+          placement="bottom"
+          title=""
+          trigger="hover"
+          @show="onUserInfoPanelShowed"
+        >
+        <template #reference>
+          <el-badge is-dot :hidden="!userHasNewMessage"><el-link type="primary" @click.prevent>{{ userName }}</el-link></el-badge>
+        </template>
+        <user-info-panel
+          v-loading="userInfoLoading"
+          :userAvatarURL="userAvatar"
+          :userName="userName"
+          :postNum="userPostNum"
+          :replyNum="userReplyNum"
+          :hasNewMessage="userHasNewMessage"
+          :tags="userTags"
+          @logoutClick="onLogoutClicked"
+        ></user-info-panel>
+        </el-popover></div>
       </div>
-      <div class="search-bar-right" v-if="!display_login_info">
+      <div class="search-bar-right" v-else>
         <el-button type="success">Sign Up</el-button>
         <el-button @click="onSignInButtonPressed">Sign In</el-button>
       </div>
+      </transition>
     </div>
     </el-card>
     </el-affix>
@@ -65,13 +86,23 @@ import { ElMessage } from 'element-plus'
 import Mocker from '@/APIs/MockerAPIs/Mocker'
 import { Options, Vue } from 'vue-class-component'
 
+import UserInfoPanel from '@/components/UserInfoPanel.vue'
+
 @Options({
   name: 'App',
+  components: {
+    'user-info-panel': UserInfoPanel
+  },
   data () {
     return {
       display_login_info: false,
       userName: 'UserName',
       userAvatar: '',
+      userPostNum: 0,
+      userReplyNum: 0,
+      userHasNewMessage: false,
+      userInfoLoading: false,
+      userTags: [],
       searchFilter: ''
     }
   },
@@ -114,6 +145,34 @@ import { Options, Vue } from 'vue-class-component'
           ElMessage.error('Check token fail. ' + v)
         })
       }, 1000)
+    },
+    onLogoutClicked () {
+      Tools.setLoginTokenCookie('')
+      this.display_login_info = false
+      const r = {
+        path: this.$route.path,
+        query: { ...this.$route.query, login: 'no' },
+        hash: this.$route.hash,
+        params: { ...this.$route.params }
+      }
+      this.$router.push(r)
+      setTimeout(() => {
+        this.$router.go(-1)
+        this.loadMembersPosts()
+      }, 1000)
+    },
+    onUserInfoPanelShowed () {
+      this.userInfoLoading = true
+      APIs.getUserInfo().then((value) => {
+        const v = value as { userPostNum:number, userReplyNum:number, userTags:unknown }
+        this.userPostNum = v.userPostNum
+        this.userReplyNum = v.userReplyNum
+        this.userTags = v.userTags
+      }).catch((e) => {
+        ElMessage.error('Can\'t get user info.' + e)
+      }).then(() => {
+        this.userInfoLoading = false
+      })
     },
     loadMembersPosts () {
       this.$store.dispatch('updateMembersPosts')

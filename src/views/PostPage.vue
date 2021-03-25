@@ -20,11 +20,15 @@
         :isYou="l.isYou"
         :hasEdited="l.hasEdited"
         :isLoading="l.isLoading"
+        :isAdmin="l.isAdmin"
+        :isPinned="l.isPinned"
         @replyTextClick="onReplyTextClicked"
         @deleteTextClick="onDeleteTextClicked(l.level)"
         @saveTextClick="onSaveTextClicked(index, $event)"
         @likeClick="onLikeClicked(index, 1)"
-        @dislikeClick="onLikeClicked(index, 2)">
+        @dislikeClick="onLikeClicked(index, 2)"
+        @pinClick="onPinClicked"
+        >
       </post-page-level>
     </div>
 
@@ -40,6 +44,7 @@
       :page-count="5"
       :current-page="currentPage"
       :total="filteredLevelNum"
+      :hide-on-single-page="true"
       @current-change="onCurrentPageChanged">
     </el-pagination>
 
@@ -77,7 +82,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       levelList: [],
       levelNum: 0,
       filteredLevelNum: 0,
-      pageSize: 2
+      pageSize: 7
     }
   },
   created () {
@@ -152,6 +157,20 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       }).catch((e) => {
         ElMessage.error('Can\'t fetch level data.' + e)
       })
+    },
+    onPinClicked (pin:boolean) {
+      this.$confirm(`Are you sure to ${pin ? 'pinned' : 'unpinned'} this post?`, 'Warning', {
+        confirmButtonText: 'Of caurse',
+        cancelButtonText: 'No sure yet',
+        type: 'warning'
+      }).then(() => {
+        APIs.pinPost(this.postId, pin).then(() => {
+          ElMessage.success(`You've just ${pin ? 'pinned' : 'unpinned'} a post.`)
+          this.$router.push('/')
+        }).catch((e) => {
+          ElMessage.error(`You can't ${pin ? 'pinned' : 'unpinned'} this post.` + e)
+        })
+      }).catch((e: unknown) => e)
     },
     loadLevels () {
       this.postId = this.$route.query.post_id
