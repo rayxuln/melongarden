@@ -5,7 +5,7 @@
     <el-empty v-if="posts_is_empty" description="There is no post, yet."></el-empty>
     <div v-else>
       <!--transition-group name="fade" mode="out-in" tag="div"-->
-      <div v-for="p in post_card_list" :key="p">
+      <div v-for="(p, index) in post_card_list" :key="index">
         <post-card
           :replyNum="p.replyNum"
           :title="p.title"
@@ -15,8 +15,12 @@
           :lastReplior="p.lastReplior"
           :images="p.images"
           :updateTime="p.updateTime"
+          :hasLike="p.hasLike"
+          :likeNum="p.likeNum"
+          :dislikeNum="p.dislikeNum"
           :routePath="`/post?post_id=${p.postId}`"
-          >
+          @likeClick="onLikeClicked(index, 1)"
+          @dislikeClick="onLikeClicked(index, 2)">
         </post-card>
       </div>
       <!--/transition-group-->
@@ -143,6 +147,19 @@ import { ElMessage } from 'element-plus'
     },
     onImagesUploadFinished () {
       this.post_box_post_button_loading = false
+    },
+    onLikeClicked (index:number, like:number) {
+      const p = this.post_card_list[index]
+      APIs.likePostLevel(p.postId, 1, like).then(() => {
+        return APIs.getPostLevelLikeInfo(p.postId, 1)
+      }).then((value) => {
+        const v = value as { hasLike:number, likeNum:number, dislikeNum:number }
+        p.hasLike = v.hasLike
+        p.likeNum = v.likeNum
+        p.dislikeNum = v.dislikeNum
+      }).catch((e) => {
+        ElMessage.error(`Can't ${like === 1 ? 'like' : 'dislike'} this post.` + e)
+      })
     }
   }
 })

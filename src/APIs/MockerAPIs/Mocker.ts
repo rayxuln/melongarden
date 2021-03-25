@@ -92,6 +92,10 @@ export class PostLevel {
   date:Date
   level = -1
   isEdited = false
+  likeNum = 0
+  disLikeNum = 0
+
+  likeOrDislikeUserList:Record<string, number> = {} // 1 = like, 2 = dislike
 
   constructor (userId:string, content:string, level:number) {
     this.date = new Date()
@@ -106,6 +110,38 @@ export class PostLevel {
 
   canUserEdit (userId:string):boolean {
     return this.userId === userId
+  }
+
+  like (userId:string):void {
+    if (this.likeOrDislikeUserList[userId] === 1) {
+      this.likeNum -= 1
+      delete this.likeOrDislikeUserList[userId]
+    } else if (this.likeOrDislikeUserList[userId] === 2) {
+      this.likeNum += 1
+      this.disLikeNum -= 1
+      this.likeOrDislikeUserList[userId] = 1
+    } else {
+      this.likeNum += 1
+      this.likeOrDislikeUserList[userId] = 1
+    }
+  }
+
+  dislike (userId:string):void {
+    if (this.likeOrDislikeUserList[userId] === 2) {
+      this.disLikeNum -= 1
+      delete this.likeOrDislikeUserList[userId]
+    } else if (this.likeOrDislikeUserList[userId] === 1) {
+      this.disLikeNum += 1
+      this.likeNum -= 1
+      this.likeOrDislikeUserList[userId] = 2
+    } else {
+      this.disLikeNum += 1
+      this.likeOrDislikeUserList[userId] = 2
+    }
+  }
+
+  hasUserLike (userId:string):number {
+    return this.likeOrDislikeUserList[userId] || 0
   }
 }
 
@@ -329,10 +365,13 @@ class Mocker {
     p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'It should be pinned1', 'Hi every one, this msg is from the Mocker!!!4')
     p.postLevelList[0].date = new Date('2019-4-1')
     this.postHelper.pinPost(p.postId)
+    p.getFirstLevel().like(this.userHelper.getUserIdByName('ADogMan'))
+    p.getFirstLevel().like(this.userHelper.getUserIdByName('ACatMan'))
 
     p = this.postHelper.post(this.userHelper.getUserIdByName('ADogMan'), 'It should be pinned2', 'Hi every one, this msg is from the Mocker!!!4')
     p.postLevelList[0].date = new Date('2019-4-2')
     this.postHelper.pinPost(p.postId)
+    p.getFirstLevel().like(this.userHelper.getUserIdByName('ADogMan'))
 
     // this.postHelper.sortPosts()
   }

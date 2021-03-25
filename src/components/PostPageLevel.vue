@@ -22,7 +22,7 @@
             <span>
             <el-link
               :type="hasLike === 1 ? 'danger' : 'primary'"
-              @click.prevent :underline="false">
+              @click.prevent="$emit('likeClick')" :underline="false">
               <i class="el-icon-caret-top"></i>
               {{ likeNum }}
             </el-link>
@@ -30,7 +30,7 @@
             <span>
             <el-link
               :type="hasLike === 2 ? 'danger' : 'primary'"
-              @click.prevent :underline="false">
+              @click.prevent="$emit('dislikeClick')" :underline="false">
               <i class="el-icon-caret-bottom"></i>
               {{ dislikeNum }}
             </el-link>
@@ -81,7 +81,7 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
   components: {
     'rich-text-editor': RichTextEditor
   },
-  emits: ['replyTextClick', 'deleteTextClick', 'saveTextClick'],
+  emits: ['replyTextClick', 'deleteTextClick', 'saveTextClick', 'likeClick', 'dislikeClick'],
   data () {
     return {
       displayEditor: false,

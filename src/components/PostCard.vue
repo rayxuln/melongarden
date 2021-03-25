@@ -8,7 +8,7 @@
   <span>
   <el-link
     :type="hasLike === 1 ? 'danger' : 'primary'"
-    @click.prevent :underline="false">
+    @click.prevent="$emit('likeClick')" :underline="false">
     <i class="el-icon-caret-top"></i>
     {{ likeNum }}
   </el-link>
@@ -16,7 +16,7 @@
   <span>
   <el-link
     :type="hasLike === 2 ? 'danger' : 'primary'"
-    @click.prevent :underline="false">
+    @click.prevent="$emit('dislikeClick')" :underline="false">
     <i class="el-icon-caret-bottom"></i>
     {{ dislikeNum }}
   </el-link>
@@ -84,6 +84,7 @@ import { Options, Vue } from 'vue-class-component'
       default: 0
     }
   },
+  emits: ['likeClick', 'dislikeClick'],
   computed: {
     displayContent () {
       return this.content

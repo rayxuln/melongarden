@@ -13,13 +13,18 @@
         :level="l.level"
         :content="l.content"
         :date="l.date"
+        :hasLike="l.hasLike"
+        :likeNum="l.likeNum"
+        :dislikeNum="l.dislikeNum"
         :isPoster="l.isPoster"
         :isYou="l.isYou"
         :hasEdited="l.hasEdited"
         :isLoading="l.isLoading"
         @replyTextClick="onReplyTextClicked"
         @deleteTextClick="onDeleteTextClicked(l.level)"
-        @saveTextClick="onSaveTextClicked(index, $event)">
+        @saveTextClick="onSaveTextClicked(index, $event)"
+        @likeClick="onLikeClicked(index, 1)"
+        @dislikeClick="onLikeClicked(index, 2)">
       </post-page-level>
     </div>
 
@@ -49,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import Tools from '@/APIs/Tools'
 import APIs from '@/APIs'
 import { Options, Vue } from 'vue-class-component'
 import RichTextEditor from '@/components/RichTextEditor.vue'
@@ -189,6 +195,19 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         params: { ...this.$route.params }
       }
       this.$router.push(r)
+    },
+    onLikeClicked (index:number, like:number) {
+      const l = this.levelList[index]
+      APIs.likePostLevel(this.postId, l.level, like).then(() => {
+        return APIs.getPostLevelLikeInfo(this.postId, l.level)
+      }).then((value) => {
+        const v = value as { hasLike:number, likeNum:number, dislikeNum:number }
+        l.hasLike = v.hasLike
+        l.likeNum = v.likeNum
+        l.dislikeNum = v.dislikeNum
+      }).catch((e) => {
+        ElMessage.error(`Can't ${like === 1 ? 'like' : 'dislike'} this level.` + e)
+      })
     }
   }
 })

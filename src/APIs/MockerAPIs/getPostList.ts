@@ -54,6 +54,7 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
   const res = Mocker.postHelper.getPosts(pageSize, pageNumber, filter)
   const rawPosts = res[0] as Array<Post>
   const postNum = res[1] as number
+  const userId = Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
   for (const p of rawPosts) {
     const images:Array<Record<string, string>> = []
     const imageSources = p.postLevelList.length > 0 ? getImagesInPost(p.postLevelList[0].content) : []
@@ -74,6 +75,9 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
       lastReplior: Mocker.userHelper.getUserNameById(p.getLastReplior()),
       updateTime: getPostLastUpdateTimeString(p),
       postId: p.postId,
+      hasLike: p.getFirstLevel().hasUserLike(userId),
+      likeNum: p.getFirstLevel().likeNum,
+      dislikeNum: p.getFirstLevel().disLikeNum,
       images
     })
   }

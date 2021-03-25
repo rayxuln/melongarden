@@ -43,6 +43,14 @@ class APIMidware {
   deletePostLevel (postId:string, level:number) {
     return APIs.deletePostLevel(postId, level)
   }
+
+  likePostLevel (postId:string, level:number, like:number) {
+    return APIs.likePostLevel(postId, level, like)
+  }
+
+  getPostLevelLikeInfo (postId:string, level:number) {
+    return APIs.getPostLevelLikeInfo(postId, level)
+  }
 }
 
 const ins = new APIMidware()

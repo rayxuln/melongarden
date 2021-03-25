@@ -8,6 +8,8 @@ import reply from './reply'
 import editPostLevel from './editPostLevel'
 import getPostLevel from './getPostLevel'
 import deletePostLevel from './deletePostLevel'
+import likePostLevel from './likePostLevel'
+import getPostLevelLikeInfo from './getPostLevelLikeInfo'
 
 export default {
   getMembersAndPosts,
@@ -19,5 +21,7 @@ export default {
   reply,
   editPostLevel,
   getPostLevel,
-  deletePostLevel
+  deletePostLevel,
+  likePostLevel,
+  getPostLevelLikeInfo
 }

@@ -5,6 +5,7 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
   const levels = []
   let levelNum = 0
   const post = Mocker.postHelper.getPostById(postId)
+  const userId = Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
   if (post !== null) {
     const res = post.getLevels(pageSize, pageNumber, filter)
     const rawLevels = res[0] as Array<PostLevel>
@@ -24,6 +25,9 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         level: l.level,
         date: Tools.getProperDateString(l.date),
         hasEdited: l.isEdited,
+        hasLike: l.hasUserLike(userId),
+        likeNum: l.likeNum,
+        dislikeNum: l.disLikeNum,
         isPoster: post.getFirstLevel().userId === l.userId,
         isLoading: false,
         isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())

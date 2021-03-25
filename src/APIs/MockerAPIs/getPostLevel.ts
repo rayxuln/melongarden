@@ -5,6 +5,7 @@ export default function (postId:string, level:number):Promise<unknown> {
   let reject = false
   let reason = ''
   const post = Mocker.postHelper.getPostById(postId)
+  const userId = Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
   let levelData = {}
   if (post === null) {
     reject = true
@@ -29,6 +30,9 @@ export default function (postId:string, level:number):Promise<unknown> {
         level: l.level,
         date: Tools.getProperDateString(l.date),
         hasEdited: l.isEdited,
+        hasLike: l.hasUserLike(userId),
+        likeNum: l.likeNum,
+        dislikeNum: l.disLikeNum,
         isPoster: post.getFirstLevel().userId === l.userId,
         isLoading: false,
         isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
