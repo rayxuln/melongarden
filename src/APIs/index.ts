@@ -31,6 +31,14 @@ class APIMidware {
   reply (postId:string, content:string) {
     return APIs.reply(postId, content)
   }
+
+  editPostLevel (postId:string, level:number, content:string) {
+    return APIs.editPostLevel(postId, level, content)
+  }
+
+  getPostLevel (postId:string, level:number) {
+    return APIs.getPostLevel(postId, level)
+  }
 }
 
 const ins = new APIMidware()

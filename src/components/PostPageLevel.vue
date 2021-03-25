@@ -10,18 +10,37 @@
           <div v-if="isYou"><el-tag>You</el-tag></div>
         </div>
       </div>
-      <div class="level-box-right">
+      <div v-loading="isLoading" class="level-box-right">
         <rich-text-editor v-if="displayEditor" v-model="editContent"></rich-text-editor>
         <div v-else class="level-box-content" ref="content"></div>
         <div class="level-box-corner">
           <span v-if="displayEditor">L{{ level }}
-            <el-link type="primary" @click.prevent>Save</el-link> |
+            <el-link type="primary" @click.prevent="$emit('saveTextClick', editContent)">Save</el-link> |
             <el-link type="primary" @click.prevent="displayEditor = false">Cancel</el-link>
           </span>
-          <span v-else> L{{ level }} {{ date }}
+          <span v-else>
+            <span>
+            <el-link
+              :type="hasLike === 1 ? 'danger' : 'primary'"
+              @click.prevent :underline="false">
+              <i class="el-icon-caret-top"></i>
+              {{ likeNum }}
+            </el-link>
+            </span>
+            <span>
+            <el-link
+              :type="hasLike === 2 ? 'danger' : 'primary'"
+              @click.prevent :underline="false">
+              <i class="el-icon-caret-bottom"></i>
+              {{ dislikeNum }}
+            </el-link>
+            </span>
+            L{{ level }} {{ date }}
+            <span v-if="hasEdited"> (Edited) </span>
             <el-link type="primary" @click.prevent="$emit('replyTextClick')">Reply</el-link>
             <span v-if="isYou"> | <el-link type="primary" @click.prevent="displayEditor = true">Edit</el-link></span>
             <span v-if="canDelete"> | <el-link type="primary" @click.prevent="$emit('deleteTextClick')">Delete</el-link></span>
+            <span v-if="level === 1 && canPin"> | <el-link type="primary" @click.prevent>Pin</el-link></span>
           </span>
         </div>
       </div>
@@ -43,15 +62,26 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
     date: String,
     isPoster: Boolean,
     isYou: Boolean,
-    editMode: {
-      type: Boolean,
-      default: false
-    }
+    isLoading: Boolean,
+    hasLike: {
+      type: Number,
+      default: 0 // 1 = like, 2 = dislike
+    },
+    likeNum: {
+      type: Number,
+      default: 0
+    },
+    dislikeNum: {
+      type: Number,
+      default: 0
+    },
+    hasEdited: Boolean,
+    canPin: Boolean
   },
   components: {
     'rich-text-editor': RichTextEditor
   },
-  emits: ['replyTextClick', 'deleteTextClick'],
+  emits: ['replyTextClick', 'deleteTextClick', 'saveTextClick'],
   data () {
     return {
       displayEditor: false,
@@ -70,16 +100,13 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
     content (newValue) {
       this.showContent(newValue)
     },
-    editMode (newValue) {
-      this.displayEditor = newValue
-    },
     displayEditor (newValue) {
       if (newValue) {
         this.editContent = this.content
       } else {
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.showContent(this.content)
-        })
+        }, 0)
       }
     }
   },
@@ -118,7 +145,7 @@ export default class PostPageLevel extends Vue {}
 
 .level-box-content{
   height: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .level-box-user-avatar{

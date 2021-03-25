@@ -5,6 +5,8 @@ import post from './post'
 import getPostInfo from './getPostInfo'
 import getPostLevelList from './getPostLevelList'
 import reply from './reply'
+import editPostLevel from './editPostLevel'
+import getPostLevel from './getPostLevel'
 
 export default {
   getMembersAndPosts,
@@ -13,5 +15,7 @@ export default {
   post,
   getPostInfo,
   getPostLevelList,
-  reply
+  reply,
+  editPostLevel,
+  getPostLevel
 }

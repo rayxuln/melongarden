@@ -5,8 +5,9 @@
     <!--div class="post-page-title">{{ title }}</div-->
     <el-page-header title="" :content="title" @back="$router.push('/')"></el-page-header>
 
-    <div class="post-page-level-container" v-for="l in levelList" :key="l.level">
+    <div class="post-page-level-container" v-for="(l, index) in levelList" :key="index">
       <post-page-level
+        :ref="`levelRefList${index}`"
         :userAvatarUrl="l.userAvatarUrl"
         :userName="l.userName"
         :level="l.level"
@@ -14,8 +15,11 @@
         :date="l.date"
         :isPoster="l.isPoster"
         :isYou="l.isYou"
+        :hasEdited="l.hasEdited"
+        :isLoading="l.isLoading"
         @replyTextClick="onReplyTextClicked"
-        @deleteTextClick="onDeleteTextClicked">
+        @deleteTextClick="onDeleteTextClicked"
+        @saveTextClick="onSaveTextClicked(index, $event)">
       </post-page-level>
     </div>
 
@@ -113,6 +117,22 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         type: 'warning'
       })
     },
+    onSaveTextClicked (index:number, content: string) {
+      const levelRef = this.$refs[`levelRefList${index}`]
+      const l = this.levelList[index]
+      l.isLoading = true
+      APIs.editPostLevel(this.postId, l.level, content).then(() => {
+        levelRef.displayEditor = false
+        return APIs.getPostLevel(this.postId, l.level)
+      }).catch((e) => {
+        ElMessage.error('Can\'t save.' + e)
+      }).then((value) => {
+        const v = value as { level:unknown }
+        this.levelList[index] = v.level
+      }).catch((e) => {
+        ElMessage.error('Can\'t fetch level data.' + e)
+      })
+    },
     loadLevels () {
       this.postId = this.$route.query.post_id
       let currentPage = Number.parseInt(this.$route.query.page)
@@ -131,6 +151,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       }).then((value) => {
         const v = value as { levels:unknown, levelNum:number }
         this.levelList = v.levels
+        this.levelRefList = []
         this.filteredLevelNum = v.levelNum
         if (this.currentPage !== currentPage) {
           this.currentPage = -1

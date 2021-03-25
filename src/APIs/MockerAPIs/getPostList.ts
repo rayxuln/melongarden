@@ -63,6 +63,7 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
 
     const titleTags = []
     if (p.isPinned) titleTags.push({ type: 'warning', tag: 'Pin' })
+    if (p.hasEdited()) titleTags.push({ type: 'info', tag: 'Edited' })
 
     posts.push({
       replyNum: p.getReplyNum(),

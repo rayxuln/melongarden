@@ -1,15 +1,20 @@
 import Tools from '../Tools'
-import Mocker, { promiseHelper, PostLevel } from './Mocker'
+import Mocker, { promiseHelper } from './Mocker'
 
-export default function (postId:string, pageSize:number, pageNumber:number, filter:string):Promise<unknown> {
-  const levels = []
-  let levelNum = 0
+export default function (postId:string, level:number):Promise<unknown> {
+  let reject = false
+  let reason = ''
   const post = Mocker.postHelper.getPostById(postId)
-  if (post !== null) {
-    const res = post.getLevels(pageSize, pageNumber, filter)
-    const rawLevels = res[0] as Array<PostLevel>
-    levelNum = res[1] as number
-    for (const l of rawLevels) {
+  let levelData = {}
+  if (post === null) {
+    reject = true
+    reason = 'Can\'t find the post.'
+  } else {
+    const l = post.getLevel(level)
+    if (l === null) {
+      reject = true
+      reason = 'Invalid level.'
+    } else {
       const user = Mocker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
       let userAvatarUrl = ''
@@ -17,7 +22,7 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         userName = user.userName
         userAvatarUrl = user.userAvatarUrl
       }
-      levels.push({
+      levelData = {
         userAvatarUrl,
         userName,
         content: l.content,
@@ -27,8 +32,8 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         isPoster: post.getFirstLevel().userId === l.userId,
         isLoading: false,
         isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
-      })
+      }
     }
   }
-  return promiseHelper({ levels, levelNum }, 1000)
+  return promiseHelper({ level: levelData }, 1000, reason, reject)
 }

@@ -103,7 +103,13 @@ export class PostLevel {
   contain (key:string):boolean {
     return this.content.includes(key)
   }
+
+  canUserEdit (userId:string):boolean {
+    return this.userId === userId
+  }
 }
+
+type NullablePostLevel = PostLevel | null
 
 export class Post {
   postLevelList:Array<PostLevel> = []
@@ -164,6 +170,12 @@ export class Post {
     return this.postLevelList[0]
   }
 
+  getLevel (l:number):NullablePostLevel {
+    l -= 1
+    if (l < 0 || l >= this.postLevelList.length) return null
+    return this.postLevelList[l]
+  }
+
   getReplyNum ():number {
     return this.postLevelList.length
   }
@@ -174,6 +186,10 @@ export class Post {
       if (pl.contain(key)) return true
     }
     return false
+  }
+
+  hasEdited ():boolean {
+    return this.getFirstLevel().isEdited
   }
 }
 
