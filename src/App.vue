@@ -43,7 +43,17 @@
       </div>
       <div class="search-bar-right" v-else>
         <el-button type="success">Sign Up</el-button>
-        <el-button @click="onSignInButtonPressed">Sign In</el-button>
+        <!--el-button @click="onSignInButtonPressed">Sign In</el-button-->
+        <el-dropdown trigger="click" @command="handleCommand">
+          <el-button>Sign In</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item icon="" disabled>Who do you want to be?</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-lollipop" command="ACatMan" divided>A Nobody</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-cold-drink" command="AdminMan">A Powerfull Man</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
       </transition>
     </div>
@@ -121,9 +131,12 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     this.loadMembersPosts()
   },
   methods: {
-    onSignInButtonPressed () {
+    handleCommand (cmd:string) {
+      this.onSignInButtonPressed(cmd)
+    },
+    onSignInButtonPressed (userName:string) {
       // Test Mocker APIs
-      Mocker.loginTestUser()
+      Mocker.loginTestUser(userName)
       const r = {
         path: this.$route.path,
         query: { ...this.$route.query, login: 'yes' },
@@ -305,7 +318,7 @@ export default class App extends Vue {}
   margin-right: 8px;
 }
 
-.search-bar-right div{
+.search-bar-right > *{
   margin-left: 8px;
 }
 

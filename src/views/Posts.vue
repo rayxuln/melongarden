@@ -40,10 +40,10 @@
         @current-change="onCurrentPageChanged">
     </el-pagination>
 
-    <el-card shadow="never">
+    <el-card shadow="never" class="post-box-el-card">
       <div class="post-box-container">
         <div class="post-box-title">Post</div>
-        <el-input placeholder="Type the title here..." maxlength="20" show-word-limit v-model="post_box_title"></el-input>
+        <el-input placeholder="Type the title here..." maxlength="50" show-word-limit v-model="post_box_title"></el-input>
         <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
         <rich-text-editor v-model="post_box_textarea" @images-upload-start="onImagesUploadStart" @images-upload-finished="onImagesUploadFinished"></rich-text-editor>
         <el-button :loading="post_box_post_button_loading" type="primary" @click="onPostButtonClicked">Post</el-button>
@@ -184,5 +184,9 @@ export default class Posts extends Vue {}
 .post-box-title{
   font-size: 32px;
   margin: 5px;
+}
+
+.post-box-el-card{
+  margin-top: 15px;
 }
 </style>

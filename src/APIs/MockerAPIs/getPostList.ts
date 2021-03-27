@@ -29,17 +29,6 @@ function getPostLastUpdateTimeString (post:Post) {
   return Tools.getDateDate(date)
 }
 
-function getImagesInPost (content:string) {
-  const images = []
-  const reg = /<img((?!scr=")[^<])+src="(([^"]|\\")*)"/gim
-  let res = reg.exec(content)
-  while (res !== null && images.length < 3) {
-    images.push(Tools.htmlUnescape(res[2]))
-    res = reg.exec(content)
-  }
-  return images
-}
-
 function genImage (small:string, big = '') {
   if (big === '') big = small
   else if (small === '') small = big
@@ -57,7 +46,7 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
   const userId = Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
   for (const p of rawPosts) {
     const images:Array<Record<string, string>> = []
-    const imageSources = p.postLevelList.length > 0 ? getImagesInPost(p.postLevelList[0].content) : []
+    const imageSources = p.postLevelList.length > 0 ? Tools.getImagesInPost(p.postLevelList[0].content) : []
     imageSources.forEach(i => {
       images.push(genImage(i))
     })

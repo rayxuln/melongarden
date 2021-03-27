@@ -16,6 +16,18 @@ class Tools {
     return ''
   }
 
+  getImagesInPost (content:string, maxNum = 3) {
+    const images = []
+    const reg = /<img((?!scr=")[^<])+src="(([^"]|\\")*)"/gim
+    let res = reg.exec(content)
+    // eslint-disable-next-line no-unmodified-loop-condition
+    while (res !== null && (maxNum === -1 || images.length < maxNum)) {
+      images.push(this.htmlUnescape(res[2]))
+      res = reg.exec(content)
+    }
+    return images
+  }
+
   imagesUploadHandler (start: () => void, finish: () => void) {
     const forceFail = false
     return (blobInfo: { base64: () => string }, success: (a: string) => unknown, failure: (arg0: string, arg1: { remove: boolean }) => void, progress: (a: number) => unknown) => {

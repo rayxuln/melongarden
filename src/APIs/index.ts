@@ -59,6 +59,10 @@ class APIMidware {
   pinPost (postId:string, pin:boolean) {
     return APIs.pinPost(postId, pin)
   }
+
+  getImagePostList (pageSize:number, pageNumber:number, filter:string) {
+    return APIs.getImagePostList(pageSize, pageNumber, filter)
+  }
 }
 
 const ins = new APIMidware()

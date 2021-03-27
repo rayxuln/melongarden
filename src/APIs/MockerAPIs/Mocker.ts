@@ -1,4 +1,6 @@
 
+import Tools from '../Tools'
+
 let userIdCount = 0
 let userTokenCount = 100
 let postIdCount = 233
@@ -92,6 +94,14 @@ class UserHelper {
     return '<UnkwownUser>'
   }
 
+  getUserAvatarById (id:string) {
+    const user = this.getUser(id)
+    if (user) {
+      return user.userAvatarUrl
+    }
+    return ''
+  }
+
   getUserTags (userId:string) {
     const user = this.getUser(userId)
     return user!.userType === UserType.ADMIN ? [{ type: 'warning', tag: 'Admin' }] : []
@@ -161,6 +171,20 @@ export class PostLevel {
 
   hasUserLike (userId:string):number {
     return this.likeOrDislikeUserList[userId] || 0
+  }
+
+  hasImages ():boolean {
+    return this.content.includes('<img')
+  }
+
+  getImages ():Array<string> {
+    return Tools.getImagesInPost(this.content, -1)
+  }
+
+  getImage ():string {
+    const res = Tools.getImagesInPost(this.content, 1)
+    if (res.length > 0) return res[0]
+    return ''
   }
 }
 
@@ -249,6 +273,7 @@ export class Post {
   }
 
   contain (key:string):boolean {
+    if (key === '') return true
     if (this.title.includes(key)) return true
     for (const pl of this.postLevelList) {
       if (pl.contain(key)) return true
@@ -258,6 +283,28 @@ export class Post {
 
   hasEdited ():boolean {
     return this.getFirstLevel().isEdited
+  }
+
+  hasImage ():boolean {
+    for (const l of this.postLevelList) {
+      if (l.hasImages()) return true
+    }
+    return false
+  }
+
+  getPreviewImage ():string {
+    for (const l of this.postLevelList) {
+      if (l.hasImages()) return l.getImage()
+    }
+    return ''
+  }
+
+  getAllImges ():Array<string> {
+    const res = []
+    for (const l of this.postLevelList) {
+      res.push(...l.getImages())
+    }
+    return res
   }
 }
 
@@ -313,14 +360,20 @@ class PostHelper {
     }
   }
 
-  getPosts (pageSize:number, pageNumber:number, key:string) {
+  getPosts (pageSize:number, pageNumber:number, key:string, needImg = false) {
     if (pageSize <= 0) return [[], 0]
     let postList = []
-    if (key === '') {
-      postList = this.postList
-    } else {
+    if (needImg) {
       for (const p of this.postList) {
-        if (p.contain(key)) postList.push(p)
+        if (p.contain(key) && p.hasImage()) postList.push(p)
+      }
+    } else {
+      if (key === '') {
+        postList = this.postList
+      } else {
+        for (const p of this.postList) {
+          if (p.contain(key)) postList.push(p)
+        }
       }
     }
     const start = Math.max(0, (pageNumber - 1) * pageSize)
@@ -395,9 +448,9 @@ class Mocker {
     document.cookie = `token=${token};path=/;`
   }
 
-  loginTestUser () {
+  loginTestUser (userName:string) {
     // this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('ACatMan'))
-    this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('AdminMan'))
+    this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName(userName))
     this.setLoginTokenCookie(this.loginUserToken)
   }
 

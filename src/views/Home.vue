@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <el-menu default-active="/" mode="horizontal" :router="true">
+    <el-menu :default-active="currentRoute" mode="horizontal" :router="true">
       <el-menu-item index="/">Posts</el-menu-item>
       <el-menu-item index="/images">Images</el-menu-item>
     </el-menu>
@@ -19,6 +19,11 @@ import { Options, Vue } from 'vue-class-component'
 
 /* eslint-disable */
 @Options({
+  computed: {
+    currentRoute () {
+      return this.$route.path
+    }
+  }
 })
 export default class Home extends Vue {}
 </script>

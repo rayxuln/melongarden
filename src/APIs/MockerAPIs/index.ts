@@ -12,6 +12,7 @@ import likePostLevel from './likePostLevel'
 import getPostLevelLikeInfo from './getPostLevelLikeInfo'
 import getUserInfo from './getUserInfo'
 import pinPost from './pinPost'
+import getImagePostList from './getImagePostList'
 
 export default {
   getMembersAndPosts,
@@ -27,5 +28,6 @@ export default {
   likePostLevel,
   getPostLevelLikeInfo,
   getUserInfo,
-  pinPost
+  pinPost,
+  getImagePostList
 }
