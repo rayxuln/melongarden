@@ -126,6 +126,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
   },
   mounted () {
     console.log(process.env.BASE_URL)
+    document.title = 'MelonGarden'
     const query = Tools.locationSearchToQuery(window.location.search)
     this.searchFilter = query.search || ''
     this.loadMembersPosts()
