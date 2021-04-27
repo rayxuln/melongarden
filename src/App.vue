@@ -134,7 +134,6 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
   },
   methods: {
     onLogoutClicked () {
-      Tools.setLoginTokenCookie('')
       this.displayLoginInfo = false
       const r = {
         path: this.$route.path,
@@ -142,6 +141,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         hash: this.$route.hash,
         params: { ...this.$route.params }
       }
+      APIs.logout()
       this.$router.push(r)
       setTimeout(() => {
         this.$router.go(-1)

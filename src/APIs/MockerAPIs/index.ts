@@ -16,6 +16,7 @@ import getImagePostList from './getImagePostList'
 import signin from './signin'
 import signup from './signup'
 import getTitleImage from './getTitleImage'
+import logout from './logout'
 
 export default {
   getMembersAndPosts,
@@ -35,5 +36,6 @@ export default {
   getImagePostList,
   signin,
   signup,
-  getTitleImage
+  getTitleImage,
+  logout
 }

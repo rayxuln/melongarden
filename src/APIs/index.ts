@@ -75,6 +75,10 @@ class APIMidware {
   getTitleImage () {
     return APIs.getTitleImage()
   }
+
+  logout () {
+    return APIs.logout()
+  }
 }
 
 const ins = new APIMidware()

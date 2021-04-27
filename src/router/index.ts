@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/Posts.vue')
       },
       {
-        path: '/images',
+        path: 'images',
         name: 'Images',
         component: () => import('../views/Images.vue')
       }
@@ -40,6 +40,33 @@ const routes: Array<RouteRecordRaw> = [
     path: '/signup',
     name: 'SignUp',
     component: () => import('../views/SignUp.vue')
+  },
+  {
+    path: '/user-center',
+    name: 'UserCenter',
+    component: () => import('../views/UserCenter.vue'),
+    children: [
+      {
+        path: 'personal-info',
+        name: 'UserPersonalInformation',
+        component: () => import('../views/user/PersonalInformation.vue')
+      },
+      {
+        path: 'messages',
+        name: 'UserMessages',
+        component: () => import('../views/user/Messages.vue')
+      },
+      {
+        path: 'posts',
+        name: 'UserPosts',
+        component: () => import('../views/user/Posts.vue')
+      },
+      {
+        path: 'replies',
+        name: 'UserReplies',
+        component: () => import('../views/user/Replies.vue')
+      }
+    ]
   }
 ]
 

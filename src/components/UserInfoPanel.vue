@@ -8,16 +8,16 @@
 
     <div class="user-info-panel-second">
       <div class="user-info-panel-second-left">
-        <div><el-link @click.prevent>Post<br>{{ postNum }}</el-link></div>
+        <div><el-link @click.prevent="$router.push('/user-center/posts')">Post<br>{{ postNum }}</el-link></div>
       </div>
       <div class="user-info-panel-second-right">
-        <div><el-link @click.prevent>Reply<br>{{ replyNum }}</el-link></div>
+        <div><el-link @click.prevent="$router.push('/user-center/replies')">Reply<br>{{ replyNum }}</el-link></div>
       </div>
     </div>
 
     <div class="user-info-panel-third">
-      <div><el-badge is-dot :hidden="!hasNewMessage"><el-link @click.prevent><i class="el-icon-message"></i> Messages</el-link></el-badge></div>
-      <div><el-link @click.prevent><i class="el-icon-set-up"></i> User Center</el-link></div>
+      <div><el-badge is-dot :hidden="!hasNewMessage"><el-link @click.prevent="$router.push('/user-center/messages')"><i class="el-icon-message"></i> Messages</el-link></el-badge></div>
+      <div><el-link @click.prevent="$router.push('/user-center/personal-info')"><i class="el-icon-set-up"></i> User Center</el-link></div>
     </div>
 
     <div class="user-info-panel-forth">
