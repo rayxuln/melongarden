@@ -71,6 +71,10 @@ class APIMidware {
   signup (user:string, pwd:string, userName:string, inviteCode:string) {
     return APIs.signup(user, pwd, userName, inviteCode)
   }
+
+  getTitleImage () {
+    return APIs.getTitleImage()
+  }
 }
 
 const ins = new APIMidware()

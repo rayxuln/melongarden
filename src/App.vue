@@ -53,7 +53,7 @@
       <div class="subheader">
         <div :span="6">
         <router-link to="/">
-        <img class="logo-img" src="./assets/logo.png"/>
+        <img v-loading="loadingTitleImage" class="logo-img" :src="titleImageURL"/>
         </router-link>
         </div>
         <div :span="18" class="right-title">
@@ -102,7 +102,9 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
       userHasNewMessage: false,
       userInfoLoading: false,
       userTags: [],
-      searchFilter: ''
+      searchFilter: '',
+      titleImageURL: '',
+      loadingTitleImage: false
     }
   },
   created () {
@@ -119,6 +121,16 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     const query = Tools.locationSearchToQuery(window.location.search)
     this.searchFilter = query.search || ''
     this.loadMembersPosts()
+
+    this.loadingTitleImage = true
+    APIs.getTitleImage().then((v:unknown) => {
+      const res = v as { url:string }
+      this.titleImageURL = res.url
+    }).catch((e) => {
+      ElMessage.error('Can\'t get title image.' + e)
+    }).then(() => {
+      this.loadingTitleImage = false
+    })
   },
   methods: {
     onLogoutClicked () {

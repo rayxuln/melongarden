@@ -15,6 +15,7 @@ import pinPost from './pinPost'
 import getImagePostList from './getImagePostList'
 import signin from './signin'
 import signup from './signup'
+import getTitleImage from './getTitleImage'
 
 export default {
   getMembersAndPosts,
@@ -33,5 +34,6 @@ export default {
   pinPost,
   getImagePostList,
   signin,
-  signup
+  signup,
+  getTitleImage
 }
