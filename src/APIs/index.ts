@@ -79,6 +79,18 @@ class APIMidware {
   logout () {
     return APIs.logout()
   }
+
+  setUserInfo (userName:string, userAvatar:string, userDescription:string) {
+    return APIs.setUserInfo(userName, userAvatar, userDescription)
+  }
+
+  resetPassword (oldPwd:string, newPwd:string) {
+    return APIs.resetPassword(oldPwd, newPwd)
+  }
+
+  deleteUser (pwd:string) {
+    return APIs.deleteUser(pwd)
+  }
 }
 
 const ins = new APIMidware()

@@ -45,6 +45,16 @@ class UserHelper {
     this.userList.push(new User(email, name, avatarUrls[userIdCount % 2], type, '', pwd))
   }
 
+  unregister (userId:string) {
+    for (let i = 0; i < this.userList.length; ++i) {
+      if (this.userList[i].userId === userId) {
+        delete this.loginUserDictionary[this.userList[i].userId]
+        this.userList.splice(i, 1)
+        return
+      }
+    }
+  }
+
   login (email:string, pwd:string) {
     for (const i of this.userList) {
       if (i.userEmail === email) {

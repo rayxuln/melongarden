@@ -17,6 +17,9 @@ import signin from './signin'
 import signup from './signup'
 import getTitleImage from './getTitleImage'
 import logout from './logout'
+import setUserInfo from './setUserInfo'
+import resetPassword from './resetPassword'
+import deleteUser from './deleteUser'
 
 export default {
   getMembersAndPosts,
@@ -37,5 +40,8 @@ export default {
   signin,
   signup,
   getTitleImage,
-  logout
+  logout,
+  setUserInfo,
+  resetPassword,
+  deleteUser
 }

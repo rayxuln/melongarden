@@ -10,6 +10,7 @@ export default function ():Promise<unknown> {
   let userEmail = ''
   let userPostNum = 0
   let userReplyNum = 0
+  let userDescription = ''
   let userTags:Array<unknown> = []
   if (user !== null) {
     userName = user.userName
@@ -18,6 +19,7 @@ export default function ():Promise<unknown> {
     userPostNum = Mocker.postHelper.getUserPostNum(user.userId)
     userReplyNum = Mocker.postHelper.getUserReplyNum(user.userId)
     userTags = Mocker.userHelper.getUserTags(user.userId)
+    userDescription = user.userDescription
   } else {
     reject = true
   }
@@ -27,6 +29,7 @@ export default function ():Promise<unknown> {
     userName,
     userAvatar,
     userEmail,
-    userTags
+    userTags,
+    userDescription
   }, 100, 'Invalid token', reject)
 }

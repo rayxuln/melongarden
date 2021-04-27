@@ -12,7 +12,11 @@
           <el-menu-item index="/user-center/posts"><i class="el-icon-postcard"></i> Posts</el-menu-item>
           <el-menu-item index="/user-center/replies"><i class="el-icon-chat-line-square"></i> Replies</el-menu-item>
         </el-menu>
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </div>
     </el-card>
   </div>
@@ -25,6 +29,11 @@ import { ElMessage } from 'element-plus'
 import checkToken from '@/APIs/MockerAPIs/checkToken'
 
 @Options({
+  data () {
+    return {
+      recursively: false
+    }
+  },
   computed: {
     currentRoute () {
       return this.$route.path
@@ -34,7 +43,9 @@ import checkToken from '@/APIs/MockerAPIs/checkToken'
     this.$watch(
       () => this.$route.query,
       () => {
-        this.checkToken()
+        if (!this.recursively) {
+          this.checkToken()
+        }
       }
     )
   },
@@ -45,6 +56,7 @@ import checkToken from '@/APIs/MockerAPIs/checkToken'
     checkToken () {
       APIs.checkToken().catch((e) => {
         ElMessage.error('Please sign in first!')
+        this.recursively = true
         this.$router.push('/signin')
       })
     }
@@ -54,6 +66,9 @@ export default class UserCenter extends Vue {}
 </script>
 
 <style scoped>
+.user-center{
+  text-align: left;
+}
 .container{
   margin: -20px;
   min-height: 400px;
