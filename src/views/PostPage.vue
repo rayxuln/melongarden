@@ -22,6 +22,7 @@
         :isLoading="l.isLoading"
         :isAdmin="l.isAdmin"
         :isPinned="l.isPinned"
+        :hasDeleted="l.hasDeleted"
         @replyTextClick="onReplyTextClicked"
         @deleteTextClick="onDeleteTextClicked(l.level)"
         @saveTextClick="onSaveTextClicked(index, $event)"

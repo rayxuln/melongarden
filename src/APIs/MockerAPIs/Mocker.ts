@@ -125,6 +125,7 @@ export class PostLevel {
   content = ''
   date:Date
   level = -1
+  deleted = false
   isEdited = false
   likeNum = 0
   disLikeNum = 0
@@ -239,6 +240,7 @@ export class Post {
       postLevelList = this.postLevelList
     } else {
       for (const l of this.postLevelList) {
+        if (l.deleted) continue
         if (l.contain(key)) {
           postLevelList.push(l)
         }
@@ -267,17 +269,17 @@ export class Post {
     return this.postLevelList[l]
   }
 
-  updateLevelIndex ():void {
-    let cnt = 1
-    for (const l of this.postLevelList) {
-      l.level = cnt++
-    }
-  }
+  // updateLevelIndex ():void {
+  //   let cnt = 1
+  //   for (const l of this.postLevelList) {
+  //     l.level = cnt++
+  //   }
+  // }
 
   deleteLevel (l:number):void {
-    l -= 1
-    this.postLevelList.splice(l, 1)
-    this.updateLevelIndex()
+    // this.postLevelList.splice(l, 1)
+    // this.updateLevelIndex()
+    this.postLevelList[l - 1].deleted = true
   }
 
   getReplyNum ():number {
@@ -288,6 +290,7 @@ export class Post {
     if (key === '') return true
     if (this.title.includes(key)) return true
     for (const pl of this.postLevelList) {
+      if (pl.deleted) continue
       if (pl.contain(key)) return true
     }
     return false
@@ -299,6 +302,7 @@ export class Post {
 
   hasImage ():boolean {
     for (const l of this.postLevelList) {
+      if (l.deleted) continue
       if (l.hasImages()) return true
     }
     return false
@@ -306,6 +310,7 @@ export class Post {
 
   getPreviewImage ():string {
     for (const l of this.postLevelList) {
+      if (l.deleted) continue
       if (l.hasImages()) return l.getImage()
     }
     return ''
@@ -314,6 +319,7 @@ export class Post {
   getAllImges ():Array<string> {
     const res = []
     for (const l of this.postLevelList) {
+      if (l.deleted) continue
       res.push(...l.getImages())
     }
     return res

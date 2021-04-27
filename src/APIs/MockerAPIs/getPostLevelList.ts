@@ -38,7 +38,8 @@ export default function (postId:string, pageSize:number, pageNumber:number, filt
         isLoading: false,
         isAdmin,
         isPinned: post.isPinned,
-        isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
+        isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie()),
+        hasDeleted: l.deleted
       })
     }
   }

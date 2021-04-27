@@ -1,7 +1,8 @@
 <template>
   <div class="post-page-level">
   <el-card shadow="never">
-    <div class="level-box">
+    <el-empty v-if="hasDeleted" :description="`L${level} has been deleted`"></el-empty>
+    <div v-else class="level-box">
       <div class="level-box-left">
         <div class="level-box-user-avatar"><el-avatar size="large" shape="square" :src="userAvatarUrl"></el-avatar></div>
         <div class="level-box-user-name-container">
@@ -77,7 +78,8 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
     },
     hasEdited: Boolean,
     isAdmin: Boolean,
-    isPinned: Boolean
+    isPinned: Boolean,
+    hasDeleted: Boolean
   },
   components: {
     'rich-text-editor': RichTextEditor

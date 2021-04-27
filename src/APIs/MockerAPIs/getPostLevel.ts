@@ -42,7 +42,8 @@ export default function (postId:string, level:number):Promise<unknown> {
         isLoading: false,
         isAdmin,
         isPinned: post.isPinned,
-        isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())
+        isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie()),
+        hasDeleted: l.deleted
       }
     }
   }
