@@ -7,8 +7,11 @@
         <div class="level-box-user-avatar"><el-avatar size="large" shape="square" :src="userAvatarUrl"></el-avatar></div>
         <div class="level-box-user-name-container">
           <div class="level-box-user-name">{{ userName }}</div>
-          <div v-if="isPoster"><el-tag class="poster-tag" type="warning">Poster</el-tag></div>
-          <div v-if="isYou"><el-tag>You</el-tag></div>
+          <!--div v-if="isPoster"><el-tag class="poster-tag" type="warning">Poster</el-tag></div>
+          <div v-if="isYou"><el-tag>You</el-tag></div-->
+          <div v-for="tag in userTags" :key="tag">
+            <el-tag :type="tag.type">{{ tag.tag }}</el-tag>
+          </div>
         </div>
       </div>
       <div v-loading="isLoading" class="level-box-right">
@@ -58,6 +61,7 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
   props: {
     userAvatarUrl: String,
     userName: String,
+    userTags: Array,
     content: String,
     level: Number,
     date: String,
@@ -169,6 +173,7 @@ export default class PostPageLevel extends Vue {}
 
 .level-box-user-name-container{
   text-align: center;
+  margin-bottom: 25px;
 }
 
 .level-box-user-name{

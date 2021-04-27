@@ -10,6 +10,7 @@
         :ref="`levelRefList${index}`"
         :userAvatarUrl="l.userAvatarUrl"
         :userName="l.userName"
+        :userTags="l.userTags"
         :level="l.level"
         :content="l.content"
         :date="l.date"

@@ -22,6 +22,7 @@ class User {
   userAvatarUrl = ''
   userType = UserType.NORMAL
   userDescription = ''
+  userLevel = 'UL1'
   pwd = ''
 
   constructor (email:string, name:string, avatar:string, type:number, description:string, pwd:string) {
@@ -115,8 +116,15 @@ class UserHelper {
   }
 
   getUserTags (userId:string) {
+    const tags = []
     const user = this.getUser(userId)
-    return user!.userType === UserType.ADMIN ? [{ type: 'warning', tag: 'Admin' }] : []
+    if (user) {
+      tags.push({ type: '', tag: user.userLevel })
+      if (user.userType === UserType.ADMIN) {
+        tags.push({ type: 'danger', tag: 'Admin' })
+      }
+    }
+    return tags
   }
 }
 

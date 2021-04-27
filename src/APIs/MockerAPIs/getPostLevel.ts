@@ -24,9 +24,20 @@ export default function (postId:string, level:number):Promise<unknown> {
       const user = Mocker.userHelper.getUser(l.userId)
       let userName = '<UnkownUser>'
       let userAvatarUrl = ''
+      const tags = []
       if (user !== null) {
         userName = user.userName
         userAvatarUrl = user.userAvatarUrl
+        tags.push({ type: '', tag: user.userLevel })
+        if (user.userType === UserType.ADMIN) {
+          tags.push({ type: 'danger', tag: 'Admin' })
+        }
+      }
+      if (post.getFirstLevel().userId === l.userId) {
+        tags.push({ type: 'warning', tag: 'Poster' })
+      }
+      if (l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie())) {
+        tags.push({ type: '', tag: 'You' })
       }
       levelData = {
         userAvatarUrl,
@@ -43,7 +54,8 @@ export default function (postId:string, level:number):Promise<unknown> {
         isAdmin,
         isPinned: post.isPinned,
         isYou: l.userId === Mocker.userHelper.getLoginUserIdByToken(Tools.getLoginTokenCookie()),
-        hasDeleted: l.deleted
+        hasDeleted: l.deleted,
+        userTags: tags
       }
     }
   }
