@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-core'
-import { ElAffix, ElAvatar, ElBacktop, ElBadge, ElButton, ElCard, ElDropdown, ElDropdownItem, ElDropdownMenu, ElEmpty, ElIcon, ElImage, ElInput, ElLink, ElLoading, ElMenu, ElMenuItem, ElMessageBox, ElPageHeader, ElPagination, ElPopover, ElSkeleton, ElTag } from 'element-plus'
+import { ElAffix, ElAvatar, ElBacktop, ElBadge, ElButton, ElCard, ElDropdown, ElDropdownItem, ElDropdownMenu, ElEmpty, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElLink, ElLoading, ElMenu, ElMenuItem, ElMessageBox, ElPageHeader, ElPagination, ElPopover, ElSkeleton, ElTag } from 'element-plus'
 
 export default (app:App):void => {
   app.use(ElButton)
@@ -25,4 +25,6 @@ export default (app:App):void => {
   app.use(ElDropdown)
   app.use(ElDropdownMenu)
   app.use(ElDropdownItem)
+  app.use(ElForm)
+  app.use(ElFormItem)
 }

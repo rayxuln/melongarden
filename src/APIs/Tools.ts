@@ -1,19 +1,21 @@
 
 class Tools {
   setLoginTokenCookie (token:string) {
-    document.cookie = `token=${token};path=/;`
+    // document.cookie = `token=${token};path=/;`
+    window.localStorage.setItem('token', token)
   }
 
   getLoginTokenCookie () {
-    const cookie = document.cookie
-    const ca = cookie.split(';')
-    for (let c of ca) {
-      c = c.trim()
-      if (c.indexOf('token=') === 0) {
-        return c.substring('token='.length, c.length)
-      }
-    }
-    return ''
+    // const cookie = document.cookie
+    // const ca = cookie.split(';')
+    // for (let c of ca) {
+    //   c = c.trim()
+    //   if (c.indexOf('token=') === 0) {
+    //     return c.substring('token='.length, c.length)
+    //   }
+    // }
+    // return ''
+    return window.localStorage.getItem('token') ?? ''
   }
 
   getImagesInPost (content:string, maxNum = 3) {

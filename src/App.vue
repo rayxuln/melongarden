@@ -18,7 +18,7 @@
         </el-input>
       </div>
       <transition name="fade" mode="out-in">
-      <div class="search-bar-right" v-if="display_login_info">
+      <div class="search-bar-right" v-if="displayLoginInfo">
         <el-avatar size="small" shape="square" :src="userAvatar"></el-avatar>
         <div><el-popover
           placement="bottom"
@@ -42,18 +42,8 @@
         </el-popover></div>
       </div>
       <div class="search-bar-right" v-else>
-        <el-button type="success">Sign Up</el-button>
-        <!--el-button @click="onSignInButtonPressed">Sign In</el-button-->
-        <el-dropdown trigger="click" @command="handleCommand">
-          <el-button>Sign In</el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item icon="" disabled>Who do you want to be?</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-lollipop" command="ACatMan" divided>A Nobody</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-cold-drink" command="AdminMan">A Powerfull Man</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <el-button type="success" @click="this.$router.push('/signup')">Sign Up</el-button>
+        <el-button @click="this.$router.push('/signin')">Sign In</el-button>
       </div>
       </transition>
     </div>
@@ -93,7 +83,6 @@ import APIs from '@/APIs'
 import Tools from '@/APIs/Tools'
 import { ElMessage } from 'element-plus'
 
-import Mocker from '@/APIs/MockerAPIs/Mocker'
 import { Options, Vue } from 'vue-class-component'
 
 import UserInfoPanel from '@/components/UserInfoPanel.vue'
@@ -105,7 +94,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
   },
   data () {
     return {
-      display_login_info: false,
+      displayLoginInfo: false,
       userName: 'UserName',
       userAvatar: '',
       userPostNum: 0,
@@ -126,43 +115,15 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
   },
   mounted () {
     console.log(process.env.BASE_URL)
-    document.title = 'MelonGarden'
+    document.title = 'Melon Garden'
     const query = Tools.locationSearchToQuery(window.location.search)
     this.searchFilter = query.search || ''
     this.loadMembersPosts()
   },
   methods: {
-    handleCommand (cmd:string) {
-      this.onSignInButtonPressed(cmd)
-    },
-    onSignInButtonPressed (userName:string) {
-      // Test Mocker APIs
-      Mocker.loginTestUser(userName)
-      const r = {
-        path: this.$route.path,
-        query: { ...this.$route.query, login: 'yes' },
-        hash: this.$route.hash,
-        params: { ...this.$route.params }
-      }
-      this.$router.push(r)
-      setTimeout(() => {
-        this.$router.go(-1)
-        this.loadMembersPosts()
-
-        APIs.checkToken().then((vaule) => {
-          const v = vaule as { userName:string, userAvatar:string }
-          this.display_login_info = true
-          this.userName = v.userName
-          this.userAvatar = v.userAvatar
-        }).catch((v) => {
-          this.display_login_info = false
-          ElMessage.error('Check token fail. ' + v)
-        })
-      }, 1000)
-    },
     onLogoutClicked () {
       Tools.setLoginTokenCookie('')
-      this.display_login_info = false
+      this.displayLoginInfo = false
       const r = {
         path: this.$route.path,
         query: { ...this.$route.query, login: 'no' },
@@ -190,6 +151,16 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     },
     loadMembersPosts () {
       this.$store.dispatch('updateMembersPosts')
+
+      APIs.checkToken().then((v:unknown) => {
+        const res = v as { userName:string, userAvatar:string }
+        this.userName = res.userName
+        this.userAvatar = res.userAvatar
+        this.displayLoginInfo = true
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      }).catch((_e) => {
+        this.displayLoginInfo = false
+      })
     },
     onSearchButtonClicked () {
       const r = {

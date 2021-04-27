@@ -1,7 +1,12 @@
 
 import Tools from '../Tools'
 
-let userIdCount = 0
+const avatarUrls = [
+  'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+  'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+]
+
+let userIdCount = 10086
 let userTokenCount = 100
 let postIdCount = 233
 
@@ -12,15 +17,21 @@ export const UserType = {
 
 class User {
   userId = ''
+  userEmail = ''
   userName = '<UnknownUserName>'
   userAvatarUrl = ''
   userType = UserType.NORMAL
+  userDescription = ''
+  pwd = ''
 
-  constructor (name:string, avatar:string, type:number) {
+  constructor (email:string, name:string, avatar:string, type:number, description:string, pwd:string) {
     this.userId = `${userIdCount++}`
+    this.userEmail = email
     this.userName = name
     this.userAvatarUrl = avatar
     this.userType = type
+    this.userDescription = description
+    this.pwd = pwd
   }
 }
 
@@ -29,19 +40,20 @@ class UserHelper {
 
   loginUserDictionary:Record<string, string> = {}
 
-  register (name:string, avatar:string, type:number = UserType.NORMAL) {
-    this.userList.push(new User(name, avatar, type))
+  register (email:string, name:string, pwd:string, type:number = UserType.NORMAL) {
+    this.userList.push(new User(email, name, avatarUrls[userIdCount % 2], type, '', pwd))
   }
 
-  login (id:string) {
+  login (email:string, pwd:string) {
     for (const i of this.userList) {
-      if (i.userId === id) {
-        console.log(`${id}(${i.userName}) has login.`)
-        this.loginUserDictionary[id] = `${userTokenCount++}`
-        return this.loginUserDictionary[id]
+      if (i.userEmail === email) {
+        if (i.pwd !== pwd) throw new Error('Wrong password.')
+        console.log(`${email}(${i.userName}) has login.`)
+        this.loginUserDictionary[i.userId] = `${userTokenCount++}`
+        return this.loginUserDictionary[i.userId]
       }
     }
-    throw new Error(`Unregister user id ${id}`)
+    throw new Error(`Unregister user ${email}`)
   }
 
   getUserIdByName (name:string) {
@@ -437,21 +449,11 @@ class Mocker {
   postHelper:PostHelper = new PostHelper()
 
   constructor () {
-    this.userHelper.register('ADogMan', 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png')
-    this.userHelper.register('ACatMan', 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png')
-    this.userHelper.register('AdminMan', 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', UserType.ADMIN)
+    this.userHelper.register('dogman', 'ADogMan', '123')
+    this.userHelper.register('catman', 'ACatMan', '123')
+    this.userHelper.register('admin', 'AdminMan', '123', UserType.ADMIN)
 
     this.postTest()
-  }
-
-  setLoginTokenCookie (token:string) {
-    document.cookie = `token=${token};path=/;`
-  }
-
-  loginTestUser (userName:string) {
-    // this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName('ACatMan'))
-    this.loginUserToken = this.userHelper.login(this.userHelper.getUserIdByName(userName))
-    this.setLoginTokenCookie(this.loginUserToken)
   }
 
   postTest () {
@@ -500,7 +502,11 @@ export default m
 export function promiseHelper (v:unknown, timeout = -1, f = 'Reject for noreson', isReject = false):Promise<unknown> {
   return new Promise((resolve, reject) => {
     if (isReject) {
-      reject(new Error(f))
+      if (timeout <= 0) {
+        reject(new Error(f))
+      } else {
+        setTimeout(() => reject(new Error(f)), timeout)
+      }
     } else {
       if (timeout <= 0) {
         resolve(v)

@@ -52,7 +52,7 @@
     <div class="reply-box-container">
       <div class="reply-box-title">Reply</div>
       <rich-text-editor v-model="replyBoxTextArea"></rich-text-editor>
-      <el-button type="primary" @click="onReply">Reply</el-button>
+      <el-button :loading="isReplying" type="primary" @click="onReply">Reply</el-button>
     </div>
     </el-card>
   </div>
@@ -82,7 +82,8 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       levelList: [],
       levelNum: 0,
       filteredLevelNum: 0,
-      pageSize: 7
+      pageSize: 7,
+      isReplying: false
     }
   },
   created () {
@@ -105,6 +106,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         return
       }
 
+      this.isReplying = true
       APIs.reply(this.postId, this.replyBoxTextArea).then(() => {
         ElMessage.success('You\'ve just replied in a post')
         this.replyBoxTextArea = ''
@@ -116,6 +118,9 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         }
       }).catch((e) => {
         ElMessage.error('Can\'t reply. ' + e)
+        this.$router.push('/signin')
+      }).then(() => {
+        this.isReplying = false
       })
     },
     onReplyTextClicked () {

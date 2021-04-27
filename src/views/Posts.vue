@@ -46,7 +46,7 @@
         <el-input placeholder="Type the title here..." maxlength="50" show-word-limit v-model="post_box_title"></el-input>
         <!--el-input type="textarea" :rows="7" placeholder="Type something interesting here..." v-model="post_box_textarea"></el-input-->
         <rich-text-editor v-model="post_box_textarea" @images-upload-start="onImagesUploadStart" @images-upload-finished="onImagesUploadFinished"></rich-text-editor>
-        <el-button :loading="post_box_post_button_loading" type="primary" @click="onPostButtonClicked">Post</el-button>
+        <el-button :loading="postBoxPostButtonLoading" type="primary" @click="onPostButtonClicked">Post</el-button>
       </div>
     </el-card>
   </div>
@@ -67,7 +67,7 @@ import { ElMessage } from 'element-plus'
       post_card_list: [],
       post_box_title: '',
       post_box_textarea: '',
-      post_box_post_button_loading: false,
+      postBoxPostButtonLoading: false,
       current_post_number: 0,
       page_size: 7,
       isPageLoading: false,
@@ -130,6 +130,7 @@ import { ElMessage } from 'element-plus'
         return
       }
 
+      this.postBoxPostButtonLoading = true
       APIs.post(this.post_box_title, this.post_box_textarea).then(() => {
         ElMessage.success('You\'ve just posted a new post')
         this.clearPostBox()
@@ -141,13 +142,16 @@ import { ElMessage } from 'element-plus'
         this.$store.dispatch('updateMembersPosts')
       }).catch((e) => {
         ElMessage.error('Can\'t post. ' + e)
+        this.$router.push('/signin')
+      }).then(() => {
+        this.postBoxPostButtonLoading = false
       })
     },
     onImagesUploadStart () {
-      this.post_box_post_button_loading = true
+      this.postBoxPostButtonLoading = true
     },
     onImagesUploadFinished () {
-      this.post_box_post_button_loading = false
+      this.postBoxPostButtonLoading = false
     },
     onLikeClicked (index:number, like:number) {
       const p = this.post_card_list[index]

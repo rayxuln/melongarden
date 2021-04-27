@@ -13,6 +13,8 @@ import getPostLevelLikeInfo from './getPostLevelLikeInfo'
 import getUserInfo from './getUserInfo'
 import pinPost from './pinPost'
 import getImagePostList from './getImagePostList'
+import signin from './signin'
+import signup from './signup'
 
 export default {
   getMembersAndPosts,
@@ -29,5 +31,7 @@ export default {
   getPostLevelLikeInfo,
   getUserInfo,
   pinPost,
-  getImagePostList
+  getImagePostList,
+  signin,
+  signup
 }

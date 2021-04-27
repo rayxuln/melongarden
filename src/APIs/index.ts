@@ -63,6 +63,14 @@ class APIMidware {
   getImagePostList (pageSize:number, pageNumber:number, filter:string) {
     return APIs.getImagePostList(pageSize, pageNumber, filter)
   }
+
+  signin (user:string, pwd:string) {
+    return APIs.signin(user, pwd)
+  }
+
+  signup (user:string, pwd:string, userName:string, inviteCode:string) {
+    return APIs.signup(user, pwd, userName, inviteCode)
+  }
 }
 
 const ins = new APIMidware()
