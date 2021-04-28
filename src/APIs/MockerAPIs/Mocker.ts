@@ -408,7 +408,7 @@ export class Post {
     const res = []
     for (const l of this.postLevelList) {
       if (l.level > 1 && l.userId === userId) {
-        res.push({ ...l, postId: this.postId, title: this.title })
+        res.push({ ...l, postId: this.postId, title: this.title, contain: l.contain })
       }
     }
     return res

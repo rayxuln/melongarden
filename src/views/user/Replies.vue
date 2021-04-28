@@ -2,6 +2,7 @@
   <data-list-viewer
     baseURL="/user-center/replies"
     :getDataAPI="getMessageList"
+    emptyText="There is no reply, yet"
     @error="onError"
   ></data-list-viewer>
 </template>

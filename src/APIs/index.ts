@@ -96,16 +96,16 @@ class APIMidware {
     return APIs.checkNewMessage()
   }
 
-  getUserMessageList (pageSize:number, pageNumber:number, filter:string) {
-    return APIs.getUserMessageList(pageSize, pageNumber, filter)
+  getUserMessageList (pageSize:number, pageNumber:number, filter:string, postPageSize:number) {
+    return APIs.getUserMessageList(pageSize, pageNumber, filter, postPageSize)
   }
 
-  getUserPostList (pageSize:number, pageNumber:number, filter:string) {
+  getUserPostList (pageSize:number, pageNumber:number, filter:string, postPageSize:number) {
     return APIs.getUserPostList(pageSize, pageNumber, filter)
   }
 
-  getUserPostLevelList (pageSize:number, pageNumber:number, filter:string) {
-    return APIs.getUserPostLevelList(pageSize, pageNumber, filter)
+  getUserPostLevelList (pageSize:number, pageNumber:number, filter:string, postPageSize:number) {
+    return APIs.getUserPostLevelList(pageSize, pageNumber, filter, postPageSize)
   }
 }
 

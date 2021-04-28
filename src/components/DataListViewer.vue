@@ -1,6 +1,6 @@
 <template>
   <div v-loading="isLoading" class="data-list-viewer">
-    <el-empty v-if="isEmpty" description="There is no post, yet."></el-empty>
+    <el-empty v-if="isEmpty" :description="emptyText"></el-empty>
     <div v-else class="list-container">
         <el-card shadow="hover" v-for="m in dataList" :key="m">
           <template #header>
@@ -37,7 +37,12 @@ import { Options, Vue } from 'vue-class-component'
 @Options({
   props: {
     baseURL: String,
-    getDataAPI: Function
+    getDataAPI: Function,
+    postPageSize: {
+      type: Number,
+      default: 7
+    },
+    emptyText: String
   },
   emits: ['error'],
   data () {
@@ -80,7 +85,7 @@ import { Options, Vue } from 'vue-class-component'
         this.pageNumber = 1
       }
       const filter = this.$route.query.search || ''
-      this.getDataAPI(this.pageSize, this.pageNumber, filter).then((value:unknown) => {
+      this.getDataAPI(this.pageSize, this.pageNumber, filter, this.postPageSize).then((value:unknown) => {
         const v = value as { dataList:unknown, totalNum:unknown }
         this.dataList = v.dataList
         this.totalNum = v.totalNum
