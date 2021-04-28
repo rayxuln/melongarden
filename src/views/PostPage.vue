@@ -101,6 +101,16 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
   },
   mounted () {
     this.loadLevels()
+
+    const cache = window.localStorage.getItem('replyBoxTextArea')
+    if (cache) {
+      this.replyBoxTextArea = cache
+    }
+  },
+  watch: {
+    replyBoxTextArea (v) {
+      window.localStorage.setItem('replyBoxTextArea', v)
+    }
   },
   methods: {
     onReply () {

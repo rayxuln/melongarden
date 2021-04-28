@@ -90,6 +90,24 @@ import { ElMessage } from 'element-plus'
   },
   mounted () {
     this.loadPosts()
+
+    let cache = null
+    cache = window.localStorage.getItem('post_box_title')
+    if (cache) {
+      this.post_box_title = cache
+    }
+    cache = window.localStorage.getItem('post_box_textarea')
+    if (cache) {
+      this.post_box_textarea = cache
+    }
+  },
+  watch: {
+    post_box_title (v) {
+      window.localStorage.setItem('post_box_title', v)
+    },
+    post_box_textarea (v) {
+      window.localStorage.setItem('post_box_textarea', v)
+    }
   },
   methods: {
     onCurrentPageChanged (pageNumber:number) {
