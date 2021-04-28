@@ -11,27 +11,31 @@
       }
 
       let redirect = ''
+      let redirectUrl = ''
 
       addSPA('melongarden', 'melongarden')
 
       for (const spa in spaMap) {
         const url = `${window.location.protocol}//${window.location.host}/${spa}/`
         if (window.location.href.indexOf(url) === 0) {
+          redirectUrl = url
           redirect = spaMap[spa]
           break
         }
       }
       
       if (redirect !== '') {
-        xmlhttp = new XMLHttpRequest()
-        xmlhttp.open('get', '/' + redirect)
-        xmlhttp.onload = (res) => {
-          document.write(res.target.responseText)
-        }
-        xmlhttp.onerror = (e) => {
-          console.log(e)
-        }
-        xmlhttp.send()
+        // xmlhttp = new XMLHttpRequest()
+        // xmlhttp.open('get', '/' + redirect)
+        // xmlhttp.onload = (res) => {
+        //   document.write(res.target.responseText)
+        // }
+        // xmlhttp.onerror = (e) => {
+        //   console.log(e)
+        // }
+        // xmlhttp.send()
+        window.localStorage.setItem(`spa_${redirect}_404_redirect_url`, window.location.href)
+        window.location.href = redirectUrl
       }
 
       window.onload = () => {

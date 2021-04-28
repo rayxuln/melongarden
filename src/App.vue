@@ -122,6 +122,15 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         })
       }
     }, 5000)
+
+    // handle 404 redirect
+    const key = 'spa_melongarden_404_redirect_url'
+    const url = window.localStorage.getItem(key)
+    if (url) {
+      this.$router.push(url)
+      console.log('redirect to: ' + key)
+      window.localStorage.removeItem(key)
+    }
   },
   mounted () {
     console.log(process.env.BASE_URL)
