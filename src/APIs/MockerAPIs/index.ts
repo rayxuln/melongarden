@@ -20,6 +20,7 @@ import logout from './logout'
 import setUserInfo from './setUserInfo'
 import resetPassword from './resetPassword'
 import deleteUser from './deleteUser'
+import checkNewMessage from './checkNewMessage'
 
 export default {
   getMembersAndPosts,
@@ -43,5 +44,6 @@ export default {
   logout,
   setUserInfo,
   resetPassword,
-  deleteUser
+  deleteUser,
+  checkNewMessage
 }

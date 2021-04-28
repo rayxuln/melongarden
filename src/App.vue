@@ -114,6 +114,14 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         this.loadMembersPosts()
       }
     )
+    setInterval(() => {
+      if (this.displayLoginInfo) {
+        APIs.checkNewMessage().then((v:unknown) => {
+          const res = v as { hasMsg:boolean }
+          this.userHasNewMessage = res.hasMsg
+        })
+      }
+    }, 5000)
   },
   mounted () {
     console.log(process.env.BASE_URL)

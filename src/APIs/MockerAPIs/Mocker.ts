@@ -9,10 +9,30 @@ const avatarUrls = [
 let userIdCount = 10086
 let userTokenCount = 100
 let postIdCount = 233
+let msgIdCount = 25565
 
 export const UserType = {
   NORMAL: 0,
   ADMIN: 1
+}
+
+class Message {
+  id = -1
+  title = ''
+  content = ''
+  relativeUrl = ''
+  read = false
+
+  constructor (title:string, content:string, url:string) {
+    this.id = msgIdCount++
+    this.title = title
+    this.content = content
+    this.relativeUrl = url
+  }
+
+  contain (key:string) {
+    return this.title.indexOf(key) >= 0 || this.content.indexOf(key) >= 0
+  }
 }
 
 class User {
@@ -25,6 +45,8 @@ class User {
   userLevel = 'UL1'
   pwd = ''
 
+  msgList:Array<Message> = []
+
   constructor (email:string, name:string, avatar:string, type:number, description:string, pwd:string) {
     this.userId = `${userIdCount++}`
     this.userEmail = email
@@ -33,6 +55,37 @@ class User {
     this.userType = type
     this.userDescription = description
     this.pwd = pwd
+  }
+
+  hasNewMessage () {
+    for (const m of this.msgList) {
+      if (!m.read) {
+        return true
+      }
+    }
+    return false
+  }
+
+  addMessage (title:string, content:string, url:string) {
+    this.msgList.push(new Message(title, content, url))
+  }
+
+  getMessageList (pageSize:number, pageNumber:number, key:string) {
+    let msgList = this.msgList
+    const res = []
+    if (key && key !== '') {
+      msgList = []
+      for (const m of this.msgList) {
+        if (m.contain(key)) msgList.push(m)
+      }
+    }
+    const start = Math.max(0, (pageNumber - 1) * pageSize)
+    const end = Math.min(msgList.length, pageNumber * pageSize)
+    for (let i = start; i < end; ++i) {
+      msgList[i].read = true
+      res.push(msgList[i])
+    }
+    return [res, msgList.length]
   }
 }
 

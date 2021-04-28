@@ -20,6 +20,12 @@ export default function (postId:string, content:string):Promise<unknown> {
       const l = post.appendLevel(id, content)
       level = l.level
       Mocker.postHelper.sortPosts()
+
+      const user = Mocker.userHelper.getUser(post.getPoster())
+      const replior = Mocker.userHelper.getUser(l.userId)
+      if (post.getPoster() !== l.userId && user && replior) {
+        user.addMessage(`New Reply: ${replior.userName} had comment on your post!`, content, postId)
+      }
     }
   }
   return promiseHelper({ level }, 1000, reason, reject)

@@ -91,6 +91,10 @@ class APIMidware {
   deleteUser (pwd:string) {
     return APIs.deleteUser(pwd)
   }
+
+  checkNewMessage () {
+    return APIs.checkNewMessage()
+  }
 }
 
 const ins = new APIMidware()
