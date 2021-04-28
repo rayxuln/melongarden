@@ -236,9 +236,10 @@ export class Post {
     this.postLevelList = []
   }
 
-  appendLevel (posterId:string, content:string):void {
+  appendLevel (posterId:string, content:string):PostLevel {
     const l = new PostLevel(posterId, content, this.postLevelList.length + 1)
     this.postLevelList.push(l)
+    return l
   }
 
   getPoster ():string {

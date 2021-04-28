@@ -7,6 +7,7 @@ export default function (postId:string, content:string):Promise<unknown> {
   const id = Mocker.userHelper.getLoginUserIdByToken(token)
   let reject = false
   let reason = ''
+  let level = -1
   if (id === '') {
     reject = true
     reason = 'You are not login yet!'
@@ -16,10 +17,10 @@ export default function (postId:string, content:string):Promise<unknown> {
       reject = true
       reason = 'Post not found!'
     } else {
-      post.appendLevel(id, content)
-
+      const l = post.appendLevel(id, content)
+      level = l.level
       Mocker.postHelper.sortPosts()
     }
   }
-  return promiseHelper({}, 1000, reason, reject)
+  return promiseHelper({ level }, 1000, reason, reject)
 }

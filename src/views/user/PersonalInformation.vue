@@ -151,6 +151,7 @@ import Tools from '@/APIs/Tools'
           this.$router.push('/signin')
         }).catch((e) => {
           ElMessage.error('Can\'t delete your account.' + e)
+          this.isSaving = false
         })
       }).catch((e:unknown) => { return e })
     },

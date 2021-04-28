@@ -6,7 +6,8 @@
     <el-page-header title="" :content="title" @back="$router.push('/')"></el-page-header>
 
     <div class="post-page-level-container" v-for="(l, index) in levelList" :key="index">
-      <post-page-level
+      <post-page-level :id="`L${l.level}`"
+        :class="{ pulse: l.pulse }"
         :ref="`levelRefList${index}`"
         :userAvatarUrl="l.userAvatarUrl"
         :userName="l.userName"
@@ -24,7 +25,7 @@
         :isAdmin="l.isAdmin"
         :isPinned="l.isPinned"
         :hasDeleted="l.hasDeleted"
-        @replyTextClick="onReplyTextClicked"
+        @replyTextClick="onReplyTextClicked(l.level)"
         @deleteTextClick="onDeleteTextClicked(l.level)"
         @saveTextClick="onSaveTextClicked(index, $event)"
         @likeClick="onLikeClicked(index, 1)"
@@ -109,15 +110,17 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       }
 
       this.isReplying = true
-      APIs.reply(this.postId, this.replyBoxTextArea).then(() => {
+      APIs.reply(this.postId, this.replyBoxTextArea).then((v:unknown) => {
+        const res = v as { level:number }
         ElMessage.success('You\'ve just replied in a post')
         this.replyBoxTextArea = ''
         const newPage = Math.ceil((this.levelNum + 1) / this.pageSize)
-        if (this.currentPage !== newPage) {
-          this.$router.push(`/post?post_id=${this.postId}&page=${newPage}`)
-        } else {
-          this.loadLevels()
-        }
+        this.$router.push(`/post?post_id=${this.postId}&page=${newPage}#L${res.level}`)
+        // if (this.currentPage !== newPage) {
+        //   this.$router.push(`/post?post_id=${this.postId}&page=${newPage}`)
+        // } else {
+        //   this.loadLevels()
+        // }
       }).catch((e) => {
         ElMessage.error('Can\'t reply. ' + e)
         this.$router.push('/signin')
@@ -125,7 +128,12 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         this.isReplying = false
       })
     },
-    onReplyTextClicked () {
+    onReplyTextClicked (level:number) {
+      for (const l of this.levelList) {
+        if (l.level === level) {
+          this.replyBoxTextArea = `<blockquote><p><strong><span style="color: #95a5a6;">@${l.userName} (L${l.level}):</span></strong></p><p>${l.content}</p></blockquote><p>&nbsp;</p>`
+        }
+      }
       window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
     },
     onDeleteTextClicked (level:number) {
@@ -211,6 +219,22 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         ElMessage.error('Error happing while loading post page. ' + e)
       }).then(() => {
         this.isLoadingPage = false
+
+        // scroll to hash level
+        const hash = this.$route.hash
+        if (hash.length > 2 && typeof hash === 'string' && hash[1] === 'L') {
+          const level = document.getElementById(hash.substring(1))
+          if (level) {
+            level.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+            const index = Number.parseInt(level.id.substring(1))
+            for (const l of this.levelList) {
+              if (l.level === index) {
+                l.pulse = true
+              }
+            }
+          }
+        }
       })
     },
     onCurrentPageChanged (pageNumber:number) {
@@ -281,4 +305,19 @@ export default class PostPage extends Vue {}
   margin-bottom: 15px;
 }
 
+.pulse{
+  animation: pulse 1s .2s ease both;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+  100%{transform:scale(1)}
+}
+
+blockquote {
+  border-left: 2px solid #ccc;
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
 </style>
