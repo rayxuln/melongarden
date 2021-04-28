@@ -92,7 +92,6 @@ class User {
       res.push(m.duplicate())
       m.read = true
     }
-    console.log(res)
     return [res, msgList.length]
   }
 }

@@ -28,7 +28,7 @@ export default function (pageSize:number, pageNumber:number, filter:string):Prom
     reject = true
   }
   return promiseHelper({
-    msgList,
+    dataList: msgList,
     totalNum
   }, 1000, 'Invalid token', reject)
 }
