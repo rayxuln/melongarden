@@ -15,7 +15,7 @@
 
 ## 认证
 
-认证信息储存在cookie中，在API调用时若需要用到认证信息，则直接传递cookie即可。
+认证信息储存在local storage中，在API调用时若需要用到认证信息，则直接将token放进请求头部即可。
 
 ## 图片上传
 
@@ -24,6 +24,24 @@
 当前为模拟图片上传，将图片数据转换为base64并编码为url返回。具体代码详见：`src/APIs/Tools.ts`中的`imagesUploadHandler`函数。
 
 ## API 列表
+
+### checkNewMessage ( )
+
+功能：轮询调用，查看当前用户是否有新消息
+
+参数：
+
+```js
+
+```
+
+返回对象：
+
+```js
+{
+    hasMsg, // Boolean类型，是否有新消息
+}
+```
 
 ### checkToken ( )
 
@@ -184,7 +202,15 @@ level // 楼层索引（从1开始）
     isLoading, // 是否正在加载 (总是为false即可)
     isAdmin, // 当前用户是否为管理员
     isPinned, // 当前帖子是否置顶
-    isYou // 当前用户是否为该楼层的作者
+    isYou, // 当前用户是否为该楼层的作者
+    hasDeleted, // 是否被删除了
+    userTags // 层主的tag数组，格式如下
+}
+
+// 用户标签格式
+{
+    type, // 标签颜色(字符串)('warning'为黄色， 'info'为灰色，)
+    tag // 标签内容(字符串)(如：'Admin'表示用户是管理员)
 }
 ```
 
@@ -245,7 +271,15 @@ filter // 搜索内容（字符串）
     isLoading, // 是否正在加载 (总是为false即可)
     isAdmin, // 当前用户是否为管理员
     isPinned, // 当前帖子是否置顶
-    isYou // 当前用户是否为该楼层的作者
+    isYou, // 当前用户是否为该楼层的作者
+    hasDeleted, // 是否被删除了
+    userTags // 层主的tag数组，格式如下
+}
+
+// 用户标签格式
+{
+    type, // 标签颜色(字符串)('warning'为黄色， 'info'为灰色，)
+    tag // 标签内容(字符串)(如：'Admin'表示用户是管理员)
 }
 ```
 
@@ -300,6 +334,24 @@ filter // 搜索内容（字符串）
 }
 ```
 
+### getTitleImage ( )
+
+功能：标题图，用于节日氛围
+
+参数：
+
+```js
+
+```
+
+返回对象：
+
+```js
+{
+    url // 标题图的url
+}
+```
+
 ### getUserInfo ( )
 
 功能：获取当前登录用户信息，用于在用户面板上显示
@@ -316,13 +368,127 @@ filter // 搜索内容（字符串）
 {
     userPostNum, // 用户发帖数
     userReplyNum, // 用户回复数
-    userTags // 用户标签数组 (格式如下)
+    userName, // 用户昵称
+    userAvatar, // 用户头像url
+    userEmail, // 用户电子邮箱
+    userTags, // 用户标签数组 (格式如下)
+    userDescription // 用户个性签名
 }
 
 // 用户标签格式
 {
     type, // 标签颜色(字符串)('warning'为黄色， 'info'为灰色，)
     tag // 标签内容(字符串)(如：'Admin'表示用户是管理员)
+}
+```
+
+### getUserMessageList ( pageSize, pageNumber, filter, postPageSize )
+
+功能：获取用户的消息
+
+参数：
+
+```js
+pageSize // 页大小
+pageNumber // 页码
+filter // 搜索字符串
+postPageSize // 帖子详情中的页大小
+```
+
+返回对象：
+
+```js
+{
+    dataList, // 消息列表，格式如下
+    totalNum, // 消息总数
+}
+
+// 消息格式
+{
+    title, // 标题
+    content, // 内容
+    url, // 点击标题后跳转到的页面url
+    date, // 日期（字符串）
+    tags // 标题tag数组(可以为空)，格式如下
+}
+
+// 标题tag格式
+{
+    type, // 标签颜色(字符串)('warning'为黄色， 'info'为灰色，)
+    tag // 标签内容(字符串)(如：'New'表示新消息)
+}
+```
+
+### getUserPostLevelList ( pageSize, pageNumber, filter, postPageSize )
+
+功能：获取用户发过的回复列表
+
+参数：
+
+```js
+pageSize // 页大小
+pageNumber // 页码
+filter // 搜索字符串
+postPageSize // 帖子详情中的页大小
+```
+
+返回对象：
+
+```js
+{
+    dataList, // 回复列表，格式如下
+    totalNum, // 总数
+}
+
+// 回复格式
+{
+    title, // 标题
+    content, // 内容
+    url, // 点击标题后跳转到的页面url
+    date, // 日期（字符串）
+    tags // 标题tag数组(可以为空)，格式如下
+}
+
+// 标题tag格式
+{
+    type, // 标签颜色(字符串)
+    tag // 标签内容(字符串)
+}
+```
+
+### getUserPostList ( pageSize, pageNumber, filter )
+
+功能：获取用户发过的帖子列表
+
+参数：
+
+```js
+pageSize // 页大小
+pageNumber // 页码
+filter // 搜索字符串
+```
+
+返回对象：
+
+```js
+{
+    dataList, // 帖子列表，格式如下
+    totalNum, // 总数
+}
+
+// 回复格式
+{
+    title, // 标题
+    content, // 内容
+    url, // 点击标题后跳转到的页面url
+    date, // 日期（字符串）
+    tags // 标题tag数组(可以为空)，格式如下
+}
+
+// 标题tag格式
+{
+    type, // 标签颜色(字符串)
+    tag // 标签内容(字符串)
 }
 ```
 
@@ -336,6 +502,22 @@ filter // 搜索内容（字符串）
 postId // 帖子标识
 level // 楼层索引(从1开始)
 like // 动作(1为点赞，2为点踩)
+```
+
+返回对象：
+
+```js
+
+```
+
+### logout ( )
+
+功能：登出当前用户，同时应该清空local storage中的token
+
+参数：
+
+```js
+
 ```
 
 返回对象：
@@ -380,13 +562,86 @@ content // 帖子内容 (字符串, html代码)
 
 ### reply ( postId, content )
 
-功能：回复帖子
+功能：回复帖子，可在这里向所回复的楼主发送一个消息('新回复'之类的)
 
 参数：
 
 ```js
 postId // 帖子标识
 content // 回复内容 (字符串, html代码)
+```
+
+返回对象：
+
+```js
+{
+    level // 回复所在的楼层索引(从1开始)
+}
+```
+
+### resetPassword ( oldPwd, newPwd )
+
+功能：重置当前用户的密码
+
+参数：
+
+```js
+oldPwd // 旧密码
+newPwd // 新密码
+```
+
+返回对象：
+
+```js
+
+```
+
+### setUserInfo ( userName, userAvatar, userDescription )
+
+功能：设置用户信息
+
+参数：
+
+```js
+userName // 用户昵称
+userAvatar // 用户头像url
+userDescription // 用户个性签名
+```
+
+返回对象：
+
+```js
+
+```
+
+### signin ( user, pwd )
+
+功能：登录，得到token后将其储存到local storage中
+
+参数：
+
+```js
+user // 账号
+pwd // 密码
+```
+
+返回对象：
+
+```js
+
+```
+
+### signup ( user, pwd, userName, inviteCode )
+
+功能：注册
+
+参数：
+
+```js
+user // 账号 (可以为电子邮箱)
+pwd // 密码
+userName // 用户名
+inviteCode // 邀请码
 ```
 
 返回对象：
