@@ -16,12 +16,13 @@ export const UserType = {
   ADMIN: 1
 }
 
-class Message {
+export class Message {
   id = -1
   title = ''
   content = ''
   relativeUrl = ''
   read = false
+  date = new Date()
 
   constructor (title:string, content:string, url:string) {
     this.id = msgIdCount++
@@ -30,7 +31,14 @@ class Message {
     this.relativeUrl = url
   }
 
-  contain (key:string) {
+  duplicate ():Message {
+    const m = new Message(this.title, this.content, this.relativeUrl)
+    m.read = this.read
+    m.date = this.date
+    return m
+  }
+
+  contain (key:string):boolean {
     return this.title.indexOf(key) >= 0 || this.content.indexOf(key) >= 0
   }
 }
@@ -71,20 +79,20 @@ class User {
   }
 
   getMessageList (pageSize:number, pageNumber:number, key:string) {
-    let msgList = this.msgList
+    const msgList = []
     const res = []
-    if (key && key !== '') {
-      msgList = []
-      for (const m of this.msgList) {
-        if (m.contain(key)) msgList.push(m)
-      }
+    for (const m of this.msgList) {
+      if (!key || m.contain(key)) msgList.push(m)
     }
+    msgList.reverse()
     const start = Math.max(0, (pageNumber - 1) * pageSize)
     const end = Math.min(msgList.length, pageNumber * pageSize)
     for (let i = start; i < end; ++i) {
-      msgList[i].read = true
-      res.push(msgList[i])
+      const m = msgList[i]
+      res.push(m.duplicate())
+      m.read = true
     }
+    console.log(res)
     return [res, msgList.length]
   }
 }
@@ -532,6 +540,7 @@ class Mocker {
     this.userHelper.register('admin', 'AdminMan', '123', UserType.ADMIN)
 
     this.postTest()
+    this.messageTest()
   }
 
   postTest () {
@@ -570,6 +579,15 @@ class Mocker {
     p.getFirstLevel().like(this.userHelper.getUserIdByName('AdminMan'))
 
     // this.postHelper.sortPosts()
+  }
+
+  messageTest () {
+    const user = this.userHelper.getUser(this.userHelper.getUserIdByName('AdminMan'))
+    if (user) {
+      for (let i = 0; i < 10; ++i) {
+        user.addMessage('666 - ' + i, 'Content!!!', '')
+      }
+    }
   }
 }
 

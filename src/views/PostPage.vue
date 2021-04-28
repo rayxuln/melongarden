@@ -279,6 +279,10 @@ export default class PostPage extends Vue {}
   text-align: left;
 }
 
+.post-page .el-card{
+  overflow: visible;
+}
+
 .post-page-body{
   margin-bottom: 15px;
 }

@@ -95,6 +95,10 @@ class APIMidware {
   checkNewMessage () {
     return APIs.checkNewMessage()
   }
+
+  getUserMessageList (pageSize:number, pageNumber:number, filter:string) {
+    return APIs.getUserMessageList(pageSize, pageNumber, filter)
+  }
 }
 
 const ins = new APIMidware()
