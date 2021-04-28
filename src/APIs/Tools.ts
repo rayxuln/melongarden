@@ -102,6 +102,15 @@ class Tools {
     })
   }
 
+  trimTextWithLength (content:string, maxLegnth:number, dotLegnth = 3, dot = '.') {
+    if (content === '') return ''
+    if (content.length > maxLegnth) {
+      content = content.substring(0, maxLegnth - dotLegnth)
+      return content.padEnd(maxLegnth, dot)
+    }
+    return content
+  }
+
   extractTextFromHtml (html:string) {
     const e = document.createElement('div')
     e.innerHTML = html

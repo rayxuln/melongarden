@@ -403,6 +403,16 @@ export class Post {
     }
     return res
   }
+
+  getUserPostLevelList (userId:string):Array<Record<string, unknown>> {
+    const res = []
+    for (const l of this.postLevelList) {
+      if (l.level > 1 && l.userId === userId) {
+        res.push({ ...l, postId: this.postId, title: this.title })
+      }
+    }
+    return res
+  }
 }
 
 class PostHelper {
@@ -525,6 +535,24 @@ class PostHelper {
     }
     return res
   }
+
+  getUserPostList (userId:string) {
+    const res = []
+    for (const post of this.postList) {
+      if (post.getFirstLevel().userId === userId) {
+        res.push(post)
+      }
+    }
+    return res
+  }
+
+  getUserPostLevelList (userId:string):Array<unknown> {
+    const res = []
+    for (const post of this.postList) {
+      res.push(...post.getUserPostLevelList(userId))
+    }
+    return res
+  }
 }
 
 class Mocker {
@@ -540,6 +568,22 @@ class Mocker {
 
     this.postTest()
     this.messageTest()
+  }
+
+  pageList (originalList:Array<unknown>, pageSize:number, pageNumber:number, key:string) {
+    const list = []
+    const res = []
+    for (const l of originalList) {
+      const m = l as { contain (key:string): boolean }
+      if (!key || m.contain(key)) list.push(m)
+    }
+    const start = Math.max(0, (pageNumber - 1) * pageSize)
+    const end = Math.min(list.length, pageNumber * pageSize)
+    for (let i = start; i < end; ++i) {
+      const m = list[i]
+      res.push({ ...m })
+    }
+    return [res, list.length]
   }
 
   postTest () {

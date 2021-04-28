@@ -99,6 +99,14 @@ class APIMidware {
   getUserMessageList (pageSize:number, pageNumber:number, filter:string) {
     return APIs.getUserMessageList(pageSize, pageNumber, filter)
   }
+
+  getUserPostList (pageSize:number, pageNumber:number, filter:string) {
+    return APIs.getUserPostList(pageSize, pageNumber, filter)
+  }
+
+  getUserPostLevelList (pageSize:number, pageNumber:number, filter:string) {
+    return APIs.getUserPostLevelList(pageSize, pageNumber, filter)
+  }
 }
 
 const ins = new APIMidware()
