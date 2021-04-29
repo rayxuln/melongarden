@@ -10,7 +10,7 @@
           <el-menu-item index="/user-center/personal-info"><i class="el-icon-user"></i> Personal Info</el-menu-item>
           <el-menu-item index="/user-center/messages"><i class="el-icon-message"></i> Messages</el-menu-item>
           <el-menu-item index="/user-center/posts"><i class="el-icon-postcard"></i> Posts</el-menu-item>
-          <el-menu-item index="/user-center/replies"><i class="el-icon-chat-line-square"></i> Replies</el-menu-item>
+          <el-menu-item index="/user-center/comments"><i class="el-icon-chat-line-square"></i> Comments</el-menu-item>
         </el-menu>
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">

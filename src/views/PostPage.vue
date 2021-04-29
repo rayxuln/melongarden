@@ -35,7 +35,7 @@
       </post-page-level>
     </div>
 
-    <div class="post-page-tail">Replies: {{ levelNum }}</div>
+    <div class="post-page-tail">Comments: {{ levelNum }}</div>
 
     </div>
     </el-card>
@@ -53,9 +53,9 @@
 
     <el-card shadow="never">
     <div class="reply-box-container">
-      <div class="reply-box-title">Reply</div>
+      <div class="reply-box-title">Comment</div>
       <rich-text-editor v-model="replyBoxTextArea"></rich-text-editor>
-      <el-button :loading="isReplying" type="primary" @click="onReply">Reply</el-button>
+      <el-button :loading="isReplying" type="primary" @click="onReply">Comment</el-button>
     </div>
     </el-card>
   </div>
@@ -115,14 +115,14 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
   methods: {
     onReply () {
       if (this.replyBoxTextArea === '') {
-        ElMessage.error('The reply content mustn\'t be empty!')
+        ElMessage.error('The content mustn\'t be empty!')
         return
       }
 
       this.isReplying = true
       APIs.reply(this.postId, this.replyBoxTextArea).then((v:unknown) => {
         const res = v as { level:number }
-        ElMessage.success('You\'ve just replied in a post')
+        ElMessage.success('You\'ve just commented in a post')
         this.replyBoxTextArea = ''
         const newPage = Math.ceil((this.levelNum + 1) / this.pageSize)
         this.$router.push(`/post?post_id=${this.postId}&page=${newPage}#L${res.level}`)
@@ -132,7 +132,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         //   this.loadLevels()
         // }
       }).catch((e) => {
-        ElMessage.error('Can\'t reply. ' + e)
+        ElMessage.error('Can\'t comment. ' + e)
         this.$router.push('/signin')
       }).then(() => {
         this.isReplying = false

@@ -62,8 +62,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/user/Posts.vue')
       },
       {
-        path: 'replies',
-        name: 'UserReplies',
+        path: 'comments',
+        name: 'UserComments',
         component: () => import('../views/user/Replies.vue')
       }
     ]

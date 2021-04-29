@@ -11,7 +11,7 @@
         <div><el-link @click.prevent="$router.push('/user-center/posts')">Post<br>{{ postNum }}</el-link></div>
       </div>
       <div class="user-info-panel-second-right">
-        <div><el-link @click.prevent="$router.push('/user-center/replies')">Reply<br>{{ replyNum }}</el-link></div>
+        <div><el-link @click.prevent="$router.push('/user-center/comments')">Comment<br>{{ replyNum }}</el-link></div>
       </div>
     </div>
 

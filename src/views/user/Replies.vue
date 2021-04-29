@@ -1,8 +1,8 @@
 <template>
   <data-list-viewer
-    baseURL="/user-center/replies"
+    baseURL="/user-center/comments"
     :getDataAPI="getMessageList"
-    emptyText="There is no reply, yet"
+    emptyText="You haven't commented anything, yet"
     @error="onError"
   ></data-list-viewer>
 </template>

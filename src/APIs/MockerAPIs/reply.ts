@@ -24,7 +24,7 @@ export default function (postId:string, content:string):Promise<unknown> {
       const user = Mocker.userHelper.getUser(post.getPoster())
       const replior = Mocker.userHelper.getUser(l.userId)
       if (post.getPoster() !== l.userId && user && replior) {
-        user.addMessage(`Reply: ${replior.userName} had comment on your post!`, content, JSON.stringify({
+        user.addMessage(`Comment: ${replior.userName} had commented on your post!`, content, JSON.stringify({
           postId: postId,
           level: l.level
         }))
