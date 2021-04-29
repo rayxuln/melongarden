@@ -4,7 +4,7 @@
       <div class="image-post-card-content">
         <el-image class="image-post-card-img" :src="img" :preview-src-list="imgList" fit="cover"></el-image>
         <div class="image-post-card-bottom">
-          <div><el-link @click.prevent="$router.push(`/post?post_id=${postId}`)"><div class="image-post-card-title">{{ title }}</div></el-link></div>
+          <div><el-link :href="`/post?post_id=${postId}`" @click.prevent="$router.push(`/post?post_id=${postId}`)"><div class="image-post-card-title">{{ title }}</div></el-link></div>
           <div class="image-post-card-bottom-content">{{ content }}</div>
           <div class="image-post-card-bottom-user">
             <div><el-avatar size="small" :src="userAvatar"></el-avatar></div>
