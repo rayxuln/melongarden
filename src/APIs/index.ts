@@ -1,9 +1,17 @@
 
-import MokerAPIs from './MockerAPIs'
+import MockerAPIs from './MockerAPIs'
+import GoAPIs from './GoAPIs'
 
-const APIs = MokerAPIs
+let APIs:Record<string, any> = GoAPIs
 
 class APIMidware {
+  checkAPI () {
+    if (window.localStorage.getItem('debug')) {
+      APIs = MockerAPIs
+      console.log('using mocker APIs')
+    }
+  }
+
   getMembersAndPosts () {
     return APIs.getMembersAndPosts()
   }
@@ -106,6 +114,45 @@ class APIMidware {
 
   getUserPostLevelList (pageSize:number, pageNumber:number, filter:string, postPageSize:number) {
     return APIs.getUserPostLevelList(pageSize, pageNumber, filter, postPageSize)
+  }
+
+  imagesUploadHandler (start: () => void, finish: () => void) {
+    if (APIs === GoAPIs) {
+      return GoAPIs.imageUploadHandler(start, finish)
+    }
+    const forceFail = false
+    return (blobInfo: { base64: () => unknown }, success: (a: string) => unknown, failure: (arg0: string, arg1: { remove: boolean }) => void, progress: (a: number) => unknown) => {
+      start()
+      const base64 = blobInfo.base64()
+      const upload = (img:string) => {
+        console.log('About to upload a image')
+        let cnt = 10
+        const int = setInterval(() => {
+          if (cnt === 0) {
+            success(img)
+            finish()
+            window.clearInterval(int)
+          } else if (forceFail && cnt === 5) {
+            failure('error force', { remove: true })
+            finish()
+            window.clearInterval(int)
+          } else {
+            cnt -= 1
+            progress((10 - cnt) / 10 * 100)
+          }
+        }, 100)
+      }
+      if (typeof base64 === 'string') {
+        upload('data:image/jpeg;base64,' + base64)
+      } else {
+        const p = base64 as Promise<unknown>
+        p.then((v:unknown) => {
+          upload(v as string)
+        }).catch((e) => {
+          console.error(e)
+        })
+      }
+    }
   }
 }
 

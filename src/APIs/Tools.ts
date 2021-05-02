@@ -1,5 +1,81 @@
 
+export class TagsBuilder {
+  tags:Array<Record<string, string>> = []
+
+  append (type:string, tag:string, add = true) {
+    if (add) {
+      this.tags.push({ type, tag })
+    }
+    return this
+  }
+
+  build () {
+    return this.tags
+  }
+}
+
+type JsonHandlerReturnType = Record<string, unknown> | Promise<unknown>
+type JsonHandler = (json:Record<string, unknown>) => JsonHandlerReturnType
+
 class Tools {
+  GO_API_BASE_URL = 'http://192.168.1.95:8082/'
+
+  objectToQuery (args:Record<string, unknown>) {
+    let query = '?'
+    for (const k in args) {
+      query += k + '=' + encodeURIComponent(String(args[k])) + '&'
+    }
+    return query
+  }
+
+  goAPIGetOption (args:Record<string, unknown>) {
+    return this.goAPIMakeOption(this.objectToQuery(args), 'GET', null)
+  }
+
+  goAPIEmptyGetOption () {
+    return this.goAPIMakeOption('', 'GET', null)
+  }
+
+  goAPIMakeOption (query:string, method:string, body:unknown) {
+    return {
+      query,
+      method,
+      body
+    }
+  }
+
+  goAPIPromiseHelper (path:string, options: {query:string, method:string, body:unknown}, jsonHandler: JsonHandler, rejectReason:string, statusMap:Record<number, string> = {}) {
+    return new Promise((resolve, reject) => {
+      fetch(this.GO_API_BASE_URL + path + options.query, {
+        method: options.method,
+        body: options.body ? JSON.stringify(options.body) : null,
+        headers: {
+          token: window.localStorage.getItem('token') ?? '',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }).then((res:Response) => {
+        if (res.status === 200) {
+          return res.json()
+        } else {
+          reject(new Error(statusMap[res.status] ?? 'Status is not ok. Status: ' + res.status))
+        }
+      }).then((v) => {
+        const res = jsonHandler(v)
+        if (res instanceof Promise) {
+          res.then(v => {
+            resolve(v)
+          }).catch(e => {
+            reject(new Error(e))
+          })
+        } else {
+          resolve(res)
+        }
+      }).catch((e) => {
+        reject(new Error(rejectReason + e))
+      })
+    })
+  }
+
   setLoginTokenCookie (token:string) {
     // document.cookie = `token=${token};path=/;`
     window.localStorage.setItem('token', token)
@@ -28,42 +104,6 @@ class Tools {
       res = reg.exec(content)
     }
     return images
-  }
-
-  imagesUploadHandler (start: () => void, finish: () => void) {
-    const forceFail = false
-    return (blobInfo: { base64: () => unknown }, success: (a: string) => unknown, failure: (arg0: string, arg1: { remove: boolean }) => void, progress: (a: number) => unknown) => {
-      start()
-      const base64 = blobInfo.base64()
-      const upload = (img:string) => {
-        console.log('About to upload a image')
-        let cnt = 10
-        const int = setInterval(() => {
-          if (cnt === 0) {
-            success(img)
-            finish()
-            window.clearInterval(int)
-          } else if (forceFail && cnt === 5) {
-            failure('error force', { remove: true })
-            finish()
-            window.clearInterval(int)
-          } else {
-            cnt -= 1
-            progress((10 - cnt) / 10 * 100)
-          }
-        }, 100)
-      }
-      if (typeof base64 === 'string') {
-        upload('data:image/jpeg;base64,' + base64)
-      } else {
-        const p = base64 as Promise<unknown>
-        p.then((v:unknown) => {
-          upload(v as string)
-        }).catch((e) => {
-          console.error(e)
-        })
-      }
-    }
   }
 
   getDateFullDate (date:Date) {

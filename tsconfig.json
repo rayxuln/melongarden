@@ -34,7 +34,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/APIs/GoAPIs/getPostList.js", "src/APIs/GoAPIs/likePostLevel.js"  ],
   "exclude": [
     "node_modules"
   ]

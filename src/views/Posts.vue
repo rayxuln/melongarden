@@ -126,14 +126,14 @@ import { ElMessage } from 'element-plus'
         this.current_post_number = 1
       }
       const filter = this.$route.query.search || ''
-      APIs.getPostList(this.page_size, this.current_post_number, filter).then((value) => {
+      APIs.getPostList(this.page_size, this.current_post_number, filter).then((value:unknown) => {
         const v = value as { posts:unknown, postNum:unknown }
         this.post_card_list = v.posts
         this.postNum = v.postNum
 
         this.posts_is_empty = this.post_card_list.length === 0
-      }).catch((v) => {
-        ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      }).catch((v:unknown) => {
+        ElMessage.error('Can\'t get post list.' + v)
       }).then(() => {
         this.isPageLoading = false
       })
@@ -158,7 +158,7 @@ import { ElMessage } from 'element-plus'
           this.loadPosts()
         }
         this.$store.dispatch('updateMembersPosts')
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t post. ' + e)
         this.$router.push('/signin')
       }).then(() => {
@@ -175,12 +175,12 @@ import { ElMessage } from 'element-plus'
       const p = this.post_card_list[index]
       APIs.likePostLevel(p.postId, 1, like).then(() => {
         return APIs.getPostLevelLikeInfo(p.postId, 1)
-      }).then((value) => {
+      }).then((value:unknown) => {
         const v = value as { hasLike:number, likeNum:number, dislikeNum:number }
         p.hasLike = v.hasLike
         p.likeNum = v.likeNum
         p.dislikeNum = v.dislikeNum
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error(`Can't ${like === 1 ? 'like' : 'dislike'} this post.` + e)
       })
     }

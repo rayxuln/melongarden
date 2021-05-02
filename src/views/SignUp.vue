@@ -76,7 +76,7 @@ import { ElMessage } from 'element-plus'
           APIs.signup(this.form.user, this.form.pwd, this.form.userName, this.form.inviteCode).then(() => {
             ElMessage.success('Sign up successfully!')
             this.$router.push('/signin')
-          }).catch((e) => {
+          }).catch((e:unknown) => {
             ElMessage.error('Can\'t sign up.' + e)
           }).then(() => {
             this.isSignuping = false

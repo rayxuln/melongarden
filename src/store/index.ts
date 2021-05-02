@@ -18,11 +18,11 @@ export default createStore({
   },
   actions: {
     updateMembersPosts (context) {
-      APIs.getMembersAndPosts().then((value) => {
-        const v = <{members:unknown, posts:unknown}> value
+      APIs.getMembersAndPosts().then((value:unknown) => {
+        const v = value as {members:unknown, posts:unknown}
         context.commit('memberNumChanged', v.members)
         context.commit('postNumChanged', v.posts)
-      }).catch((v) => {
+      }).catch((v:unknown) => {
         ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
       })
     }

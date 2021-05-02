@@ -149,7 +149,7 @@ import Tools from '@/APIs/Tools'
         APIs.deleteUser(pwd).then(() => {
           ElMessage.success('Account deleted!')
           this.$router.push('/signin')
-        }).catch((e) => {
+        }).catch((e:unknown) => {
           ElMessage.error('Can\'t delete your account.' + e)
           this.isSaving = false
         })
@@ -163,7 +163,7 @@ import Tools from '@/APIs/Tools'
         this.userEmail = info.userEmail
         this.userTags = info.userTags
         this.userDescription = info.userDescription
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t get user info.' + e)
         this.$router.push('/signin')
       })
@@ -189,7 +189,7 @@ import Tools from '@/APIs/Tools'
           this.isSaving = true
           APIs.setUserInfo(this.editForm.userName, this.imgUrl, this.editForm.userDescription).then(() => {
             ElMessage.success('Edit successfully!')
-          }).catch((e) => {
+          }).catch((e:unknown) => {
             ElMessage.error('Can\'t edit.' + e)
             this.$router.push('/signin')
           }).then(() => {
@@ -201,9 +201,10 @@ import Tools from '@/APIs/Tools'
         }
       })
     },
-    onUploadAvatarIamge (params: { file:File }) {
+    onUploadAvatarIamge (params: { file:File, name:string }) {
       const file = {
-        raw: params.file,
+        filename: () => params.name,
+        blob: () => params.file,
         base64: () => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader()
@@ -213,7 +214,7 @@ import Tools from '@/APIs/Tools'
           })
         }
       }
-      const handler = Tools.imagesUploadHandler(() => {
+      const handler = APIs.imagesUploadHandler(() => {
         this.avatarUploading = true
       }, () => {
         this.avatarUploading = false
@@ -248,8 +249,10 @@ import Tools from '@/APIs/Tools'
             this.isSaving = true
             APIs.resetPassword(this.resetForm.oldPwd, this.resetForm.newPwd).then(() => {
               ElMessage.success('Reset password successfully!')
+              return APIs.logout()
+            }).then(() => {
               this.$router.push('/signin')
-            }).catch((e) => {
+            }).catch((e:unknown) => {
               ElMessage.error('Can\'t reset password.' + e)
               this.isSaving = false
               this.currentPanel = 'info'

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Tools from '@/APIs/Tools'
+import APIs from '@/APIs'
 import tinymce from 'tinymce/tinymce'
 import TheEditor from '@tinymce/tinymce-vue'
 import 'tinymce/themes/silver'
@@ -53,7 +53,7 @@ import { Options, Vue } from 'vue-class-component'
     }
   },
   created () {
-    this.init.images_upload_handler = Tools.imagesUploadHandler(() => {
+    this.init.images_upload_handler = APIs.imagesUploadHandler(() => {
       this.$emit('images-upload-start')
     }, () => {
       this.$emit('images-upload-finished')

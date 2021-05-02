@@ -131,7 +131,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         // } else {
         //   this.loadLevels()
         // }
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t comment. ' + e)
         this.$router.push('/signin')
       }).then(() => {
@@ -141,7 +141,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
     onReplyTextClicked (level:number) {
       for (const l of this.levelList) {
         if (l.level === level) {
-          this.replyBoxTextArea = `<blockquote><p><strong><span style="color: #95a5a6;">@${l.userName} (L${l.level}):</span></strong></p><p>${l.content}</p></blockquote><p>&nbsp;</p>`
+          this.replyBoxTextArea = `<blockquote><p><strong><span style="color: #95a5a6;"> @${l.userName} (L${l.level}):</span></strong></p><p>${l.content}</p></blockquote><p>&nbsp;</p>`
         }
       }
       window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
@@ -152,7 +152,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         cancelButtonText: 'No sure yet',
         type: 'warning'
       }).then(() => {
-        APIs.deletePostLevel(this.postId, level).then((value) => {
+        APIs.deletePostLevel(this.postId, level).then((value:unknown) => {
           const v = value as { hasDeletePost:boolean }
           if (v.hasDeletePost) { // go to post list page
             this.$router.push('/')
@@ -161,7 +161,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
             this.loadLevels()
             ElMessage.success('You\'ve just deleted a level.')
           }
-        }).catch((e) => {
+        }).catch((e:unknown) => {
           ElMessage.error('Can\'t delete this level.' + e)
         })
       }).catch((e: unknown) => e)
@@ -174,12 +174,12 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         levelRef.displayEditor = false
         ElMessage.success('Edit has been saved.')
         return APIs.getPostLevel(this.postId, l.level)
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t save.' + e)
-      }).then((value) => {
+      }).then((value:unknown) => {
         const v = value as { level:unknown }
         this.levelList[index] = v.level
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t fetch level data.' + e)
       })
     },
@@ -192,7 +192,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         APIs.pinPost(this.postId, pin).then(() => {
           ElMessage.success(`You've just ${pin ? 'pinned' : 'unpinned'} a post.`)
           this.$router.push('/')
-        }).catch((e) => {
+        }).catch((e:unknown) => {
           ElMessage.error(`You can't ${pin ? 'pinned' : 'unpinned'} this post.` + e)
         })
       }).catch((e: unknown) => e)
@@ -207,12 +207,12 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
 
       this.isLoadingPage = true
 
-      APIs.getPostInfo(this.postId).then((value) => {
+      APIs.getPostInfo(this.postId).then((value:unknown) => {
         const v = value as {levelNum:number, title:string}
         this.levelNum = v.levelNum
         this.title = v.title
         return APIs.getPostLevelList(this.postId, this.pageSize, currentPage, filter)
-      }).then((value) => {
+      }).then((value:unknown) => {
         const v = value as { levels:unknown, levelNum:number }
         this.levelList = v.levels
         this.levelRefList = []
@@ -225,7 +225,7 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
         this.$nextTick(() => {
           PrismHighlightAll()
         })
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Error happing while loading post page. ' + e)
       }).then(() => {
         this.isLoadingPage = false
@@ -260,12 +260,12 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       const l = this.levelList[index]
       APIs.likePostLevel(this.postId, l.level, like).then(() => {
         return APIs.getPostLevelLikeInfo(this.postId, l.level)
-      }).then((value) => {
+      }).then((value:unknown) => {
         const v = value as { hasLike:number, likeNum:number, dislikeNum:number }
         l.hasLike = v.hasLike
         l.likeNum = v.likeNum
         l.dislikeNum = v.dislikeNum
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error(`Can't ${like === 1 ? 'like' : 'dislike'} this level.` + e)
       })
     }

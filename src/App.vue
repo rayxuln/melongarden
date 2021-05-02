@@ -114,6 +114,9 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         this.loadMembersPosts()
       }
     )
+
+    APIs.checkAPI()
+
     setInterval(() => {
       if (this.displayLoginInfo) {
         APIs.checkNewMessage().then((v:unknown) => {
@@ -143,7 +146,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     APIs.getTitleImage().then((v:unknown) => {
       const res = v as { url:string }
       this.titleImageURL = res.url
-    }).catch((e) => {
+    }).catch((e:unknown) => {
       ElMessage.error('Can\'t get title image.' + e)
     }).then(() => {
       this.loadingTitleImage = false
@@ -167,12 +170,12 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     },
     onUserInfoPanelShowed () {
       this.userInfoLoading = true
-      APIs.getUserInfo().then((value) => {
+      APIs.getUserInfo().then((value:unknown) => {
         const v = value as { userPostNum:number, userReplyNum:number, userTags:unknown }
         this.userPostNum = v.userPostNum
         this.userReplyNum = v.userReplyNum
         this.userTags = v.userTags
-      }).catch((e) => {
+      }).catch((e:unknown) => {
         ElMessage.error('Can\'t get user info.' + e)
       }).then(() => {
         this.userInfoLoading = false
@@ -187,7 +190,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         this.userAvatar = res.userAvatar
         this.displayLoginInfo = true
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      }).catch((_e) => {
+      }).catch((_e:unknown) => {
         this.displayLoginInfo = false
       })
     },

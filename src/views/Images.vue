@@ -82,14 +82,14 @@ import { ElMessage } from 'element-plus'
         this.currentPageNumber = 1
       }
       const filter = this.$route.query.search || ''
-      APIs.getImagePostList(this.pageSize, this.currentPageNumber, filter).then((value) => {
+      APIs.getImagePostList(this.pageSize, this.currentPageNumber, filter).then((value:unknown) => {
         const v = value as { posts:unknown, postNum:unknown }
         this.imagePostCardList = v.posts
         this.postNum = v.postNum
 
         this.isEmpty = this.imagePostCardList.length === 0
-      }).catch((v) => {
-        ElMessage.error('There is something wrong with the server. Please try to refresh this page in a moment. ' + v)
+      }).catch((v:unknown) => {
+        ElMessage.error('Can\'t get image post list.' + v)
       }).then(() => {
         this.isPageLoading = false
       })

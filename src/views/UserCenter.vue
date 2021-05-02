@@ -54,7 +54,7 @@ import checkToken from '@/APIs/MockerAPIs/checkToken'
   },
   methods: {
     checkToken () {
-      APIs.checkToken().catch((e) => {
+      APIs.checkToken().catch((e:unknown) => {
         ElMessage.error('Please sign in first!')
         this.recursively = true
         this.$router.push('/signin')

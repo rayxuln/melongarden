@@ -52,7 +52,7 @@ import { ElMessage } from 'element-plus'
           this.isSignining = true
           APIs.signin(this.form.user, this.form.pwd).then(() => {
             this.$router.push('/')
-          }).catch((e) => {
+          }).catch((e:unknown) => {
             ElMessage.error('Can\'t sign in.' + e)
           }).then(() => {
             this.isSignining = false
