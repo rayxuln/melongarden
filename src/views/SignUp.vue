@@ -5,7 +5,7 @@
       Sign Up
     </template>
     <el-form ref="form" status-icon :rules="rules" :model="form">
-      <el-form-item prop="user" label="E-mail">
+      <el-form-item prop="user" label="User">
         <el-input v-model="form.user" placeholder="User"></el-input>
       </el-form-item>
       <el-form-item prop="pwd" label="Password">
@@ -22,7 +22,7 @@
       </el-form-item>
     </el-form>
     <div>
-      <el-link type="primary" @click.prevent="$router.push('/signin')"> Already signed up? Sign in here.</el-link>
+      <el-link type="primary" @click.prevent="$router.push('/signin')"> Already signed up? Click here.</el-link>
     </div>
     <div class="signin-button">
       <el-button :loading="isSignuping" type="primary" @click="onSignIn"> Sign Up </el-button>
@@ -48,7 +48,7 @@ import { ElMessage } from 'element-plus'
       },
       rules: {
         user: [
-          { required: true, message: 'E-mail can\'t be empty!', trigger: 'blur' }
+          { required: true, message: 'User can\'t be empty!', trigger: 'blur' }
         ],
         pwd: [
           { required: true, message: 'Password can\'t be empty', trigger: 'blur' },

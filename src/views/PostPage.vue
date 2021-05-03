@@ -167,6 +167,10 @@ import { PrismHighlightAll } from '@/plugins/prism_wrap'
       }).catch((e: unknown) => e)
     },
     onSaveTextClicked (index:number, content: string) {
+      if (content === '') {
+        ElMessage.error('The content mustn\'t be empty!')
+        return
+      }
       const levelRef = this.$refs[`levelRefList${index}`]
       const l = this.levelList[index]
       l.isLoading = true

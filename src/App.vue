@@ -5,7 +5,7 @@
     <el-card>
     <div class="search-bar">
       <div class="search-bar-left">
-        <div>MelonGarden</div>
+        <div><router-link to="/">MelonGarden</router-link></div>
         <el-input
           placeholder="Type something to search"
           prefix-icon="el-icon-search"
@@ -27,12 +27,12 @@
           @show="onUserInfoPanelShowed"
         >
         <template #reference>
-          <el-badge is-dot :hidden="!userHasNewMessage"><el-link type="primary" @click.prevent>{{ userName }}</el-link></el-badge>
+          <el-badge is-dot :hidden="!userHasNewMessage"><el-link type="primary" @click.prevent="$router.push('/user-center/personal-info')" href="/user-center/personal-info">{{ `${userName} (${userEmail})` }}</el-link></el-badge>
         </template>
         <user-info-panel
           v-loading="userInfoLoading"
           :userAvatarURL="userAvatar"
-          :userName="userName"
+          :userName="userEmail"
           :postNum="userPostNum"
           :replyNum="userReplyNum"
           :hasNewMessage="userHasNewMessage"
@@ -96,6 +96,7 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
     return {
       displayLoginInfo: false,
       userName: 'UserName',
+      userEmail: 'xxx@xxx.xx',
       userAvatar: '',
       userPostNum: 0,
       userReplyNum: 0,
@@ -185,8 +186,9 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
       this.$store.dispatch('updateMembersPosts')
 
       APIs.checkToken().then((v:unknown) => {
-        const res = v as { userName:string, userAvatar:string }
+        const res = v as { userName:string, userAvatar:string, userEmail:string }
         this.userName = res.userName
+        this.userEmail = res.userEmail
         this.userAvatar = res.userAvatar
         this.displayLoginInfo = true
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -326,4 +328,22 @@ export default class App extends Vue {}
   margin-left: 8px;
 }
 
+a {
+  color: #606266;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #606266;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #409eff;
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: none;
+}
 </style>

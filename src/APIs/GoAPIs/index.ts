@@ -22,6 +22,9 @@ import resetPassword from './resetPassword.js'
 import deleteUser from './deleteUser.js'
 import getImagePostList from './getImagePostList.js'
 import imageUploadHandler from './imageUploadHandler.js'
+import getUserPostList from './getUserPostList.js'
+import getUserPostLevelList from './getUserPostLevelList.js'
+import pinPost from './pinPost.js'
 
 function emptyPromise () {
   return () => {
@@ -45,7 +48,7 @@ export default {
   likePostLevel,
   getPostLevelLikeInfo,
   getUserInfo,
-  pinPost: emptyPromise(),
+  pinPost,
   getImagePostList,
   signin,
   signup,
@@ -56,7 +59,7 @@ export default {
   deleteUser,
   checkNewMessage,
   getUserMessageList,
-  getUserPostList: emptyPromise(),
-  getUserPostLevelList: emptyPromise(),
+  getUserPostList,
+  getUserPostLevelList,
   imageUploadHandler
 }

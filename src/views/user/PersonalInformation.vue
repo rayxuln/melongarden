@@ -4,7 +4,7 @@
       <div class="info-container-head">
         <div><el-avatar :size="64" :src="userAvatar" shape="square"></el-avatar></div>
         <div class="info-container-head-right">
-          <div class="info-container-head-right-name">{{ userName }} ({{ userEmail }})</div>
+          <div class="info-container-head-right-name">{{ userEmail }}</div>
           <div class="info-container-head-right-tag-list">
             <el-tag v-for="tag in userTags" :key="tag" :type="tag.type">{{ tag.tag }}</el-tag>
           </div>

@@ -2,7 +2,12 @@ import Tools, { TagsBuilder } from '../Tools'
 import getPostLevel from './getPostLevel.js'
 
 export default function (pageSize, pageNumber, filter, postPageSize) {
-  return Tools.goAPIPromiseHelper('api/v1/messages', Tools.goAPIEmptyGetOption(), (v) => {
+  return Tools.goAPIPromiseHelper('api/v1/messages', Tools.goAPIGetOption({
+    page: pageNumber,
+    page_size: pageSize,
+    filter: filter
+  }), (v) => {
+    v = v.messages
     const dataList = []
     for (const d of v) {
       const page = Math.floor((d.comment_id - 1) / postPageSize) + 1
@@ -17,10 +22,6 @@ export default function (pageSize, pageNumber, filter, postPageSize) {
       })
       Promise.resolve(Tools.goAPIPromiseHelper(`api/v1/messages/${d.post_id}/${d.comment_id}`, Tools.goAPIEmptyGetOption(), v => v, ''))
     }
-    // return {
-    //   dataList,
-    //   totalNum: v.length
-    // }
     return new Promise(resolve => {
       const ps = []
       for (let i = 0; i < dataList.length; ++i) {
@@ -29,7 +30,8 @@ export default function (pageSize, pageNumber, filter, postPageSize) {
 
       Promise.all(ps).then(res => {
         for (let i = 0; i < res.length; ++i) {
-          dataList[i].content = res.level.content
+          dataList[i].content = Tools.trimTextWithLength(Tools.extractTextFromHtml(res[i].level.content), 50)
+          dataList[i].date = res[i].level.date
         }
 
         resolve({

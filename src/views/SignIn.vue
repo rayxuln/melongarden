@@ -6,14 +6,14 @@
     </template>
     <el-form ref="form" :rules="rules" :model="form">
       <el-form-item prop="user">
-        <el-input v-model="form.user" placeholder="E-mail" @keyup.enter="onSignIn"><template #prefix><i class="el-icon-user"></i></template></el-input>
+        <el-input v-model="form.user" placeholder="User" @keyup.enter="onSignIn"><template #prefix><i class="el-icon-user"></i></template></el-input>
       </el-form-item>
       <el-form-item prop="pwd">
         <el-input v-model="form.pwd" placeholder="Password" show-password @keyup.enter="onSignIn"><template #prefix><i class="el-icon-lock"></i></template></el-input>
       </el-form-item>
     </el-form>
     <div>
-      <el-link type="primary" @click.prevent="$router.push('/signup')"> Not sign up yet? You can sign up here.</el-link>
+      <el-link type="primary" @click.prevent="$router.push('/signup')"> Not sign up yet? Click here.</el-link>
     </div>
     <div class="signin-button">
       <el-button :loading="isSignining" type="primary" @click="onSignIn"> Sign In </el-button>
@@ -36,7 +36,7 @@ import { ElMessage } from 'element-plus'
       },
       rules: {
         user: [
-          { required: true, message: 'Please input the E-mail!', trigger: 'blur' }
+          { required: true, message: 'Please input the user!', trigger: 'blur' }
         ],
         pwd: [
           { required: true, message: 'Please input the password!', trigger: 'blur' }

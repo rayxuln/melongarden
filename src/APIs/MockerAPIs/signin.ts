@@ -15,5 +15,5 @@ export default function (user:string, pwd:string):Promise<unknown> {
 
   Tools.setLoginTokenCookie(token)
 
-  return promiseHelper({}, 1000, 'Email or password is wrong!', reject)
+  return promiseHelper({}, 1000, 'User or password is wrong!', reject)
 }
