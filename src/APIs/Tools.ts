@@ -18,7 +18,7 @@ type JsonHandlerReturnType = Record<string, unknown> | Promise<unknown>
 type JsonHandler = (json:Record<string, unknown>) => JsonHandlerReturnType
 
 class Tools {
-  GO_API_BASE_URL = 'http://192.168.43.139:8082/'
+  GO_API_BASE_URL = 'http://81.68.104.78:8082/' // 'http://192.168.43.139:8082/'
 
   objectToQuery (args:Record<string, unknown>) {
     let query = '?'
