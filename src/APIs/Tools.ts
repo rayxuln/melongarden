@@ -22,7 +22,7 @@ class Tools {
   GO_API_BASE_URL = ''
 
   constructor () {
-      this.GO_API_BASE_URL = document.location.protocol === 'https:' ? 'https://mc.raiix.com:8085/' : 'http://81.68.104.78:8082/'
+    this.GO_API_BASE_URL = document.location.protocol === 'https:' ? 'https://mc.raiix.com:8085/' : 'http://81.68.104.78:8082/'
   }
 
   objectToQuery (args:Record<string, unknown>) {
