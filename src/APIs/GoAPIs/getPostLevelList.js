@@ -54,7 +54,7 @@ export default function (postId, pageSize, pageNumber, filter) {
             levels[i].userAvatarUrl = res[i].avatar
             levels[i].isAdmin = currentUserData.is_admin
             levels[i].isYou = currentUserData.id === res[i].id
-            levels[i].userTags = (new TagsBuilder()).append('info', res[i].name).append('', `UL${res[i].level}`).append('danger', 'Admin', res[i].is_admin).append('warning', 'You', levels[i].isYou).append('', 'Poster', levels[i].isPoster).build()
+            levels[i].userTags = (new TagsBuilder()).append('info', res[i].name).append('', `UL${res[i].level}`, false).append('danger', 'Admin', res[i].is_admin).append('warning', 'You', levels[i].isYou).append('', 'Poster', levels[i].isPoster).build() // TODO: NOT RELEASE2
           }
           resolve({
             levels,

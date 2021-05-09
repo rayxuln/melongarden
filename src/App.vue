@@ -346,4 +346,9 @@ a:hover {
 a:active {
   text-decoration: none;
 }
+
+/* TODO: NOT RELEASE2 */
+.not-release-2 {
+  display: none;
+}
 </style>

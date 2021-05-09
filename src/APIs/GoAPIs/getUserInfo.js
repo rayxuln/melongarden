@@ -8,7 +8,7 @@ export default function () {
       userName: v.name,
       userAvatar: v.avatar,
       userEmail: v.id,
-      userTags: (new TagsBuilder()).append('info', v.name).append('', `UL${v.level}`).build(),
+      userTags: (new TagsBuilder()).append('info', v.name).append('', `UL${v.level}`, false).build(), // TODO: NOT RELEASE2
       userDescription: v.description
     }
   }, '')

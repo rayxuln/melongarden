@@ -1,4 +1,6 @@
 import Tools, { TagsBuilder } from '../Tools'
+import checkToken from './checkToken.js'
+import getPostLevelLikeInfo from './getPostLevelLikeInfo.js'
 
 function genImage (small, big = '') {
   if (big === '') big = small
@@ -36,14 +38,40 @@ export default function (pageSize, pageNumber, filter) {
         updateTime: v.posts[i].latest_reply,
         postId: v.posts[i].id,
         hasLike: v.vote_status === -1 ? 2 : v.vote_status,
-        likeNum: v.posts[i].vote_down,
-        dislikeNum: v.posts[i].vote_up,
+        likeNum: v.posts[i].vote_up,
+        dislikeNum: v.posts[i].vote_down,
         images: translateImageArray(v.post_images[i])
       })
     }
-    return {
-      posts,
-      postNum: v.total_posts
-    }
+    // return {
+    //   posts,
+    //   postNum: v.total_posts
+    // }
+    return new Promise(resolve => {
+      checkToken().then(() => {
+        const postLikeInfoPromiseList = []
+        for (const p of posts) {
+          postLikeInfoPromiseList.push(getPostLevelLikeInfo(p.postId, 1))
+        }
+        Promise.all(postLikeInfoPromiseList).then(likeInfoList => {
+          for (let i = 0; i < likeInfoList.length; ++i) {
+            posts[i].hasLike = likeInfoList[i].hasLike
+          }
+        }).catch(e => {
+          console.error(e)
+          return e
+        }).then(() => {
+          resolve({
+            posts,
+            postNum: v.total_posts
+          })
+        })
+      }).catch(() => {
+        resolve({
+          posts,
+          postNum: v.total_posts
+        })
+      })
+    })
   }, '')
 }

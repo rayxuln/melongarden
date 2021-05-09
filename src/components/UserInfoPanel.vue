@@ -7,10 +7,11 @@
     </div>
 
     <div class="user-info-panel-second">
-      <div class="user-info-panel-second-left">
+      W.I.P
+      <div class="user-info-panel-second-left not-release-2">
         <div><el-link @click.prevent="$router.push('/user-center/posts')">Post<br>{{ postNum }}</el-link></div>
       </div>
-      <div class="user-info-panel-second-right">
+      <div class="user-info-panel-second-right not-release-2">
         <div><el-link @click.prevent="$router.push('/user-center/comments')">Comment<br>{{ replyNum }}</el-link></div>
       </div>
     </div>

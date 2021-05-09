@@ -44,7 +44,7 @@ export default function (postId, level) {
           level.userAvatarUrl = res[0].avatar
           level.isAdmin = currentUserData.is_admin
           level.isYou = currentUserData.id === res[0].id
-          level.userTags = (new TagsBuilder()).append('info', res[0].name).append('', `UL${res[0].level}`).append('danger', 'Admin', res[0].is_admin).append('warning', 'You', level.isYou).append('', 'Poster', level.isPoster).build()
+          level.userTags = (new TagsBuilder()).append('info', res[0].name).append('', `UL${res[0].level}`, false).append('danger', 'Admin', res[0].is_admin).append('warning', 'You', level.isYou).append('', 'Poster', level.isPoster).build() // TODO: NOT RELEASE2
           resolve({
             level
           })

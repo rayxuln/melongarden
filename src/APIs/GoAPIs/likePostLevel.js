@@ -8,6 +8,8 @@ export default function (postId, level, like) {
     return Tools.goAPIPromiseHelper(`api/v1/comments/${postId}/${level}/vote/${like === userLike ? 0 : like}`, Tools.goAPIEmptyGetOption(), (v) => {
       return {
       }
-    }, '')
+    }, '', {
+      401: 'You have not signed in yet!'
+    })
   })
 }
