@@ -40,6 +40,27 @@
           @logoutClick="onLogoutClicked"
         ></user-info-panel>
         </el-popover></div>
+        <div> <!-- 签到 -->
+        <el-popover
+          placement="bottom"
+          title=""
+          trigger="click"
+          :width="300"
+          @show="onCheckInPanelShowed"
+        >
+        <template #reference>
+          <el-link type="primary" href="javascript:" @click.prevent>Check In</el-link>
+        </template>
+          <check-in-panel
+            v-loading="checkInPanel.loading"
+            :dateData="checkInPanel.data"
+            :month="checkInPanel.month"
+            :hasCheckedIn="checkInPanel.hasCheckedIn"
+            @check-in="onCheckIn"
+          >
+          </check-in-panel>
+        </el-popover>
+        </div> <!-- 签到 -->
       </div>
       <div class="search-bar-right" v-else>
         <el-button type="success" @click="this.$router.push('/signup')">Sign Up</el-button>
@@ -86,11 +107,13 @@ import { ElMessage } from 'element-plus'
 import { Options, Vue } from 'vue-class-component'
 
 import UserInfoPanel from '@/components/UserInfoPanel.vue'
+import CheckInPanel from '@/components/CheckInPanel.vue'
 
 @Options({
   name: 'App',
   components: {
-    'user-info-panel': UserInfoPanel
+    'user-info-panel': UserInfoPanel,
+    'check-in-panel': CheckInPanel
   },
   data () {
     return {
@@ -105,7 +128,13 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
       userTags: [],
       searchFilter: '',
       titleImageURL: '',
-      loadingTitleImage: false
+      loadingTitleImage: false,
+      checkInPanel: {
+        loading: false,
+        hasCheckedIn: false,
+        month: 6,
+        data: []
+      }
     }
   },
   created () {
@@ -204,6 +233,25 @@ import UserInfoPanel from '@/components/UserInfoPanel.vue'
         params: { ...this.$route.params }
       }
       this.$router.push(r)
+    },
+    onCheckInPanelShowed () {
+      this.loadCheckInPanelInfo()
+    },
+    loadCheckInPanelInfo () {
+      const d = new Date()
+      this.checkInPanel.month = d.getMonth() + 1
+      this.checkInPanel.data = []
+      for (let i = 0; i < 31; ++i) {
+        this.checkInPanel.data.push(false)
+      }
+      this.checkInPanel.data[13] = true
+      this.checkInPanel.data[16] = true
+      this.checkInPanel.data[1] = true
+      this.checkInPanel.hasCheckedIn = false
+    },
+    onCheckIn () {
+      this.loadCheckInPanelInfo()
+      this.checkInPanel.hasCheckedIn = true
     }
   }
 })
