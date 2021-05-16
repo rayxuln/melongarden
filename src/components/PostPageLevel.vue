@@ -44,7 +44,7 @@
             <el-link type="primary" @click.prevent="$emit('replyTextClick')">Reply</el-link>
             <span v-if="isYou"> | <el-link type="primary" @click.prevent="displayEditor = true">Edit</el-link></span>
             <span v-if="canDelete"> | <el-link type="primary" @click.prevent="$emit('deleteTextClick')">Delete</el-link></span>
-            <span class="not-release-2" v-if="level === 1 && isAdmin"> | <el-link type="primary" @click.prevent="$emit('pinClick', !isPinned)">{{ pinText }}</el-link></span>
+            <span v-if="level === 1 && isAdmin"> | <el-link type="primary" @click.prevent="$emit('pinClick', !isPinned)">{{ pinText }}</el-link></span>
           </span>
         </div>
       </div>
