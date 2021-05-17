@@ -238,20 +238,24 @@ import CheckInPanel from '@/components/CheckInPanel.vue'
       this.loadCheckInPanelInfo()
     },
     loadCheckInPanelInfo () {
-      const d = new Date()
-      this.checkInPanel.month = d.getMonth() + 1
-      this.checkInPanel.data = []
-      for (let i = 0; i < 31; ++i) {
-        this.checkInPanel.data.push(false)
-      }
-      this.checkInPanel.data[13] = true
-      this.checkInPanel.data[16] = true
-      this.checkInPanel.data[1] = true
-      this.checkInPanel.hasCheckedIn = false
+      this.checkInPanel.loading = true
+      APIs.getUserCheckInRecords().then((v:unknown) => {
+        const res = v as { month:number, records:Array<boolean>, hasCheckedIn:boolean }
+        this.checkInPanel.month = res.month
+        this.checkInPanel.data = res.records
+        this.checkInPanel.hasCheckedIn = res.hasCheckedIn
+      }).catch((e:unknown) => {
+        ElMessage.error('Can\'t load check in info.' + e)
+      }).then(() => {
+        this.checkInPanel.loading = false
+      })
     },
     onCheckIn () {
-      this.loadCheckInPanelInfo()
-      this.checkInPanel.hasCheckedIn = true
+      APIs.checkIn().then(() => {
+        this.loadCheckInPanelInfo()
+      }).catch((e:unknown) => {
+        ElMessage.error('Can\'t check in.' + e)
+      })
     }
   }
 })

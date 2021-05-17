@@ -24,6 +24,8 @@ import checkNewMessage from './checkNewMessage'
 import getUserMessageList from './getUserMessageList'
 import getUserPostList from './getUserPostList'
 import getUserPostLevelList from './getUserPostLevelList'
+import getUserCheckInRecords from './getUserCheckInRecords'
+import checkIn from './checkIn'
 
 export default {
   getMembersAndPosts,
@@ -51,5 +53,7 @@ export default {
   checkNewMessage,
   getUserMessageList,
   getUserPostList,
-  getUserPostLevelList
+  getUserPostLevelList,
+  getUserCheckInRecords,
+  checkIn
 }

@@ -116,6 +116,14 @@ class APIMidware {
     return APIs.getUserPostLevelList(pageSize, pageNumber, filter, postPageSize)
   }
 
+  getUserCheckInRecords () {
+    return APIs.getUserCheckInRecords()
+  }
+
+  checkIn () {
+    return APIs.checkIn()
+  }
+
   imagesUploadHandler (start: () => void, finish: () => void) {
     if (APIs === GoAPIs) {
       return GoAPIs.imageUploadHandler(start, finish)

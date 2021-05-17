@@ -51,6 +51,8 @@ class User {
   userType = UserType.NORMAL
   userDescription = ''
   userLevel = 'UL1'
+  userCheckInRecords:Array<boolean> = []
+
   pwd = ''
 
   msgList:Array<Message> = []
@@ -63,6 +65,10 @@ class User {
     this.userType = type
     this.userDescription = description
     this.pwd = pwd
+
+    for (let i = 0; i < 31; ++i) {
+      this.userCheckInRecords.push(false)
+    }
   }
 
   hasNewMessage () {
@@ -93,6 +99,17 @@ class User {
       m.read = true
     }
     return [res, msgList.length]
+  }
+
+  checkIn () {
+    const date = new Date()
+    this.userCheckInRecords[date.getDate() - 1] = true
+  }
+
+  hasCheckedIn () {
+    const date = new Date()
+    const res = this.userCheckInRecords[date.getDate() - 1]
+    return res
   }
 }
 
