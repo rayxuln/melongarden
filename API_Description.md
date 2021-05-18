@@ -21,7 +21,7 @@
 
 帖子内容中非网络图片需要将图片数据上传到服务器中，并返回图片的网络地址。
 
-当前为模拟图片上传，将图片数据转换为base64并编码为url返回。具体代码详见：`src/APIs/Tools.ts`中的`imagesUploadHandler`函数。
+当前为模拟图片上传，将图片数据转换为base64并编码为url返回。具体代码详见：`src/APIs/index.ts`中的`imagesUploadHandler`函数。
 
 ## API 列表
 

@@ -25,6 +25,9 @@ import imageUploadHandler from './imageUploadHandler.js'
 import getUserPostList from './getUserPostList.js'
 import getUserPostLevelList from './getUserPostLevelList.js'
 import pinPost from './pinPost.js'
+import getUserCheckInRecords from './getUserCheckInRecords.js'
+import checkIn from './checkIn.js'
+import getHottopList from './getHottopList.js'
 
 function emptyPromise () {
   return () => {
@@ -61,5 +64,8 @@ export default {
   getUserMessageList,
   getUserPostList,
   getUserPostLevelList,
+  getUserCheckInRecords,
+  checkIn,
+  getHottopList,
   imageUploadHandler
 }
