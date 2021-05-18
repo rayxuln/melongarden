@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-core'
-import { ElAffix, ElAvatar, ElBacktop, ElBadge, ElButton, ElCard, ElCol, ElDivider, ElDropdown, ElDropdownItem, ElDropdownMenu, ElEmpty, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElLink, ElLoading, ElMenu, ElMenuItem, ElMessageBox, ElPageHeader, ElPagination, ElPopover, ElRow, ElSkeleton, ElTag, ElUpload } from 'element-plus'
+import { ElAffix, ElAutocomplete, ElAvatar, ElBacktop, ElBadge, ElButton, ElCard, ElCol, ElDivider, ElDropdown, ElDropdownItem, ElDropdownMenu, ElEmpty, ElForm, ElFormItem, ElIcon, ElImage, ElInput, ElLink, ElLoading, ElMenu, ElMenuItem, ElMessageBox, ElPageHeader, ElPagination, ElPopover, ElRow, ElSkeleton, ElTag, ElUpload } from 'element-plus'
 
 import useTooltip from './useTooltip.js'
 
@@ -34,4 +34,5 @@ export default (app:App):void => {
   app.use(ElRow)
   app.use(ElCol)
   useTooltip(app)
+  app.use(ElAutocomplete)
 }

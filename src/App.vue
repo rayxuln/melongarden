@@ -6,16 +6,35 @@
     <div class="search-bar">
       <div class="search-bar-left">
         <div><router-link to="/">MelonGarden</router-link></div>
-        <el-input
-          placeholder="Type something to search"
-          prefix-icon="el-icon-search"
-          v-model="searchFilter"
-          @change="onSearchButtonClicked"
-          clearable>
-          <template #append>
-            <el-button icon="el-icon-search" @click="onSearchButtonClicked"></el-button>
+        <el-popover
+          placement="bottom"
+          title=""
+          :width="400"
+          trigger="click"
+          @show="onSearchBarPopoverShowed"
+          v-model:visible="searchBarPopover.visible"
+        > <!-- 搜索框 -->
+          <template #reference>
+            <el-input
+              placeholder="Type something to search"
+              prefix-icon="el-icon-search"
+              v-model="searchFilter"
+              @change="onSearchButtonClicked"
+              clearable>
+              <template #append>
+                <el-button icon="el-icon-search" @click="onSearchButtonClicked"></el-button>
+              </template>
+            </el-input>
           </template>
-        </el-input>
+          <search-bar-popover
+            :hottopList="searchBarPopover.hottopList"
+            :historyList="searchBarPopover.historyList"
+            @clear="onClearHistory"
+            @select-history-item="onSelectHistoryItem"
+            @select-hottop-item="onSelectHottopItem"
+            @delete-history-item="onDeleteHistoryItem"
+          ></search-bar-popover>
+        </el-popover> <!-- 搜索框 -->
       </div>
       <transition name="fade" mode="out-in">
       <div class="search-bar-right" v-if="displayLoginInfo">
@@ -108,12 +127,14 @@ import { Options, Vue } from 'vue-class-component'
 
 import UserInfoPanel from '@/components/UserInfoPanel.vue'
 import CheckInPanel from '@/components/CheckInPanel.vue'
+import SearchBarPopover from '@/components/SearchBarPopover.vue'
 
 @Options({
   name: 'App',
   components: {
     'user-info-panel': UserInfoPanel,
-    'check-in-panel': CheckInPanel
+    'check-in-panel': CheckInPanel,
+    'search-bar-popover': SearchBarPopover
   },
   data () {
     return {
@@ -134,6 +155,11 @@ import CheckInPanel from '@/components/CheckInPanel.vue'
         hasCheckedIn: false,
         month: 6,
         data: []
+      },
+      searchBarPopover: {
+        hottopList: [],
+        historyList: [],
+        visible: false
       }
     }
   },
@@ -233,6 +259,22 @@ import CheckInPanel from '@/components/CheckInPanel.vue'
         params: { ...this.$route.params }
       }
       this.$router.push(r)
+
+      this.searchBarPopover.visible = false
+
+      const history = JSON.parse(window.localStorage.getItem('history') ?? '[]') as Array<string>
+      let exist = false
+      for (const i of history) {
+        if (i === this.searchFilter) {
+          exist = true
+          break
+        }
+      }
+      if (!exist) history.push(this.searchFilter)
+      if (history.length > 10) {
+        history.splice(0, 1)
+      }
+      window.localStorage.setItem('history', JSON.stringify(history))
     },
     onCheckInPanelShowed () {
       this.loadCheckInPanelInfo()
@@ -257,6 +299,41 @@ import CheckInPanel from '@/components/CheckInPanel.vue'
       }).catch((e:unknown) => {
         ElMessage.error('Can\'t check in.' + e)
       })
+    },
+    onSearchBarPopoverShowed () {
+      this.loadHottop()
+      this.loadHistory()
+    },
+    loadHottop () {
+      APIs.getHottopList().then((v: { hottopList: Array<unknown> }) => {
+        this.searchBarPopover.hottopList = [...v.hottopList]
+      }).catch((e:unknown) => {
+        ElMessage.error('Can\'t load hottops.' + e)
+      })
+    },
+    loadHistory () {
+      this.searchBarPopover.historyList = JSON.parse(window.localStorage.getItem('history') ?? '[]') as Array<string>
+    },
+    onClearHistory () {
+      window.localStorage.setItem('history', '[]')
+      this.loadHistory()
+    },
+    onSelectHistoryItem (item:string) {
+      this.searchFilter = item
+      this.onSearchButtonClicked()
+    },
+    onSelectHottopItem (item: { id: number }) {
+      this.searchFilter = ''
+      this.$router.push(`/post?post_id=${item.id}`)
+      this.searchBarPopover.visible = false
+    },
+    onDeleteHistoryItem (index:number) {
+      const history = JSON.parse(window.localStorage.getItem('history') ?? '[]') as Array<string>
+      if (index >= 0 && index < history.length) {
+        history.splice(index, 1)
+      }
+      window.localStorage.setItem('history', JSON.stringify(history))
+      this.loadHistory()
     }
   }
 })

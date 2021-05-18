@@ -124,6 +124,10 @@ class APIMidware {
     return APIs.checkIn()
   }
 
+  getHottopList () {
+    return APIs.getHottopList()
+  }
+
   imagesUploadHandler (start: () => void, finish: () => void) {
     if (APIs === GoAPIs) {
       return GoAPIs.imageUploadHandler(start, finish)

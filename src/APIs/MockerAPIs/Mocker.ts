@@ -570,6 +570,20 @@ class PostHelper {
     }
     return res
   }
+
+  getHottopList ():Array<unknown> {
+    const res = []
+    let cnt = 0
+    for (const post of this.postList) {
+      res.push({
+        title: post.title,
+        id: post.postId
+      })
+      cnt += 1
+      if (cnt > 3) break
+    }
+    return res
+  }
 }
 
 class Mocker {

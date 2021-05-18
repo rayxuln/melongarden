@@ -26,6 +26,7 @@ import getUserPostList from './getUserPostList'
 import getUserPostLevelList from './getUserPostLevelList'
 import getUserCheckInRecords from './getUserCheckInRecords'
 import checkIn from './checkIn'
+import getHottopList from './getHottopList'
 
 export default {
   getMembersAndPosts,
@@ -55,5 +56,6 @@ export default {
   getUserPostList,
   getUserPostLevelList,
   getUserCheckInRecords,
-  checkIn
+  checkIn,
+  getHottopList
 }

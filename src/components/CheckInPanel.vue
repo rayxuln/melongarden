@@ -220,11 +220,11 @@ export default class CheckInPanel extends Vue {}
   margin: 5px;
 }
 
-.hide{
-  display: none;
-}
-
 .marked{
   color: #409eff;
+}
+
+.hide{
+  display: none;
 }
 </style>

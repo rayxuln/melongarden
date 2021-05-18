@@ -34,6 +34,7 @@
         >
       </post-page-level>
     </div>
+    <el-empty v-if="levelList.length <= 0" description="No result."></el-empty>
 
     <div class="post-page-tail">Comments: {{ levelNum }}</div>
 
