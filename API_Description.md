@@ -25,6 +25,22 @@
 
 ## API 列表
 
+### checkIn ()
+
+功能：签到
+
+参数：
+
+```js
+
+```
+
+返回对象：
+
+```js
+
+```
+
 ### checkNewMessage ( )
 
 功能：轮询调用，查看当前用户是否有新消息
@@ -97,6 +113,30 @@ content // 编辑后的内容（字符串, html代码）
 
 ```js
 
+```
+
+### getHottopList ()
+
+功能： 获取热榜信息
+
+参数：
+
+```js
+
+```
+
+返回对象：
+
+```js
+{
+    hottopList // 热榜列表，数据格式如下
+}
+
+// 热榜列表数据格式
+{
+    title // 标题
+    id // 帖子id
+}
 ```
 
 ### getImagePostList ( pageSize, pageNumber, filter )
@@ -349,6 +389,26 @@ filter // 搜索内容（字符串）
 ```js
 {
     url // 标题图的url
+}
+```
+
+### getUserCheckInRecords ()
+
+功能：获取当前用户签到信息
+
+参数：
+
+```js
+
+```
+
+返回对象：
+
+```js
+{
+    month, // 月份，从1开始
+    records, // 记录列表，为长度31（当月的天总数，为31即可，不用做特殊处理）的数组，表示一个月中的某日是否签到，元素为boolean类型，false表示没签到，true表示签到了
+    hasCheckedIn // 当天是否签到了
 }
 ```
 
