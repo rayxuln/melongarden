@@ -44,7 +44,7 @@
         <el-popover
           placement="bottom"
           title=""
-          trigger="click"
+          trigger="hover"
           :width="300"
           @show="onCheckInPanelShowed"
         >
@@ -252,6 +252,7 @@ import CheckInPanel from '@/components/CheckInPanel.vue'
     },
     onCheckIn () {
       APIs.checkIn().then(() => {
+        ElMessage.success('You\'ve checked in!')
         this.loadCheckInPanelInfo()
       }).catch((e:unknown) => {
         ElMessage.error('Can\'t check in.' + e)

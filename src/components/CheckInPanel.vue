@@ -33,7 +33,7 @@
       <el-row v-for="row in data" :key="row" type="flex" justify="space-between">
         <el-col v-for="col in row" :key="col" :span="3">
           <el-tooltip :content="col.checked ? 'Checked' : 'Unchecked'" placement="top" effect="light">
-            <el-link :class="{ hide: col.empty }" @click.prevent>{{ col.num }}<i class="el-icon-s-flag" :class="{ hide: !col.checked }"></i></el-link>
+            <el-link :class="{ hide: col.empty }" @click.prevent :type="col.checked ? 'primary' : 'default'">{{ col.num }}<i class="el-icon-s-flag" :class="{ hide: !col.checked }"></i></el-link>
           </el-tooltip>
         </el-col>
       </el-row>
@@ -222,5 +222,9 @@ export default class CheckInPanel extends Vue {}
 
 .hide{
   display: none;
+}
+
+.marked{
+  color: #409eff;
 }
 </style>
