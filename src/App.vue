@@ -35,6 +35,7 @@
             @delete-history-item="onDeleteHistoryItem"
           ></search-bar-popover>
         </el-popover> <!-- 搜索框 -->
+        <el-button v-if="displayLoginInfo" type="success" @click="onNewPostButtonClicked">New Post</el-button>
       </div>
       <transition name="fade" mode="out-in">
       <div class="search-bar-right" v-if="displayLoginInfo">
@@ -334,6 +335,9 @@ import SearchBarPopover from '@/components/SearchBarPopover.vue'
       }
       window.localStorage.setItem('history', JSON.stringify(history))
       this.loadHistory()
+    },
+    onNewPostButtonClicked () {
+      window.scroll({ top: document.body.clientHeight, left: 0, behavior: 'smooth' })
     }
   }
 })
