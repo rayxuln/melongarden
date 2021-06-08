@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Try to redirect</title>
+    <script type="text/javascript">
+
+      const spaMap = {}
+
+      function addSPA (name, target) {
+        spaMap[name] = target
+      }
+
+      let redirect = ''
+      let redirectUrl = ''
+
+      addSPA('melongarden', 'melongarden')
+
+      for (const spa in spaMap) {
+        const url = `${window.location.protocol}//${window.location.host}/${spa}/`
+        if (window.location.href.indexOf(url) === 0) {
+          redirectUrl = url
+          redirect = spaMap[spa]
+          break
+        }
+      }
+      
+      if (redirect !== '') {
+        // xmlhttp = new XMLHttpRequest()
+        // xmlhttp.open('get', '/' + redirect)
+        // xmlhttp.onload = (res) => {
+        //   document.write(res.target.responseText)
+        // }
+        // xmlhttp.onerror = (e) => {
+        //   console.log(e)
+        // }
+        // xmlhttp.send()
+        window.localStorage.setItem(`spa_${redirect}_404_redirect_url`, window.location.href)
+        window.location.href = redirectUrl
+      }
+
+      window.onload = () => {
+        document.getElementById('content').innerText = `Can\'t not find ${window.location.pathname}.`
+      }
+
+    </script>
+  </head>
+  <body style="width: 100%;height: 100%;text-align: center;padding: 150px;">
+    <div id="content">Can't not found the page you want.</div>
+    <div><a href="/">Go Home</a></div>
+  </body>
+</html>
