@@ -6,7 +6,7 @@
     </template>
     <el-form ref="form" :rules="rules" :model="form">
       <el-form-item prop="user">
-        <el-input v-model="form.user" placeholder="User" @keyup.enter="onSignIn"><template #prefix><i class="el-icon-user"></i></template></el-input>
+        <el-input v-model="form.user" placeholder="E-mail" @keyup.enter="onSignIn"><template #prefix><i class="el-icon-user"></i></template></el-input>
       </el-form-item>
       <el-form-item prop="pwd">
         <el-input v-model="form.pwd" placeholder="Password" show-password @keyup.enter="onSignIn"><template #prefix><i class="el-icon-lock"></i></template></el-input>
@@ -36,7 +36,8 @@ import { ElMessage } from 'element-plus'
       },
       rules: {
         user: [
-          { required: true, message: 'Please input the user!', trigger: 'blur' }
+          { required: true, message: 'Please input the e-mail!', trigger: 'blur' },
+          { validator: this.emailValidator, trigger: 'blur' }
         ],
         pwd: [
           { required: true, message: 'Please input the password!', trigger: 'blur' }
@@ -61,6 +62,11 @@ import { ElMessage } from 'element-plus'
           return false
         }
       })
+    },
+    emailValidator (rule: unknown, value: string, callback: (arg0: Error|undefined) => void) {
+      if (value.match(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
+        callback(undefined)
+      } else callback(new Error('The e-mail address is invalid!'))
     }
   }
 })

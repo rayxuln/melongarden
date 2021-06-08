@@ -5,8 +5,8 @@
       Sign Up
     </template>
     <el-form ref="form" status-icon :rules="rules" :model="form">
-      <el-form-item prop="user" label="User">
-        <el-input v-model="form.user" placeholder="User"></el-input>
+      <el-form-item prop="user" label="E-mail">
+        <el-input v-model="form.user" placeholder="Your e-mail"></el-input>
       </el-form-item>
       <el-form-item prop="pwd" label="Password">
         <el-input v-model="form.pwd" placeholder="Password" show-password></el-input>
@@ -48,7 +48,8 @@ import { ElMessage } from 'element-plus'
       },
       rules: {
         user: [
-          { required: true, message: 'User can\'t be empty!', trigger: 'blur' }
+          { required: true, message: 'E-mail can\'t be empty!', trigger: 'blur' },
+          { validator: this.emailValidator, trigger: 'blur' }
         ],
         pwd: [
           { required: true, message: 'Password can\'t be empty', trigger: 'blur' },
@@ -94,6 +95,11 @@ import { ElMessage } from 'element-plus'
       if (value !== this.form.pwd) {
         callback(new Error('Password and Repeat Password must be the same!'))
       } else callback(undefined)
+    },
+    emailValidator (rule: unknown, value: string, callback: (arg0: Error|undefined) => void) {
+      if (value.match(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
+        callback(undefined)
+      } else callback(new Error('The e-mail address is invalid!'))
     }
   }
 })

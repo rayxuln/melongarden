@@ -35,7 +35,7 @@
             @delete-history-item="onDeleteHistoryItem"
           ></search-bar-popover>
         </el-popover> <!-- 搜索框 -->
-        <el-button v-if="displayLoginInfo" type="success" @click="onNewPostButtonClicked">New Post</el-button>
+        <el-button v-if="displayLoginInfo && showNewPostButton" type="success" @click="onNewPostButtonClicked">New Post</el-button>
       </div>
       <transition name="fade" mode="out-in">
       <div class="search-bar-right" v-if="displayLoginInfo">
@@ -140,6 +140,7 @@ import SearchBarPopover from '@/components/SearchBarPopover.vue'
   data () {
     return {
       displayLoginInfo: false,
+      showNewPostButton: true,
       userName: 'UserName',
       userEmail: 'xxx@xxx.xx',
       userAvatar: '',
@@ -169,6 +170,12 @@ import SearchBarPopover from '@/components/SearchBarPopover.vue'
       () => this.$route.path,
       () => {
         this.loadMembersPosts()
+
+        if (this.$route.path === '/') {
+          this.showNewPostButton = true
+        } else {
+          this.showNewPostButton = false
+        }
       }
     )
 
