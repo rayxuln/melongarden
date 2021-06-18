@@ -149,7 +149,7 @@ export default class PostPageLevel extends Vue {}
   background-color: rgb(247, 249, 251);
   min-height: 300px;
   border-right: 1px solid #EBEEF5;
-  flex: 1;
+  flex: 2.2;
 }
 
 .level-box-right{
@@ -166,7 +166,8 @@ export default class PostPageLevel extends Vue {}
 }
 
 .level-box-user-avatar{
-  margin: 50px;
+  width: 40px;
+  margin: auto;
   margin-top: 75px;
   margin-bottom: 15px;
 }
